@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "generate:milestones": "node scripts/generateMilestones.js",
+    "generate:features": "node scripts/generateFeatures.js",
     "generate:atlases": "node scripts/compileCardAtlases.js"
   },
   "dependencies": {

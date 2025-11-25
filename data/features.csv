@@ -1,0 +1,21 @@
+ID,Addon,Copies,Score Points,Category,Title,North edge,East edge,South edge,West edge,Text (SA - Special Ability; OC - On Completion),Funny text,Notes
+,,1,-1,DESIGN,"Lost Notebook, Found",*,*,*,*,"When placing: If it's surrounded from 4 sides, close any Open DESIGN Ticket. If it is surrounded from all 8 sides, close all Open DESIGN Tickets.",,"Isn't it boring, having cards like that for all categories?"
+,,1,-1,TECH,Phrack Overglow,*,*,*,*,"When placing: If it's surrounded from 4 sides, close any Open TECH Ticket. If it is surrounded from all 8 sides, close all Open TECH Tickets.",,
+,,1,-1,MARKETING,,*,*,*,*,"When placing: If it's surrounded from 4 sides, close any Open MARKETING Ticket. If it is surrounded from all 8 sides, close all Open MARKETING Tickets.",,
+,,1,0,TECH,Code Style,A,*,*,*,"SA: If you have 2 or more TECH Tickets with no counters on them, put 1 counter on each.","Spaces, not tabs...","Isn't it boring, having cards like that for all categories?"
+,,1,0,DESIGN,Custom Fonts,*,*,C,*,"SA: If you have 2 or more DESIGN Tickets with no counters on them, put 1 counter on each.",,
+,,1,0,MARKETING,PR Guidelines,*,B,*,*,"SA: If you have 2 or more MARKETING Tickets with no counters on them, put 1 counter on each.",,
+,,1,1,TECH,Cheap Placeholder,A,*,B,*,,,"Isn't it boring, having cards like that for all categories?"
+,,1,1,DESIGN,Landing Page,*,*,B,C,,,
+,,1,1,MARKETING,Press Release,C,A,*,*,,,
+,,1,2,TECH,Cloud Database,C,A,B,*,,,"Isn't it boring, having cards like that for all categories?"
+,,1,2,DESIGN,Brand Book,B,C,*,A,,,
+,,1,2,MARKETING,Campaign Template,*,A,A,B,,,
+,,1,3,TECH,LLMs Doing The Job,A,*,B,C,"SA: Roll a die. On 5-6, close the cheapest TECH Ticket. On 1-4, remove 1 counter from every TECH Ticket.",,
+,,1,3,DESIGN,Collab With Ony Jive,A,C,*,A,OC: All other DESIGN Features get one new Ticket each.,,
+,,1,3,MARKETING,,,,,,,,
+,,1,4,TECH,AA: Artificial Analyst,B,C,A,C,SA: Relocate up to 2 counters to a Ticket belonging to a different category.,,
+,,1,4,DESIGN,Vanity Fair,C,A,A,C,"SA: When drawing a card, you can discard it right away without looking at it and place 2 counters on any Ticket instead. That won't spend your action.",,
+,,1,5,TECH,Training Data Cleanup,A,C,B,B,"OC: Roll a die. On 1, discard 2 cards from your hand.",,
+,,1,5,MARKETING,He's Satoshi Nakamoto,B,C,C,C,"OC: Too much attention is directed towards your CEO now, rendering them too busy. CEO ability doesn't work anymore (turn their Role card face down).",,
+,,1,5,MARKETING,foe.com,C,B,C,B,"SA: If there are any Open MARKETING Tickets, pick one. Roll a die. On 1-4, add another Ticket on top of it. On 5-6, close the Ticket you picked.",Schavi Iffmann sends his regards.,

@@ -38,7 +38,7 @@ async function buildAtlases(prefix, cards, srcDir, destDir) {
 
 		const canvas = createCanvas(CARD_SIZE * ATLAS_COLUMNS, CARD_SIZE * ATLAS_ROWS);
 		const ctx = canvas.getContext('2d');
-		ctx.fillStyle = '#111';
+		ctx.fillStyle = '#fff';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		await Promise.all(

@@ -16,6 +16,11 @@ const TIER_COLORS = {
 	2: '#ffb169',
 	3: '#ff6b6b'
 };
+const CATEGORY_COLORS = {
+	DESIGN: { background: '#ffe3f3', foreground: '#a32c68' },
+	TECH: { background: '#d9f5ff', foreground: '#005d8f' },
+	MARKETING: { background: '#fff2d6', foreground: '#a35a00' }
+};
 
 module.exports = {
 	CARD_SIZE,
@@ -25,5 +30,6 @@ module.exports = {
 	BODY_TEXT_COLOR,
 	EDGE_COLORS,
 	STRIPE_COLORS,
-	TIER_COLORS
+	TIER_COLORS,
+	CATEGORY_COLORS
 };
