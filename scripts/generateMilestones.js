@@ -16,6 +16,12 @@ const EDGE_COLORS = {
 	C: '#ffd166'
 };
 const STRIPE_COLORS = [EDGE_COLORS.A, EDGE_COLORS.B, EDGE_COLORS.C];
+const TIER_COLORS = {
+	0: '#b4bcc6',
+	1: '#6dd19c',
+	2: '#ffb169',
+	3: '#ff6b6b'
+};
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/milestones.csv');
@@ -33,24 +39,33 @@ async function main() {
 
 	await Promise.all(
 		milestones.map(async (record) => {
-			const canvas = createCanvas(CARD_SIZE, CARD_SIZE);
-			const ctx = canvas.getContext('2d');
+			const baseName = sanitizeFileName(record.ID || record.Title || 'card');
 
-			paintBackground(ctx);
-			paintEdges(ctx, record);
-			paintCopy(ctx, record);
+			const frontCanvas = createCanvas(CARD_SIZE, CARD_SIZE);
+			const frontCtx = frontCanvas.getContext('2d');
+			paintBackground(frontCtx);
+			paintEdges(frontCtx, record);
+			paintCopy(frontCtx, record);
+			const frontPath = path.join(outputDir, `${baseName}.png`);
+			await fs.writeFile(frontPath, frontCanvas.toBuffer('image/png'));
 
-			const fileName = `${sanitizeFileName(record.ID || record.Title || 'card')}.png`;
-			const filePath = path.join(outputDir, fileName);
-			await fs.writeFile(filePath, canvas.toBuffer('image/png'));
+			const backCanvas = createCanvas(CARD_SIZE, CARD_SIZE);
+			const backCtx = backCanvas.getContext('2d');
+			paintBack(backCtx, record);
+			const backPath = path.join(outputDir, `${withBackPrefix(baseName)}.png`);
+			await fs.writeFile(backPath, backCanvas.toBuffer('image/png'));
 		})
 	);
 
-	console.log(`Generated ${milestones.length} milestone card(s) in ${outputDir}`);
+	console.log(`Generated ${milestones.length * 2} milestone card face/back images in ${outputDir}`);
 }
 
 function sanitizeFileName(value) {
 	return value.replace(/[^a-z0-9._-]+/gi, '_');
+}
+
+function withBackPrefix(baseName) {
+	return `back-${baseName}`;
 }
 
 function paintBackground(ctx) {
@@ -255,6 +270,47 @@ function paintCopy(ctx, record) {
 			blankLineHeight: 20
 		});
 	}
+}
+
+function paintBack(ctx, record) {
+	const tier = Number(record.Tier ?? 0);
+	const accent = TIER_COLORS[tier] || TIER_COLORS[0];
+
+	ctx.fillStyle = '#fbf4ec';
+	ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
+
+	ctx.strokeStyle = '#d4cdc3';
+	ctx.lineWidth = 4;
+	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, CARD_SIZE - EDGE_THICKNESS, CARD_SIZE - EDGE_THICKNESS);
+
+	const gradient = ctx.createRadialGradient(
+		CARD_SIZE / 2,
+		CARD_SIZE / 2,
+		40,
+		CARD_SIZE / 2,
+		CARD_SIZE / 2,
+		CARD_SIZE / 2
+	);
+	gradient.addColorStop(0, `${accent}33`);
+	gradient.addColorStop(1, '#ffffff00');
+	ctx.fillStyle = gradient;
+	ctx.fillRect(EDGE_THICKNESS, EDGE_THICKNESS, CARD_SIZE - EDGE_THICKNESS * 2, CARD_SIZE - EDGE_THICKNESS * 2);
+
+	ctx.fillStyle = '#3a3028';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'top';
+	ctx.font = '700 40px "Noto Sans", "Montserrat", sans-serif';
+	ctx.fillText('Milestone', CARD_SIZE / 2, EDGE_THICKNESS + 20);
+
+	ctx.textBaseline = 'middle';
+	ctx.fillStyle = accent;
+	ctx.font = '800 200px "Montserrat", sans-serif';
+	ctx.fillText(String(tier), CARD_SIZE / 2, CARD_SIZE / 2 + 40);
+
+	ctx.textBaseline = 'bottom';
+	ctx.fillStyle = '#675748';
+	ctx.font = '600 28px "Noto Sans", "Montserrat", sans-serif';
+	ctx.fillText(`Tier ${tier}`, CARD_SIZE / 2, CARD_SIZE - EDGE_THICKNESS - 20);
 }
 
 function buildStats(record) {
