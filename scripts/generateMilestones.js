@@ -235,6 +235,14 @@ function paintCopy(ctx, record) {
 		blankLineHeight: 22
 	});
 
+	const stats = buildStats(record);
+	if (stats.length) {
+		cursorY += 30;
+		ctx.font = '600 16px "Noto Sans", "Montserrat", sans-serif';
+		ctx.fillStyle = '#3a3028';
+		cursorY = drawStats(ctx, stats, safeZoneLeft, cursorY, contentWidth);
+	}
+
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
 		cursorY += 18;
@@ -247,6 +255,65 @@ function paintCopy(ctx, record) {
 			blankLineHeight: 20
 		});
 	}
+}
+
+function buildStats(record) {
+	const mapping = [
+		{ key: 'TCF', label: 'Completed Features' },
+		{ key: 'ACF', label: 'Adjacent Features' },
+		{ key: 'MTS', label: 'Total Product Score' }
+	];
+
+	return mapping
+		.map(({ key, label }) => {
+			const value = Number(record[key] ?? 0);
+			if (!value) return null;
+			return `${label}: ${value}+`;
+		})
+		.filter(Boolean);
+}
+
+function drawStats(ctx, stats, x, startY, maxWidth) {
+	const lineHeight = 22;
+	const verticalGap = 4;
+	const paddingX = 12;
+	const paddingY = 10;
+	ctx.save();
+	ctx.textAlign = 'left';
+	ctx.textBaseline = 'top';
+
+	const contentHeight = stats.length * lineHeight + (stats.length - 1) * verticalGap;
+	const backgroundHeight = contentHeight + paddingY * 2;
+	ctx.fillStyle = '#f1e3d4';
+	ctx.beginPath();
+	const radius = 10;
+	const bgLeft = x - paddingX;
+	const bgTop = startY - paddingY;
+	const bgRight = x + maxWidth + paddingX;
+	const bgBottom = bgTop + backgroundHeight;
+	ctx.moveTo(bgLeft + radius, bgTop);
+	ctx.lineTo(bgRight - radius, bgTop);
+	ctx.quadraticCurveTo(bgRight, bgTop, bgRight, bgTop + radius);
+	ctx.lineTo(bgRight, bgBottom - radius);
+	ctx.quadraticCurveTo(bgRight, bgBottom, bgRight - radius, bgBottom);
+	ctx.lineTo(bgLeft + radius, bgBottom);
+	ctx.quadraticCurveTo(bgLeft, bgBottom, bgLeft, bgBottom - radius);
+	ctx.lineTo(bgLeft, bgTop + radius);
+	ctx.quadraticCurveTo(bgLeft, bgTop, bgLeft + radius, bgTop);
+	ctx.closePath();
+	ctx.fill();
+
+	ctx.fillStyle = '#3a3028';
+	ctx.font = '600 16px "Noto Sans", "Montserrat", sans-serif';
+
+	let cursorY = startY;
+	stats.forEach((stat) => {
+		ctx.fillText(stat, x, cursorY);
+		cursorY += lineHeight + verticalGap;
+	});
+	cursorY -= verticalGap; // remove extra gap after last entry
+	ctx.restore();
+	return cursorY + 6;
 }
 
 function drawTextBlock(ctx, raw = '', options) {
