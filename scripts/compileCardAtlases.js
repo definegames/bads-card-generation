@@ -9,19 +9,59 @@ const ATLAS_COLUMNS = 10;
 const ATLAS_ROWS = 7;
 const CARDS_PER_ATLAS = ATLAS_COLUMNS * ATLAS_ROWS;
 
+const CARD_GROUPS = [
+	{
+		label: 'Milestone faces',
+		prefix: 'milestone-faces',
+		dir: path.resolve(__dirname, '../outputs/milestones'),
+		filter: (name) => !name.startsWith('back-') && name.endsWith('.png')
+	},
+	{
+		label: 'Milestone backs',
+		prefix: 'milestone-backs',
+		dir: path.resolve(__dirname, '../outputs/milestones'),
+		filter: (name) => name.startsWith('back-') && name.endsWith('.png')
+	},
+	{
+		label: 'Feature faces',
+		prefix: 'feature-faces',
+		dir: path.resolve(__dirname, '../outputs/features'),
+		filter: (name) => name.endsWith('.png')
+	},
+	{
+		label: 'Ability faces',
+		prefix: 'ability-faces',
+		dir: path.resolve(__dirname, '../outputs/abilities'),
+		filter: (name) => name.endsWith('.png')
+	}
+];
+
 async function main() {
-	const milestonesDir = path.resolve(__dirname, '../outputs/milestones');
 	const atlasesDir = path.resolve(__dirname, '../outputs/atlases');
 	await fs.mkdir(atlasesDir, { recursive: true });
 
-	const files = await fs.readdir(milestonesDir);
-	const faces = files.filter((name) => !name.startsWith('back-') && name.endsWith('.png')).sort();
-	const backs = files.filter((name) => name.startsWith('back-') && name.endsWith('.png')).sort();
+	await Promise.all(
+		CARD_GROUPS.map(async (group) => {
+			const cards = await readCards(group);
+			if (!cards.length) {
+				console.warn(`No cards found for ${group.label}, skipping.`);
+				return;
+			}
+			await buildAtlases(group.prefix, cards, group.dir, atlasesDir);
+		})
+	);
+}
 
-	await Promise.all([
-		buildAtlases('milestone-faces', faces, milestonesDir, atlasesDir),
-		buildAtlases('milestone-backs', backs, milestonesDir, atlasesDir)
-	]);
+async function readCards(group) {
+	try {
+		const entries = await fs.readdir(group.dir);
+		return entries.filter(group.filter).sort();
+	} catch (error) {
+		if (error.code === 'ENOENT') {
+			return [];
+		}
+		throw error;
+	}
 }
 
 async function buildAtlases(prefix, cards, srcDir, destDir) {
