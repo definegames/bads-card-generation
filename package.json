@@ -5,13 +5,14 @@
   "author": "Phil Filippak <xenohunter@pm.me>",
   "license": "MIT",
   "scripts": {
-    "generate": "yarn generate:abilities && yarn generate:features && yarn generate:milestones && yarn generate:roles && yarn generate:misc && yarn generate:tickets && yarn generate:atlases",
+  "generate": "yarn generate:abilities && yarn generate:features && yarn generate:milestones && yarn generate:roles && yarn generate:misc && yarn generate:tickets && yarn generate:problems && yarn generate:atlases",
     "generate:milestones": "node scripts/generateMilestones.js",
     "generate:features": "node scripts/generateFeatures.js",
     "generate:abilities": "node scripts/generateAbilities.js",
     "generate:roles": "node scripts/generateRoles.js",
     "generate:misc": "node scripts/generateMisc.js",
-    "generate:tickets": "node scripts/generateTickets.js",
+  "generate:tickets": "node scripts/generateTickets.js",
+  "generate:problems": "node scripts/generateProblems.js",
     "generate:atlases": "node scripts/compileCardAtlases.js"
   },
   "dependencies": {

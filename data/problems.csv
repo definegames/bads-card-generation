@@ -1,0 +1,15 @@
+ID,Addon,Copies,Title,Text,Funny text,Notes
+,,1,Sick Leave,"Put 3 counters on this card and put it beside yourself. At upkeep, remove one counter from it. At 0, discard this card.
+
+As long as this card is laying beside you, you cannot place counters on Tickets.",,Formerly known as Burnout.
+,,1,Unexpected Failure,"Place 2 Tickets on the most expensive completed Feature. In case of a tie, let the CEO choose.",,
+,,1,US-East-1 Outage,Everyone discards a card.,,
+,,1,Sunset A Feature,"Remove one Feature from the Product whose removal won't break the Product graph in two or more parts.
+
+If the removed Feature is not Completed, place 1 counter on any Ticket for each Ticket on the removed Feature.",At least we can spend our time on something we really care about!,
+,,1,Lagging Behind,"If the Product has 4 or more Features (both Completed and not) and if the Tier 1 Milestone is not in the Product yet, everyone discards 2 cards. For everyone who doesn't have enough cards, remove 1 counter from any Ticket.",,
+,,1,Feature Creep,"Take the first Feature from the bottom of the Player Deck. Put it on any valid place in the Product. Put 1 extra Ticket on it.
+
+If there is no valid place for the Feature, discard it.
+
+Shuffle the deck.",,"Formerly, the unplaced Feature was put back in the deck."

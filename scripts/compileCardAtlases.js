@@ -57,6 +57,14 @@ const CARD_GROUPS = [
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: TICKET_CARD_SIZE,
 		cardHeight: TICKET_CARD_SIZE
+	},
+	{
+		label: 'Problem faces',
+		prefix: 'problem-faces',
+		dir: path.resolve(__dirname, '../outputs/problems'),
+		filter: (name) => name.endsWith('.png'),
+		cardWidth: TICKET_CARD_SIZE,
+		cardHeight: TICKET_CARD_SIZE
 	}
 
 ];
