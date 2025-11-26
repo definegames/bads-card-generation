@@ -1,2 +1,5 @@
 outputs/
 node_modules/
+public/atlases/
+public/misc/
+.next/

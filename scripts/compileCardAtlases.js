@@ -71,6 +71,7 @@ const CARD_GROUPS = [
 
 async function main() {
 	const atlasesDir = path.resolve(__dirname, '../outputs/atlases');
+	await fs.rm(atlasesDir, { recursive: true, force: true });
 	await fs.mkdir(atlasesDir, { recursive: true });
 
 	await Promise.all(
@@ -130,7 +131,8 @@ async function buildAtlases({ prefix, cards, srcDir, destDir, cardWidth, cardHei
 			})
 		);
 
-		const atlasName = `${prefix}-${String(atlasIndex + 1).padStart(2, '0')}.png`;
+		const cardCount = batch.length;
+		const atlasName = `${prefix}-${String(atlasIndex + 1).padStart(2, '0')}-count-${cardCount}.png`;
 		const atlasPath = path.join(destDir, atlasName);
 		await fs.writeFile(atlasPath, canvas.toBuffer('image/png'));
 		console.log(`Saved ${atlasName} with ${batch.length} cards.`);

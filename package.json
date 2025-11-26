@@ -5,18 +5,25 @@
   "author": "Phil Filippak <xenohunter@pm.me>",
   "license": "MIT",
   "scripts": {
-  "generate": "yarn generate:abilities && yarn generate:features && yarn generate:milestones && yarn generate:roles && yarn generate:misc && yarn generate:tickets && yarn generate:problems && yarn generate:atlases",
+  "dev": "next dev",
+  "build": "yarn generate && next build",
+  "start": "next start",
+  "generate": "yarn generate:abilities && yarn generate:features && yarn generate:milestones && yarn generate:roles && yarn generate:misc && yarn generate:tickets && yarn generate:problems && yarn generate:atlases && yarn sync:public",
     "generate:milestones": "node scripts/generateMilestones.js",
     "generate:features": "node scripts/generateFeatures.js",
     "generate:abilities": "node scripts/generateAbilities.js",
     "generate:roles": "node scripts/generateRoles.js",
     "generate:misc": "node scripts/generateMisc.js",
-  "generate:tickets": "node scripts/generateTickets.js",
-  "generate:problems": "node scripts/generateProblems.js",
-    "generate:atlases": "node scripts/compileCardAtlases.js"
+    "generate:tickets": "node scripts/generateTickets.js",
+    "generate:problems": "node scripts/generateProblems.js",
+    "generate:atlases": "node scripts/compileCardAtlases.js",
+    "sync:public": "node scripts/syncStaticAssets.js"
   },
   "dependencies": {
     "canvas": "^3.2.0",
-    "csv-parse": "^6.1.0"
+    "csv-parse": "^6.1.0",
+    "next": "^16.0.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   }
 }
