@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs/promises');
 const { createCanvas, loadImage } = require('canvas');
-const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT } = require('./utils/constants');
+const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT, TICKET_CARD_SIZE } = require('./utils/constants');
 
 const ATLAS_COLUMNS = 10;
 const ATLAS_ROWS = 7;
@@ -49,6 +49,14 @@ const CARD_GROUPS = [
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: ROLE_CARD_WIDTH,
 		cardHeight: ROLE_CARD_HEIGHT
+	},
+	{
+		label: 'Ticket faces',
+		prefix: 'ticket-faces',
+		dir: path.resolve(__dirname, '../outputs/tickets'),
+		filter: (name) => name.endsWith('.png'),
+		cardWidth: TICKET_CARD_SIZE,
+		cardHeight: TICKET_CARD_SIZE
 	}
 
 ];
