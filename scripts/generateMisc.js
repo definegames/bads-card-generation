@@ -18,9 +18,11 @@ async function main() {
 
 	await Promise.all(
 		MISC_CARD_TYPES.map(async (card) => {
-			const canvas = createCanvas(CARD_SIZE, CARD_SIZE);
+			const width = card.width ?? CARD_SIZE;
+			const height = card.height ?? CARD_SIZE;
+			const canvas = createCanvas(width, height);
 			const ctx = canvas.getContext('2d');
-			paintCardBack(ctx, card);
+			paintCardBack(ctx, card, width, height);
 			const targetPath = path.join(outputDir, `${card.key}.png`);
 			await fs.writeFile(targetPath, canvas.toBuffer('image/png'));
 		})
@@ -29,28 +31,45 @@ async function main() {
 	console.log(`Generated ${MISC_CARD_TYPES.length} misc card backs in ${outputDir}`);
 }
 
-function paintCardBack(ctx, card) {
+function paintCardBack(ctx, card, width, height) {
 	ctx.fillStyle = card.background;
-	ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
+	ctx.fillRect(0, 0, width, height);
 
 	ctx.strokeStyle = '#d4cdc3';
 	ctx.lineWidth = 4;
-	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, CARD_SIZE - EDGE_THICKNESS, CARD_SIZE - EDGE_THICKNESS);
+	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, width - EDGE_THICKNESS, height - EDGE_THICKNESS);
 
-	const safeLeft = EDGE_THICKNESS + CONTENT_PADDING;
-	const safeRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-	const safeWidth = safeRight - safeLeft;
-	const top = EDGE_THICKNESS + CONTENT_PADDING;
+	const monogramSize = Math.floor(Math.min(width, height) * 0.55);
+	const labelSize = Math.floor(Math.min(width, height) * 0.16);
 
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillStyle = '#ffffff18';
-	ctx.font = '900 220px "Montserrat", sans-serif';
-	ctx.fillText(card.label.slice(0, 1), CARD_SIZE / 2, CARD_SIZE / 2);
+	ctx.font = `900 ${monogramSize}px "Montserrat", sans-serif`;
+	ctx.fillText(card.label.slice(0, 1), width / 2, height / 2);
 
-	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = '800 60px "Montserrat", sans-serif';
-	ctx.fillText(card.label, CARD_SIZE / 2, CARD_SIZE / 2);
+	ctx.fillStyle = card.textColor || BODY_TEXT_COLOR;
+	ctx.font = `800 ${labelSize}px "Montserrat", sans-serif`;
+	drawLabel(ctx, card, width, height, labelSize);
+
+	if (card.key === 'role') {
+		ctx.fillStyle = `${(card.textColor || BODY_TEXT_COLOR)}14`;
+		const inset = EDGE_THICKNESS + 30;
+		ctx.fillRect(inset, EDGE_THICKNESS + 20, width - inset * 2, height - (EDGE_THICKNESS + 20) * 2);
+	}
+}
+
+function drawLabel(ctx, card, width, height, labelSize) {
+	const wrap = card.key === 'player-deck' || card.key === 'work-deck';
+	const lines = wrap ? card.label.split(/\s+/).filter(Boolean) : [card.label];
+	if (!lines.length) return;
+	const lineHeight = labelSize * 1.2;
+	const totalHeight = lineHeight * lines.length;
+	let cursorY = height / 2 - totalHeight / 2 + lineHeight / 2;
+	lines.forEach((line) => {
+		ctx.fillText(line, width / 2, cursorY);
+		cursorY += lineHeight;
+	});
 }
 
 if (require.main === module) {

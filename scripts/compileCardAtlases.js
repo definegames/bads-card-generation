@@ -3,8 +3,8 @@
 const path = require('path');
 const fs = require('fs/promises');
 const { createCanvas, loadImage } = require('canvas');
+const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT } = require('./utils/constants');
 
-const CARD_SIZE = 490;
 const ATLAS_COLUMNS = 10;
 const ATLAS_ROWS = 7;
 const CARDS_PER_ATLAS = ATLAS_COLUMNS * ATLAS_ROWS;
@@ -14,26 +14,43 @@ const CARD_GROUPS = [
 		label: 'Milestone faces',
 		prefix: 'milestone-faces',
 		dir: path.resolve(__dirname, '../outputs/milestones'),
-		filter: (name) => !name.startsWith('back-') && name.endsWith('.png')
+		filter: (name) => !name.startsWith('back-') && name.endsWith('.png'),
+		cardWidth: CARD_SIZE,
+		cardHeight: CARD_SIZE
 	},
 	{
 		label: 'Milestone backs',
 		prefix: 'milestone-backs',
 		dir: path.resolve(__dirname, '../outputs/milestones'),
-		filter: (name) => name.startsWith('back-') && name.endsWith('.png')
+		filter: (name) => name.startsWith('back-') && name.endsWith('.png'),
+		cardWidth: CARD_SIZE,
+		cardHeight: CARD_SIZE
 	},
 	{
 		label: 'Feature faces',
 		prefix: 'feature-faces',
 		dir: path.resolve(__dirname, '../outputs/features'),
-		filter: (name) => name.endsWith('.png')
+		filter: (name) => name.endsWith('.png'),
+		cardWidth: CARD_SIZE,
+		cardHeight: CARD_SIZE
 	},
 	{
 		label: 'Ability faces',
 		prefix: 'ability-faces',
 		dir: path.resolve(__dirname, '../outputs/abilities'),
-		filter: (name) => name.endsWith('.png')
+		filter: (name) => name.endsWith('.png'),
+		cardWidth: CARD_SIZE,
+		cardHeight: CARD_SIZE
+	},
+	{
+		label: 'Role faces',
+		prefix: 'role-faces',
+		dir: path.resolve(__dirname, '../outputs/roles'),
+		filter: (name) => name.endsWith('.png'),
+		cardWidth: ROLE_CARD_WIDTH,
+		cardHeight: ROLE_CARD_HEIGHT
 	}
+
 ];
 
 async function main() {
@@ -47,7 +64,14 @@ async function main() {
 				console.warn(`No cards found for ${group.label}, skipping.`);
 				return;
 			}
-			await buildAtlases(group.prefix, cards, group.dir, atlasesDir);
+			await buildAtlases({
+				prefix: group.prefix,
+				cards,
+				srcDir: group.dir,
+				destDir: atlasesDir,
+				cardWidth: group.cardWidth ?? CARD_SIZE,
+				cardHeight: group.cardHeight ?? CARD_SIZE
+			});
 		})
 	);
 }
@@ -64,7 +88,7 @@ async function readCards(group) {
 	}
 }
 
-async function buildAtlases(prefix, cards, srcDir, destDir) {
+async function buildAtlases({ prefix, cards, srcDir, destDir, cardWidth, cardHeight }) {
 	if (!cards.length) {
 		console.warn(`No cards found for ${prefix}, skipping.`);
 		return;
@@ -76,7 +100,7 @@ async function buildAtlases(prefix, cards, srcDir, destDir) {
 		const sliceEnd = sliceStart + CARDS_PER_ATLAS;
 		const batch = cards.slice(sliceStart, sliceEnd);
 
-		const canvas = createCanvas(CARD_SIZE * ATLAS_COLUMNS, CARD_SIZE * ATLAS_ROWS);
+		const canvas = createCanvas(cardWidth * ATLAS_COLUMNS, cardHeight * ATLAS_ROWS);
 		const ctx = canvas.getContext('2d');
 		ctx.fillStyle = '#fff';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -86,7 +110,7 @@ async function buildAtlases(prefix, cards, srcDir, destDir) {
 				const image = await loadImage(path.join(srcDir, fileName));
 				const col = index % ATLAS_COLUMNS;
 				const row = Math.floor(index / ATLAS_COLUMNS);
-				ctx.drawImage(image, col * CARD_SIZE, row * CARD_SIZE, CARD_SIZE, CARD_SIZE);
+				ctx.drawImage(image, col * cardWidth, row * cardHeight, cardWidth, cardHeight);
 			})
 		);
 
