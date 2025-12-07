@@ -16,7 +16,7 @@ Spend your action to remove a counter from thie Ticket. At 0, close it.",,
 ,,1,MARKETING,Fix A Typo,▢,1,,,
 ,,1,DESIGN,You'll Need A Vacation,▢,10,You may spend your action and discard 3 cards from your hand to close this Ticket at once.,,
 ,,1,ANY,Wildcard,▢,5,This Ticket acts as if it belongs to each category.,,
-,,1,NONE,Cracked (???),▢,5,"SA: Roll a die. On 5-6, place as many counters on this Ticket as there are on the cheapest adjacent Ticket (on 4 sides). If 5 counters or more, close this Ticket.",,
+,,1,ADMIN,Cracked (???),▢,5,"SA: Roll a die. On 5-6, place as many counters on this Ticket as there are on the cheapest adjacent Ticket (on 4 sides). If 5 counters or more, close this Ticket.",,
 ,,1,TECH,Fix The Typo,▢,1,"OC: If there is another Ticket under this one and if that's a TECH Ticket, roll a die. On 6, close that other Ticket as well.",,
 ,,1,DESIGN,More Mockups,▢,3,,,
 ,,1,TECH,A Chunk Of Work,▢,3,,,
@@ -25,14 +25,14 @@ Spend your action to remove a counter from thie Ticket. At 0, close it.",,
 ,,1,DESIGN,Bad On Purpose,▢,3,"OC: The player who closed this Ticket either:
 - draws a card if this is the last Ticket before the Feature is Completed
 - discards a card otherwise",,
-,,1,NONE,Basically Nothing,▢,1,,,
+,,1,ADMIN,Basically Nothing,▢,1,,,
 ,,1,DESIGN,Generate The Logo,▢,0,"You cannot conventionally place a counter on this Ticket. Instead, spend your action and roll a die. On 6, close this Ticket.",,
-,,1,NONE,Rote Work,▢,10,,,
+,,1,ADMIN,Rote Work,▢,10,,,
 ,,1,TECH,Merging Databases,▢,5,"WS: Place 4 counters on this Ticket. For each adjacent (on 4 sides) Completed TECH Feature, remove 1 counter.",,Probably reformulate the text.
-,,1,NONE,Just Another Ticket,▢,3,,,
-,,1,NONE,Just A One-Liner,▢,2,,,
-,,1,NONE,Crasher,▢,4,Discard a card every time you place counters on this Ticket.,,It was formerly called Burnout.
-,,1,NONE,Reprioritization,✕,4,"Pull one counter from every adjacent (on 4 sides) Ticket, if possible.
+,,1,ADMIN,Just Another Ticket,▢,3,,,
+,,1,ADMIN,Just A One-Liner,▢,2,,,
+,,1,ADMIN,Crasher,▢,4,Discard a card every time you place counters on this Ticket.,,It was formerly called Burnout.
+,,1,ADMIN,Reprioritization,✕,4,"Pull one counter from every adjacent (on 4 sides) Ticket, if possible.
 
 Spend your action to remove a counter from this Ticket. At 0, close it.",,
 ,,1,TECH,Prompt Engineering,▢,3,"You cannot conventionally place a counter on this Ticket. Instead, spend your action and roll a die. On 5-6, place a counter on it.",,

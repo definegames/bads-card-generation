@@ -67,7 +67,7 @@ function paintTicket(ctx, record) {
 	const safeRight = TICKET_CARD_SIZE - padding;
 	const contentWidth = safeRight - safeLeft;
 
-	const category = (record.Category || 'NONE').trim().toUpperCase();
+	const category = (record.Category || 'ERROR!!!').trim().toUpperCase();
 	const categoryColors = CATEGORY_COLORS[category] || { background: '#edf2f7', foreground: '#2d3748' };
 
 	const badgeY = padding - 8;

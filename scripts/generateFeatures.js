@@ -104,7 +104,7 @@ function paintFeatureContent(ctx, record) {
 }
 
 function paintHeaderRow(ctx, record, safeZoneLeft, safeZoneRight) {
-	const category = (record.Category || 'General').trim().toUpperCase();
+	const category = (record.Category || 'ERROR!!!').trim().toUpperCase();
 	const categoryColors = CATEGORY_COLORS[category] || { background: '#edf2f7', foreground: '#2d3748' };
 	const badgeY = EDGE_THICKNESS + 12;
 	const badgePaddingX = 14;
