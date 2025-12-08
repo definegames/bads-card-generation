@@ -12,6 +12,7 @@ const {
 	BODY_TEXT_COLOR,
 	CATEGORY_COLORS
 } = require('./utils/constants');
+const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 
 async function main() {
@@ -26,7 +27,7 @@ async function main() {
 		columns: true,
 		skip_empty_lines: true,
 		relax_quotes: true
-	});
+	}).filter((record) => !shouldIgnoreRecord(record));
 
 	const tasks = [];
 	for (const record of features) {

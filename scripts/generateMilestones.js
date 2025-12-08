@@ -13,6 +13,7 @@ const {
 	TIER_COLORS
 } = require('./utils/constants');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
+const { shouldIgnoreRecord } = require('./utils/recordFilters');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/milestones.csv');
@@ -28,8 +29,10 @@ async function main() {
 		relax_quotes: true
 	});
 
+	const filteredMilestones = milestones.filter((record) => !shouldIgnoreRecord(record));
+
 	await Promise.all(
-		milestones.map(async (record) => {
+		filteredMilestones.map(async (record) => {
 			const baseName = sanitizeFileName(record.ID || record.Title || 'card');
 
 			const frontCanvas = createCanvas(CARD_SIZE, CARD_SIZE);
@@ -48,7 +51,7 @@ async function main() {
 		})
 	);
 
-	console.log(`Generated ${milestones.length * 2} milestone card face/back images in ${outputDir}`);
+	console.log(`Generated ${filteredMilestones.length * 2} milestone card face/back images in ${outputDir}`);
 }
 
 function sanitizeFileName(value) {

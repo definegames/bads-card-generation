@@ -11,6 +11,7 @@ const {
 	CATEGORY_COLORS,
 	TICKET_CARD_SIZE
 } = require('./utils/constants');
+const { shouldIgnoreRecord } = require('./utils/recordFilters');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/tickets.csv');
@@ -24,7 +25,7 @@ async function main() {
 		columns: true,
 		skip_empty_lines: true,
 		relax_quotes: true
-	});
+	}).filter((record) => !shouldIgnoreRecord(record));
 
 	const tasks = [];
 	for (const ticket of tickets) {

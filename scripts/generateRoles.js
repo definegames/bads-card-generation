@@ -13,6 +13,7 @@ const {
 	ROLE_CARD_BACKGROUND,
 	ROLE_ACCENT_COLOR
 } = require('./utils/constants');
+const { shouldIgnoreRecord } = require('./utils/recordFilters');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/roles.csv');
@@ -28,7 +29,9 @@ async function main() {
 		relax_quotes: true
 	});
 
-	const validRoles = roles.filter((record) => Boolean((record.Title || '').trim()));
+	const validRoles = roles.filter(
+		(record) => Boolean((record.Title || '').trim()) && !shouldIgnoreRecord(record)
+	);
 
 	await Promise.all(
 		validRoles.map(async (record) => {

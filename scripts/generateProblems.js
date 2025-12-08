@@ -5,6 +5,7 @@ const fs = require('fs/promises');
 const { createCanvas } = require('canvas');
 const { parse } = require('csv-parse/sync');
 const { TICKET_CARD_SIZE, BODY_TEXT_COLOR } = require('./utils/constants');
+const { shouldIgnoreRecord } = require('./utils/recordFilters');
 
 const BACKGROUND_COLOR = '#fffdf8';
 const BORDER_COLOR = '#d9cbbd';
@@ -23,7 +24,7 @@ async function main() {
 		columns: true,
 		skip_empty_lines: true,
 		trim: true
-	});
+	}).filter((record) => !shouldIgnoreRecord(record));
 
 	const tasks = [];
 	for (const problem of problems) {

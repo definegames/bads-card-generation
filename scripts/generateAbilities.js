@@ -11,6 +11,7 @@ const {
 	BACKGROUND_COLOR,
 	BODY_TEXT_COLOR
 } = require('./utils/constants');
+const { shouldIgnoreRecord } = require('./utils/recordFilters');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/abilities.csv');
@@ -24,7 +25,7 @@ async function main() {
 		columns: true,
 		skip_empty_lines: true,
 		relax_quotes: true
-	});
+	}).filter((record) => !shouldIgnoreRecord(record));
 
 	const jobs = [];
 	for (const ability of abilities) {
