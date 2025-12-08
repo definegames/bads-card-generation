@@ -25,7 +25,8 @@ const TIER_COLORS = {
 const CATEGORY_COLORS = {
 	DESIGN: { background: '#ffe3f3', foreground: '#a32c68' },
 	TECH: { background: '#d9f5ff', foreground: '#005d8f' },
-	MARKETING: { background: '#fff2d6', foreground: '#a35a00' }
+	MARKETING: { background: '#fff2d6', foreground: '#a35a00' },
+	ADMIN: { background: '#f0f0f0', foreground: '#808080'}
 };
 const MISC_CARD_TYPES = [
 	{ key: 'role', label: 'Role', background: '#dceeff', textColor: '#0c356b', width: ROLE_CARD_WIDTH, height: ROLE_CARD_HEIGHT },
