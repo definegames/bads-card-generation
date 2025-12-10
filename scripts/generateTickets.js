@@ -12,10 +12,12 @@ const {
 	TICKET_CARD_SIZE
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
+const { getLocalizedText } = require('./utils/textHelpers');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/tickets.csv');
-	const outputDir = path.resolve(__dirname, '../outputs/tickets');
+	const outputDir = resolveOutputPath('tickets');
 
 	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
@@ -112,7 +114,7 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 	}
 
 	let cursorY = dividerY + 18;
-	const text = record['Text'] || record.Text || '';
+	const text = getLocalizedText(record, ['Text', 'Text (SA - Special Ability; WS - When Starting; OC - On Closing)']);
 	if (text.trim()) {
 		ctx.font = '500 18px "Noto Sans", "Montserrat", sans-serif';
 		cursorY = drawTextBlock(ctx, text, {

@@ -12,10 +12,12 @@ const {
 	BODY_TEXT_COLOR
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
+const { getLocalizedText } = require('./utils/textHelpers');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/abilities.csv');
-	const outputDir = path.resolve(__dirname, '../outputs/abilities');
+	const outputDir = resolveOutputPath('abilities');
 
 	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
@@ -92,7 +94,7 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 	ctx.textAlign = 'left';
 	ctx.fillStyle = BODY_TEXT_COLOR;
 	ctx.font = '500 20px "Noto Sans", "Montserrat", sans-serif';
-	const description = record.Text || '';
+	const description = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, description, {
 		x: safeLeft,
 		y: cursorY,

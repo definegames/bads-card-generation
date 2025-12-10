@@ -2,18 +2,18 @@
 
 const path = require('path');
 const fs = require('fs/promises');
+const { resolveOutputPath, PROJECT_ROOT } = require('./utils/runtimeConfig');
 
+const PUBLIC_ROOT = path.join(PROJECT_ROOT, 'public');
 const PAIRS = [
-	{ src: '../outputs/atlases', dest: '../public/atlases' },
-	{ src: '../outputs/misc', dest: '../public/misc' }
+	{ src: resolveOutputPath('atlases'), dest: path.join(PUBLIC_ROOT, 'atlases') },
+	{ src: resolveOutputPath('misc'), dest: path.join(PUBLIC_ROOT, 'misc') }
 ];
 
 async function main() {
 	await Promise.all(
 		PAIRS.map(async ({ src, dest }) => {
-			const absoluteSrc = path.resolve(__dirname, src);
-			const absoluteDest = path.resolve(__dirname, dest);
-			await copyDirectory(absoluteSrc, absoluteDest);
+			await copyDirectory(src, dest);
 		})
 	);
 

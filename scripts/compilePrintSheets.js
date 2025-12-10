@@ -6,6 +6,7 @@ const fsSync = require('fs');
 const { createCanvas, loadImage } = require('canvas');
 const PDFDocument = require('pdfkit');
 const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT, TICKET_CARD_SIZE } = require('./utils/constants');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
 
 const PRINT_DPI = 300;
 const MM_PER_INCH = 25.4;
@@ -21,7 +22,7 @@ const A4_HEIGHT_PT = (A4_HEIGHT_MM / MM_PER_INCH) * POINTS_PER_INCH;
 const DEFAULT_MARGIN = Math.round(PRINT_DPI * 0.35); // ~9 mm
 const DEFAULT_GAP = 1;
 const EXTRA_EMPTY_SHEETS = 1;
-const MISC_OUTPUT_DIR = path.resolve(__dirname, '../outputs/misc');
+const MISC_OUTPUT_DIR = resolveOutputPath('misc');
 
 const PLAYER_CARD_SIZE_MM = 85;
 const WORK_CARD_SIZE_MM = 78;
@@ -32,7 +33,7 @@ const PRINT_SETS = [
 	{
 		key: 'milestones',
 		label: 'Milestones',
-		frontDir: path.resolve(__dirname, '../outputs/milestones'),
+		frontDir: resolveOutputPath('milestones'),
 		filter: (name) => name.endsWith('.png') && !name.startsWith('back-'),
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE,
@@ -45,61 +46,61 @@ const PRINT_SETS = [
 	{
 		key: 'features',
 		label: 'Features',
-		frontDir: path.resolve(__dirname, '../outputs/features'),
+		frontDir: resolveOutputPath('features'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE,
 		printWidthMM: PLAYER_CARD_SIZE_MM,
 		printHeightMM: PLAYER_CARD_SIZE_MM,
-		backStrategy: { type: 'staticImage', path: path.resolve(__dirname, '../outputs/misc/player-deck.png') },
+		backStrategy: { type: 'staticImage', path: path.join(MISC_OUTPUT_DIR, 'player-deck.png') },
 		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'feature-empty.png')
 	},
 	{
 		key: 'abilities',
 		label: 'Abilities',
-		frontDir: path.resolve(__dirname, '../outputs/abilities'),
+		frontDir: resolveOutputPath('abilities'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE,
 		printWidthMM: PLAYER_CARD_SIZE_MM,
 		printHeightMM: PLAYER_CARD_SIZE_MM,
-		backStrategy: { type: 'staticImage', path: path.resolve(__dirname, '../outputs/misc/player-deck.png') },
+		backStrategy: { type: 'staticImage', path: path.join(MISC_OUTPUT_DIR, 'player-deck.png') },
 		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'ability-empty.png')
 	},
 	{
 		key: 'roles',
 		label: 'Roles',
-		frontDir: path.resolve(__dirname, '../outputs/roles'),
+		frontDir: resolveOutputPath('roles'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: ROLE_CARD_WIDTH,
 		cardHeight: ROLE_CARD_HEIGHT,
 		printWidthMM: ROLE_CARD_WIDTH_MM,
 		printHeightMM: ROLE_CARD_HEIGHT_MM,
-		backStrategy: { type: 'staticImage', path: path.resolve(__dirname, '../outputs/misc/role.png') },
+		backStrategy: { type: 'staticImage', path: path.join(MISC_OUTPUT_DIR, 'role.png') },
 		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'role-empty.png')
 	},
 	{
 		key: 'tickets',
 		label: 'Tickets',
-		frontDir: path.resolve(__dirname, '../outputs/tickets'),
+		frontDir: resolveOutputPath('tickets'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: TICKET_CARD_SIZE,
 		cardHeight: TICKET_CARD_SIZE,
 		printWidthMM: WORK_CARD_SIZE_MM,
 		printHeightMM: WORK_CARD_SIZE_MM,
-		backStrategy: { type: 'staticImage', path: path.resolve(__dirname, '../outputs/misc/work-deck.png') },
+		backStrategy: { type: 'staticImage', path: path.join(MISC_OUTPUT_DIR, 'work-deck.png') },
 		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'ticket-empty.png')
 	},
 	{
 		key: 'problems',
 		label: 'Problems',
-		frontDir: path.resolve(__dirname, '../outputs/problems'),
+		frontDir: resolveOutputPath('problems'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: TICKET_CARD_SIZE,
 		cardHeight: TICKET_CARD_SIZE,
 		printWidthMM: WORK_CARD_SIZE_MM,
 		printHeightMM: WORK_CARD_SIZE_MM,
-		backStrategy: { type: 'staticImage', path: path.resolve(__dirname, '../outputs/misc/work-deck.png') },
+		backStrategy: { type: 'staticImage', path: path.join(MISC_OUTPUT_DIR, 'work-deck.png') },
 		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'problem-empty.png')
 	}
 ];
@@ -107,7 +108,7 @@ const PRINT_SETS = [
 const imageCache = new Map();
 
 async function main() {
-	const printDir = path.resolve(__dirname, '../outputs/print');
+	const printDir = resolveOutputPath('print');
 	await fs.rm(printDir, { recursive: true, force: true });
 	await fs.mkdir(printDir, { recursive: true });
 

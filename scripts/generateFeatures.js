@@ -19,12 +19,14 @@ const {
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
+const { getLocalizedText } = require('./utils/textHelpers');
 const MARKET_LABEL_FONT = '700 20px "Roboto Mono", "Courier New", monospace';
 const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/features.csv');
-	const outputDir = path.resolve(__dirname, '../outputs/features');
+	const outputDir = resolveOutputPath('features');
 
 	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
@@ -92,7 +94,7 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 	let cursorY = headerBottom + 60;
 	ctx.fillStyle = BODY_TEXT_COLOR;
 	ctx.font = '500 19px "Noto Sans", "Montserrat", sans-serif';
-	const description = record['Text'] || record.Text || '';
+	const description = getLocalizedText(record, ['Text', 'Text (SA - Special Ability; OC - On Completion)']);
 	cursorY = drawTextBlock(ctx, description, {
 		x: safeZoneLeft,
 		y: cursorY,

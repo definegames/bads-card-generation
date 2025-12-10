@@ -8,9 +8,10 @@ const { drawMilestoneFront, drawMilestoneBack } = require('./generateMilestones'
 const { drawRoleCard } = require('./generateRoles');
 const { drawTicketCard } = require('./generateTickets');
 const { drawProblemCard } = require('./generateProblems');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
 
 async function main() {
-	const miscDir = path.resolve(__dirname, '../outputs/misc');
+	const miscDir = resolveOutputPath('misc');
 	await fs.mkdir(miscDir, { recursive: true });
 
 	const templates = [

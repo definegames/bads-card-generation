@@ -14,10 +14,12 @@ const {
 	ROLE_ACCENT_COLOR
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
+const { getLocalizedText } = require('./utils/textHelpers');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/roles.csv');
-	const outputDir = path.resolve(__dirname, '../outputs/roles');
+	const outputDir = resolveOutputPath('roles');
 
 	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
@@ -107,7 +109,7 @@ function paintRoleContent(ctx, record, { isBlank = false } = {}) {
 	}
 
 	let cursorY = dividerY + 18;
-	const text = (record.Text || '').trim();
+	const text = getLocalizedText(record, ['Text']);
 	if (text) {
 		ctx.textAlign = 'left';
 		ctx.font = '500 20px "Noto Sans", "Montserrat", sans-serif';

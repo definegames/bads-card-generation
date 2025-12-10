@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs/promises');
 const { createCanvas, loadImage } = require('canvas');
 const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT, TICKET_CARD_SIZE } = require('./utils/constants');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
 
 const ATLAS_COLUMNS = 10;
 const ATLAS_ROWS = 7;
@@ -13,7 +14,7 @@ const CARD_GROUPS = [
 	{
 		label: 'Milestone faces',
 		prefix: 'milestone-faces',
-		dir: path.resolve(__dirname, '../outputs/milestones'),
+		dir: resolveOutputPath('milestones'),
 		filter: (name) => !name.startsWith('back-') && name.endsWith('.png'),
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE
@@ -21,7 +22,7 @@ const CARD_GROUPS = [
 	{
 		label: 'Milestone backs',
 		prefix: 'milestone-backs',
-		dir: path.resolve(__dirname, '../outputs/milestones'),
+		dir: resolveOutputPath('milestones'),
 		filter: (name) => name.startsWith('back-') && name.endsWith('.png'),
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE
@@ -29,7 +30,7 @@ const CARD_GROUPS = [
 	{
 		label: 'Feature faces',
 		prefix: 'feature-faces',
-		dir: path.resolve(__dirname, '../outputs/features'),
+		dir: resolveOutputPath('features'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE
@@ -37,7 +38,7 @@ const CARD_GROUPS = [
 	{
 		label: 'Ability faces',
 		prefix: 'ability-faces',
-		dir: path.resolve(__dirname, '../outputs/abilities'),
+		dir: resolveOutputPath('abilities'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE
@@ -45,7 +46,7 @@ const CARD_GROUPS = [
 	{
 		label: 'Role faces',
 		prefix: 'role-faces',
-		dir: path.resolve(__dirname, '../outputs/roles'),
+		dir: resolveOutputPath('roles'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: ROLE_CARD_WIDTH,
 		cardHeight: ROLE_CARD_HEIGHT
@@ -53,7 +54,7 @@ const CARD_GROUPS = [
 	{
 		label: 'Ticket faces',
 		prefix: 'ticket-faces',
-		dir: path.resolve(__dirname, '../outputs/tickets'),
+		dir: resolveOutputPath('tickets'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: TICKET_CARD_SIZE,
 		cardHeight: TICKET_CARD_SIZE
@@ -61,7 +62,7 @@ const CARD_GROUPS = [
 	{
 		label: 'Problem faces',
 		prefix: 'problem-faces',
-		dir: path.resolve(__dirname, '../outputs/problems'),
+		dir: resolveOutputPath('problems'),
 		filter: (name) => name.endsWith('.png'),
 		cardWidth: TICKET_CARD_SIZE,
 		cardHeight: TICKET_CARD_SIZE
@@ -70,7 +71,7 @@ const CARD_GROUPS = [
 ];
 
 async function main() {
-	const atlasesDir = path.resolve(__dirname, '../outputs/atlases');
+	const atlasesDir = resolveOutputPath('atlases');
 	await fs.rm(atlasesDir, { recursive: true, force: true });
 	await fs.mkdir(atlasesDir, { recursive: true });
 

@@ -6,6 +6,8 @@ const { createCanvas } = require('canvas');
 const { parse } = require('csv-parse/sync');
 const { TICKET_CARD_SIZE, BODY_TEXT_COLOR } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
+const { getLocalizedText } = require('./utils/textHelpers');
 
 const BACKGROUND_COLOR = '#fffdf8';
 const BORDER_COLOR = '#d9cbbd';
@@ -14,7 +16,7 @@ const FUNNY_TEXT_COLOR = '#7a4a38';
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/problems.csv');
-	const outputDir = path.resolve(__dirname, '../outputs/problems');
+	const outputDir = resolveOutputPath('problems');
 
 	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
@@ -89,7 +91,7 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 	}
 
 	let cursorY = delimiterY + 18;
-	const mainText = (record.Text || '').trim();
+	const mainText = getLocalizedText(record, ['Text']);
 	if (mainText) {
 		ctx.fillStyle = BODY_TEXT_COLOR;
 		ctx.font = '500 20px "Noto Sans", "Montserrat", sans-serif';

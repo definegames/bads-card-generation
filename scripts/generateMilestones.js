@@ -14,10 +14,12 @@ const {
 } = require('./utils/constants');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
+const { resolveOutputPath } = require('./utils/runtimeConfig');
+const { getLocalizedText } = require('./utils/textHelpers');
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/milestones.csv');
-	const outputDir = path.resolve(__dirname, '../outputs/milestones');
+	const outputDir = resolveOutputPath('milestones');
 
 	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
@@ -125,7 +127,8 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 		cursorY += blankLineHeight;
 		ctx.font = bodyFont;
 	}
-	cursorY = drawTextBlock(ctx, record.Text, {
+	const bodyCopy = getLocalizedText(record, ['Text']);
+	cursorY = drawTextBlock(ctx, bodyCopy, {
 		x: safeZoneLeft,
 		y: cursorY,
 		maxWidth: contentWidth,
