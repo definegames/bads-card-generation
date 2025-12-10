@@ -19,7 +19,7 @@ const A4_WIDTH_PT = (A4_WIDTH_MM / MM_PER_INCH) * POINTS_PER_INCH;
 const A4_HEIGHT_PT = (A4_HEIGHT_MM / MM_PER_INCH) * POINTS_PER_INCH;
 
 const DEFAULT_MARGIN = Math.round(PRINT_DPI * 0.35); // ~9 mm
-const DEFAULT_GAP = Math.round(PRINT_DPI * 0.08); // ~2 mm
+const DEFAULT_GAP = 1;
 const EXTRA_EMPTY_SHEETS = 1;
 const MISC_OUTPUT_DIR = path.resolve(__dirname, '../outputs/misc');
 
@@ -341,6 +341,7 @@ async function renderSheetPair(batch, layout) {
 
 	const back = createSheetCanvas();
 	await paintBatch(back.ctx, batch, layout, positions, true);
+	drawBackGuides(back.ctx, layout, positions);
 
 	return {
 		frontBuffer: front.canvas.toBuffer('image/png'),
@@ -369,6 +370,52 @@ async function paintBatch(ctx, batch, layout, positions, isBack) {
 			ctx.drawImage(image, x, y, layout.cardWidth, layout.cardHeight);
 		})
 	);
+}
+
+function drawBackGuides(ctx, layout, positions) {
+	if (!positions.length || layout.gap <= 0) {
+		return;
+	}
+
+	const { cardWidth, cardHeight, columns, rows, gap } = layout;
+	const minX = Math.min(...positions.map((pos) => pos.backX));
+	const maxX = Math.max(...positions.map((pos) => pos.backX + cardWidth));
+	const minY = Math.min(...positions.map((pos) => pos.backY));
+	const maxY = Math.max(...positions.map((pos) => pos.backY + cardHeight));
+
+	ctx.save();
+	ctx.strokeStyle = '#111';
+	ctx.lineWidth = 1;
+	ctx.setLineDash([6, 4]);
+
+	for (let col = 0; col < columns - 1; col++) {
+		const sample = positions[col];
+		if (!sample) continue;
+		const x = sample.backX + cardWidth + gap / 2;
+		ctx.beginPath();
+		ctx.moveTo(x, minY);
+		ctx.lineTo(x, maxY);
+		ctx.stroke();
+	}
+
+	for (let row = 0; row < rows - 1; row++) {
+		const sample = positions[row * columns];
+		if (!sample) continue;
+		const y = sample.backY + cardHeight + gap / 2;
+		ctx.beginPath();
+		ctx.moveTo(minX, y);
+		ctx.lineTo(maxX, y);
+		ctx.stroke();
+	}
+
+	// central sheet guide
+	const centerX = A4_WIDTH_PX / 2;
+	ctx.beginPath();
+	ctx.moveTo(centerX, 0);
+	ctx.lineTo(centerX, A4_HEIGHT_PX);
+	ctx.stroke();
+
+	ctx.restore();
 }
 
 async function loadCachedImage(imagePath) {

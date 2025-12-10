@@ -67,16 +67,19 @@ function paintBackground(ctx) {
 async function drawMilestoneFront(filePath, record, options = {}) {
 	const canvas = createCanvas(CARD_SIZE, CARD_SIZE);
 	const ctx = canvas.getContext('2d');
+	const isBlank = options.blank === true || record.__blank === true;
 	paintBackground(ctx);
-	paintEdgesAndDividers(ctx, record);
-	paintCopy(ctx, record, { isBlank: options.blank === true || record.__blank === true });
+	const edgeOptions = isBlank ? { edgeColorOverride: '#ffffff' } : undefined;
+	paintEdgesAndDividers(ctx, record, edgeOptions);
+	paintCopy(ctx, record, { isBlank });
 	await fs.writeFile(filePath, canvas.toBuffer('image/png'));
 }
 
-async function drawMilestoneBack(filePath, record) {
+async function drawMilestoneBack(filePath, record, options = {}) {
 	const canvas = createCanvas(CARD_SIZE, CARD_SIZE);
 	const ctx = canvas.getContext('2d');
-	paintBack(ctx, record);
+	const isBlank = options.blank === true || record.__blank === true;
+	paintBack(ctx, record, { isBlank });
 	await fs.writeFile(filePath, canvas.toBuffer('image/png'));
 }
 
@@ -166,7 +169,7 @@ function getTierCallout(record) {
 	}
 }
 
-function paintBack(ctx, record) {
+function paintBack(ctx, record, { isBlank = false } = {}) {
 	const tier = Number(record.Tier ?? 0);
 	const accent = TIER_COLORS[tier] || TIER_COLORS[0];
 
@@ -196,15 +199,17 @@ function paintBack(ctx, record) {
 	ctx.font = '700 40px "Noto Sans", "Montserrat", sans-serif';
 	ctx.fillText('Milestone', CARD_SIZE / 2, EDGE_THICKNESS + 20);
 
-	ctx.textBaseline = 'middle';
-	ctx.fillStyle = accent;
-	ctx.font = '800 200px "Montserrat", sans-serif';
-	ctx.fillText(String(tier), CARD_SIZE / 2, CARD_SIZE / 2 + 40);
+	if (!isBlank) {
+		ctx.textBaseline = 'middle';
+		ctx.fillStyle = accent;
+		ctx.font = '800 200px "Montserrat", sans-serif';
+		ctx.fillText(String(tier), CARD_SIZE / 2, CARD_SIZE / 2 + 40);
 
-	ctx.textBaseline = 'bottom';
-	ctx.fillStyle = '#675748';
-	ctx.font = '600 28px "Noto Sans", "Montserrat", sans-serif';
-	ctx.fillText(`Tier ${tier}`, CARD_SIZE / 2, CARD_SIZE - EDGE_THICKNESS - 20);
+		ctx.textBaseline = 'bottom';
+		ctx.fillStyle = '#675748';
+		ctx.font = '600 28px "Noto Sans", "Montserrat", sans-serif';
+		ctx.fillText(`Tier ${tier}`, CARD_SIZE / 2, CARD_SIZE - EDGE_THICKNESS - 20);
+	}
 }
 
 function buildStats(record) {

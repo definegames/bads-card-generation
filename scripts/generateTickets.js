@@ -73,11 +73,11 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 	const categoryColors = CATEGORY_COLORS[category] || { background: '#edf2f7', foreground: '#2d3748' };
 
 	const badgeY = padding - 8;
-	ctx.font = '700 18px "Montserrat", sans-serif';
-	const badgeWidth = ctx.measureText(category).width + 24;
-	ctx.fillStyle = categoryColors.background;
-	drawRoundedRect(ctx, safeLeft, badgeY, badgeWidth, 32, 10);
 	if (!isBlank) {
+		ctx.font = '700 18px "Montserrat", sans-serif';
+		const badgeWidth = ctx.measureText(category).width + 24;
+		ctx.fillStyle = categoryColors.background;
+		drawRoundedRect(ctx, safeLeft, badgeY, badgeWidth, 32, 10);
 		ctx.fillStyle = categoryColors.foreground;
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'middle';

@@ -12,11 +12,12 @@ const EDGE_DEFINITIONS = [
 	{ key: 'West edge', position: 'west' }
 ];
 
-function paintEdgesAndDividers(ctx, record = {}) {
+function paintEdgesAndDividers(ctx, record = {}, options = {}) {
+	const { edgeColorOverride } = options;
 	EDGE_DEFINITIONS.forEach(({ key, position }) => {
 		const value = (record[key] || '').trim();
-		if (!value) return;
-		drawEdge(ctx, position, value);
+		if (!edgeColorOverride && !value) return;
+		drawEdge(ctx, position, value, edgeColorOverride);
 	});
 
 	drawCornerDividers(ctx);
@@ -55,9 +56,14 @@ function drawCornerDividers(ctx) {
 	ctx.restore();
 }
 
-function drawEdge(ctx, position, code) {
+function drawEdge(ctx, position, code, overrideColor) {
 	const rect = edgeRect(position);
 	withEdgeClip(ctx, position, () => {
+		if (overrideColor) {
+			ctx.fillStyle = overrideColor;
+			ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+			return;
+		}
 		if (code === '*') {
 			drawStripedEdge(ctx, rect, position);
 			return;

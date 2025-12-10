@@ -20,6 +20,7 @@ const {
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const MARKET_LABEL_FONT = '700 20px "Roboto Mono", "Courier New", monospace';
+const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/features.csv');
@@ -57,7 +58,8 @@ async function drawFeatureCard(filePath, record, options = {}) {
 	const ctx = canvas.getContext('2d');
 
 	paintBackground(ctx);
-	paintEdgesAndDividers(ctx, record);
+	const edgeOptions = isBlank ? { edgeColorOverride: '#ffffff' } : undefined;
+	paintEdgesAndDividers(ctx, record, edgeOptions);
 	paintFeatureContent(ctx, record, { isBlank });
 
 	await fs.writeFile(filePath, canvas.toBuffer('image/png'));
@@ -117,7 +119,8 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 function paintHeaderRow(ctx, record, safeZoneLeft, safeZoneRight, { isBlank = false } = {}) {
 	const markets = parseMarkets(record);
 	const scoreValue = isBlank ? '' : formatScore(record['Score Points']);
-	const pillMetrics = measureScorePill(ctx, scoreValue);
+	const pillMeasurementValue = isBlank ? BLANK_SCORE_WIDTH_TOKEN : scoreValue;
+	const pillMetrics = measureScorePill(ctx, pillMeasurementValue);
 	const marketBottom = isBlank
 		? EDGE_THICKNESS + 12
 		: drawMarketRow(ctx, markets, safeZoneLeft, safeZoneRight, pillMetrics.width);

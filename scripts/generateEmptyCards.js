@@ -17,7 +17,7 @@ async function main() {
 		{ file: 'feature-empty.png', task: () => drawFeatureCard(path.join(miscDir, 'feature-empty.png'), createFeatureRecord(), { blank: true }) },
 		{ file: 'ability-empty.png', task: () => drawAbilityCard(path.join(miscDir, 'ability-empty.png'), createAbilityRecord(), { blank: true }) },
 		{ file: 'milestone-empty-front.png', task: () => drawMilestoneFront(path.join(miscDir, 'milestone-empty-front.png'), createMilestoneRecord(), { blank: true }) },
-		{ file: 'milestone-empty-back.png', task: () => drawMilestoneBack(path.join(miscDir, 'milestone-empty-back.png'), createMilestoneRecord()) },
+		{ file: 'milestone-empty-back.png', task: () => drawMilestoneBack(path.join(miscDir, 'milestone-empty-back.png'), createMilestoneRecord(), { blank: true }) },
 		{ file: 'role-empty.png', task: () => drawRoleCard(path.join(miscDir, 'role-empty.png'), createRoleRecord(), { blank: true }) },
 		{ file: 'ticket-empty.png', task: () => drawTicketCard(path.join(miscDir, 'ticket-empty.png'), createTicketRecord(), { blank: true }) },
 		{ file: 'problem-empty.png', task: () => drawProblemCard(path.join(miscDir, 'problem-empty.png'), createProblemRecord(), { blank: true }) }
