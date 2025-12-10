@@ -8,7 +8,7 @@
     "dev": "next dev",
     "build": "yarn generate && next build",
     "start": "next start",
-    "generate": "yarn generate:abilities && yarn generate:features && yarn generate:milestones && yarn generate:roles && yarn generate:misc && yarn generate:tickets && yarn generate:problems && yarn generate:atlases && yarn sync:public",
+  "generate": "yarn generate:abilities && yarn generate:features && yarn generate:milestones && yarn generate:roles && yarn generate:misc && yarn generate:tickets && yarn generate:problems && yarn generate:atlases && yarn generate:print && yarn sync:public",
     "generate:milestones": "node scripts/generateMilestones.js",
     "generate:features": "node scripts/generateFeatures.js",
     "generate:abilities": "node scripts/generateAbilities.js",
@@ -17,12 +17,14 @@
     "generate:tickets": "node scripts/generateTickets.js",
     "generate:problems": "node scripts/generateProblems.js",
     "generate:atlases": "node scripts/compileCardAtlases.js",
+    "generate:print": "node scripts/compilePrintSheets.js",
     "sync:public": "node scripts/syncStaticAssets.js"
   },
   "dependencies": {
     "canvas": "^3.2.0",
     "csv-parse": "^6.1.0",
     "next": "16.0.7",
+    "pdfkit": "^0.17.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   }
