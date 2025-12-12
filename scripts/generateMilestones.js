@@ -163,9 +163,9 @@ function getTierCallout(record) {
 	const tier = Number(record.Tier ?? 0);
 	switch (tier) {
 		case 1:
-			return 'Regroup';
+			return 'Regroup: everyone may shuffle their hand into the deck, then draw 2 cards.';
 		case 2:
-			return 'Pivot';
+			return 'Pivot: the CEO may rearrange N Features, then roll a die, if <N, add 1 Ticket on top of each moved Feature. N in (1;6)';
 		case 3:
 			return 'You win!';
 		default:
