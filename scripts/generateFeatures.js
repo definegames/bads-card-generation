@@ -75,6 +75,8 @@ function paintBackground(ctx) {
 function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 	const safeZoneLeft = EDGE_THICKNESS + CONTENT_PADDING;
 	const safeZoneRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
+	const safeZoneBottom = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
+	const contentWidth = safeZoneRight - safeZoneLeft;
 	const headerBottom = paintHeaderRow(ctx, record, safeZoneRight, { isBlank });
 	if (isBlank) {
 		return;
@@ -94,22 +96,29 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 	cursorY = drawTextBlock(ctx, description, {
 		x: safeZoneLeft,
 		y: cursorY,
-		maxWidth: safeZoneRight - safeZoneLeft,
+		maxWidth: contentWidth,
 		lineHeight: 26,
 		blankLineHeight: 24
 	});
 
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
-		cursorY += 18;
+		const funnyOptions = {
+			maxWidth: contentWidth,
+			lineHeight: 22,
+			blankLineHeight: 20
+		};
 		ctx.font = 'italic 500 18px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+		const funnyHeight = measureTextBlockHeight(ctx, funny, funnyOptions);
+		const funnyGap = 18;
+		const minFunnyY = cursorY + funnyGap;
+		const bottomAlignedY = safeZoneBottom - funnyHeight;
+		const funnyY = Math.max(minFunnyY, bottomAlignedY);
 		ctx.fillStyle = '#5c4d40';
 		drawTextBlock(ctx, funny, {
 			x: safeZoneLeft,
-			y: cursorY,
-			maxWidth: safeZoneRight - safeZoneLeft,
-			lineHeight: 22,
-			blankLineHeight: 20
+			y: funnyY,
+			...funnyOptions
 		});
 	}
 }
@@ -182,6 +191,51 @@ function drawTextBlock(ctx, raw = '', options) {
 		cursorY = drawWrappedLine(ctx, line, x, cursorY, maxWidth, lineHeight);
 	});
 	return cursorY;
+}
+
+function measureTextBlockHeight(ctx, raw = '', options) {
+	const { maxWidth, lineHeight, blankLineHeight = lineHeight } = options;
+	const normalized = String(raw ?? '')
+		.replace(/\r/g, '')
+		.replace(/\t/g, '    ');
+	if (!normalized.trim()) {
+		return 0;
+	}
+
+	const lines = normalized.split('\n');
+	let height = 0;
+	lines.forEach((line) => {
+		if (!line.trim()) {
+			height += blankLineHeight;
+			return;
+		}
+		height += measureWrappedLineHeight(ctx, line, maxWidth, lineHeight);
+	});
+	return height;
+}
+
+function measureWrappedLineHeight(ctx, text, maxWidth, lineHeight) {
+	const tokens = text.match(/\S+\s*/g) || [];
+	if (!tokens.length) {
+		return lineHeight;
+	}
+	let line = '';
+	let height = 0;
+	tokens.forEach((token, index) => {
+		const testLine = line + token;
+		const metrics = ctx.measureText(testLine);
+		if (metrics.width > maxWidth && line) {
+			height += lineHeight;
+			line = token.trimStart();
+		} else {
+			line = testLine;
+		}
+
+		if (index === tokens.length - 1) {
+			height += lineHeight;
+		}
+	});
+	return height;
 }
 
 function drawWrappedLine(ctx, text, x, startY, maxWidth, lineHeight) {
