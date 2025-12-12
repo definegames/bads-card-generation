@@ -10,19 +10,12 @@ const {
 	EDGE_THICKNESS,
 	CONTENT_PADDING,
 	BACKGROUND_COLOR,
-	BODY_TEXT_COLOR,
-	MARKET_ORDER,
-	MARKET_COLORS,
-	MARKET_PILL_BACKGROUNDS,
-	MARKET_INACTIVE_COLOR,
-	MARKET_LABEL_GAP,
-	MARKET_PILL_GAP
+	BODY_TEXT_COLOR
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
-const MARKET_LABEL_FONT = '700 20px "Roboto Mono", "Noto Color Emoji", "Courier New", monospace';
 const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
 
 async function main() {
@@ -80,7 +73,7 @@ function paintBackground(ctx) {
 function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 	const safeZoneLeft = EDGE_THICKNESS + CONTENT_PADDING;
 	const safeZoneRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-	const headerBottom = paintHeaderRow(ctx, record, safeZoneLeft, safeZoneRight, { isBlank });
+	const headerBottom = paintHeaderRow(ctx, record, safeZoneRight, { isBlank });
 	if (isBlank) {
 		return;
 	}
@@ -119,16 +112,12 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 	}
 }
 
-function paintHeaderRow(ctx, record, safeZoneLeft, safeZoneRight, { isBlank = false } = {}) {
-	const markets = parseMarkets(record);
+function paintHeaderRow(ctx, record, safeZoneRight, { isBlank = false } = {}) {
 	const scoreValue = isBlank ? '' : formatScore(record['Score Points']);
 	const pillMeasurementValue = isBlank ? BLANK_SCORE_WIDTH_TOKEN : scoreValue;
 	const pillMetrics = measureScorePill(ctx, pillMeasurementValue);
-	const marketBottom = isBlank
-		? EDGE_THICKNESS + 12
-		: drawMarketRow(ctx, markets, safeZoneLeft, safeZoneRight, pillMetrics.width);
 	const scoreBottom = drawScorePill(ctx, scoreValue, safeZoneRight, pillMetrics, { isBlank });
-	return Math.max(marketBottom, scoreBottom);
+	return scoreBottom;
 }
 
 function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {
@@ -225,51 +214,6 @@ function sanitizeFileName(value) {
 	return value.replace(/[^a-z0-9._-]+/gi, '_');
 }
 
-function drawMarketRow(ctx, markets, safeZoneLeft, safeZoneRight, pillWidth) {
-	const rowTop = EDGE_THICKNESS + 12;
-	const rowHeight = 36;
-	const highlights = new Set(markets);
-	const maxRowRight = safeZoneRight - pillWidth - MARKET_PILL_GAP;
-	let cursorX = safeZoneLeft;
-
-	ctx.save();
-	ctx.font = MARKET_LABEL_FONT;
-	ctx.textAlign = 'left';
-	ctx.textBaseline = 'top';
-
-	MARKET_ORDER.forEach((market, index) => {
-		cursorX = Math.min(cursorX, maxRowRight);
-		const isActive = highlights.has(market);
-		const color = isActive ? MARKET_COLORS[market] || BODY_TEXT_COLOR : MARKET_INACTIVE_COLOR;
-		const text = market;
-		const labelWidth = ctx.measureText(text).width;
-		if (isActive) {
-			const pillPaddingX = 8;
-			const pillPaddingY = 4;
-			const pillRadius = 8;
-			const pillTop = rowTop - pillPaddingY;
-			const pillLeft = cursorX - pillPaddingX;
-			const pillWidth = labelWidth + pillPaddingX * 2;
-			const pillHeight = 24 + pillPaddingY * 2;
-			ctx.fillStyle = MARKET_PILL_BACKGROUNDS[market] || '#f5f1eb';
-			drawRoundedRect(ctx, pillLeft, pillTop, pillWidth, pillHeight, pillRadius);
-		}
-		ctx.fillStyle = color;
-		ctx.fillText(text, cursorX, rowTop);
-		const underlineY = rowTop + 24;
-		ctx.strokeStyle = color;
-		ctx.lineWidth = 2;
-		ctx.beginPath();
-		ctx.moveTo(cursorX, underlineY);
-		ctx.lineTo(cursorX + labelWidth, underlineY);
-		ctx.stroke();
-		cursorX += labelWidth + (index === MARKET_ORDER.length - 1 ? MARKET_PILL_GAP : MARKET_LABEL_GAP);
-	});
-
-	ctx.restore();
-	return rowTop + rowHeight;
-}
-
 function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = false } = {}) {
 	const pillX = safeZoneRight - metrics.width;
 	const pillY = EDGE_THICKNESS + 6;
@@ -290,25 +234,6 @@ function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = fals
 	return pillY + metrics.height;
 }
 
-function parseMarkets(record) {
-	const raw = String(record.Markets ?? '').trim();
-	if (!raw) {
-		return [];
-	}
-
-	const tokens = raw.split(',').map((token) => normalizeMarketName(token)).filter(Boolean);
-	const seen = new Set();
-	const normalized = [];
-	tokens.forEach((market) => {
-		if (seen.has(market)) {
-			return;
-		}
-		seen.add(market);
-		normalized.push(market);
-	});
-	return normalized;
-}
-
 function measureScorePill(ctx, scoreValue) {
 	ctx.save();
 	ctx.font = '700 24px "Montserrat", sans-serif';
@@ -320,22 +245,6 @@ function measureScorePill(ctx, scoreValue) {
 		width: scoreWidth + pillPaddingX * 2,
 		height: pillHeight
 	};
-}
-
-function normalizeMarketName(value = '') {
-	const upper = String(value).trim().toUpperCase();
-	switch (upper) {
-		case 'B2B':
-			return 'B2B';
-		case 'AI':
-			return 'AI';
-		case 'DATING':
-			return 'Dating';
-		case 'SAAS':
-			return 'SaaS';
-		default:
-			return null;
-	}
 }
 
 if (require.main === module) {
