@@ -18,7 +18,7 @@ async function readDirectorySafe(dir) {
 }
 
 function extractCardCount(fileName) {
-	const match = fileName.match(/-count-(\d+)(?:-[a-z]+)?\.png$/i);
+	const match = fileName.match(/-count-(\d+)(?:-[a-z]+)?(?:-[\da-z]+)?\.png$/i);
 	return match ? Number(match[1]) : null;
 }
 
