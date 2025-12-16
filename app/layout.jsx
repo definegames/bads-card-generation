@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-	title: 'BADS Card Atlases',
+	title: 'B2B AI SaaS Card Atlases',
 	description: 'Direct links to generated card atlases and misc assets.'
 };
 

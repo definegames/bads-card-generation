@@ -160,7 +160,7 @@ async function main() {
 	}
 
 	const localeTag = (LOCALE || 'default').toLowerCase();
-	const pdfFileName = `bads-double-sided-cards-${localeTag}.pdf`;
+	const pdfFileName = `bas-double-sided-cards-${localeTag}.pdf`;
 	const pdfPath = path.join(printDir, pdfFileName);
 	await writePdf(pdfPath, pdfPages);
 	printSummary(sheetSummaries, pdfPath);
