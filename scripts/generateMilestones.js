@@ -127,8 +127,14 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 	const blankLineHeight = 22;
 	if (tierCallout) {
 		ctx.font = '700 18px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
-		ctx.fillText(tierCallout, safeZoneLeft, cursorY);
-		cursorY += bodyLineHeight;
+		const calloutLineHeight = 24;
+		cursorY = drawTextBlock(ctx, tierCallout, {
+			x: safeZoneLeft,
+			y: cursorY,
+			maxWidth: contentWidth,
+			lineHeight: calloutLineHeight,
+			blankLineHeight: calloutLineHeight
+		});
 		cursorY += blankLineHeight;
 		ctx.font = bodyFont;
 	}
