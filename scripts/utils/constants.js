@@ -16,6 +16,18 @@ const TIER_COLORS = {
 	2: '#ffb169',
 	3: '#ff6b6b'
 };
+const TIER_CALLOUTS = {
+	default: {
+		1: 'Regroup: each player may shuffle their hand into the deck, then draw 2 cards.',
+		2: 'Pivot: the CEO may rearrange 1 to 6 Features, then roll a die. If the result is less than the number of moved Features, add 1 Ticket on top of each moved Feature.',
+		3: 'You win!'
+	},
+	ru: {
+		1: 'Regroup: каждый игрок может замешать свою руку в колоду, затем взять 2 карты.',
+		2: 'Pivot: CEO может переставить от 1 до 6 Фич, затем бросить кубик. Если результат меньше числа перемещённых Фич, положите по 1 Тикету поверх каждой из них.',
+		3: 'Вы победили!'
+	}
+};
 const CATEGORY_COLORS = {
 	DESIGN: { background: '#ffe3f3', foreground: '#a32c68' },
 	TECH: { background: '#d9f5ff', foreground: '#005d8f' },
@@ -41,6 +53,7 @@ module.exports = {
 	BODY_TEXT_COLOR,
 	IGNORE_ADDON_RECORDS,
 	TIER_COLORS,
+	TIER_CALLOUTS,
 	CATEGORY_COLORS,
 	MISC_CARD_TYPES
 };

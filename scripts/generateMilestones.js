@@ -10,11 +10,12 @@ const {
 	EDGE_THICKNESS,
 	CONTENT_PADDING,
 	BODY_TEXT_COLOR,
-	TIER_COLORS
+	TIER_COLORS,
+	TIER_CALLOUTS
 } = require('./utils/constants');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
-const { resolveOutputPath } = require('./utils/runtimeConfig');
+const { resolveOutputPath, LOCALE } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
 
 const MILESTONE_FACE_BACKGROUND = '#dff6c2';
@@ -171,16 +172,11 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 
 function getTierCallout(record) {
 	const tier = Number(record.Tier ?? 0);
-	switch (tier) {
-		case 1:
-			return 'Regroup: everyone may shuffle their hand into the deck, then draw 2 cards.';
-		case 2:
-			return 'Pivot: the CEO may rearrange N Features, then roll a die, if <N, add 1 Ticket on top of each moved Feature. N in (1;6)';
-		case 3:
-			return 'You win!';
-		default:
-			return '';
+	if (!tier) {
+		return '';
 	}
+	const localeKey = TIER_CALLOUTS[LOCALE] ? LOCALE : 'default';
+	return TIER_CALLOUTS[localeKey][tier] || TIER_CALLOUTS.default[tier] || '';
 }
 
 function paintBack(ctx, record, { isBlank = false } = {}) {
