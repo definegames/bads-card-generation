@@ -123,6 +123,19 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 	ctx.font = bodyFont;
 
 	let cursorY = EDGE_THICKNESS + 70;
+	const stats = buildStats(record);
+	if (stats.length) {
+		cursorY += 20;
+		ctx.font = '700 26px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.fillStyle = '#2a3f1d';
+		ctx.fillText('REQUIREMENTS', safeZoneLeft, cursorY);
+		cursorY += 40;
+		ctx.font = '600 22px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.fillStyle = '#3a3028';
+		cursorY = drawStats(ctx, stats, safeZoneLeft, cursorY, contentWidth);
+		cursorY += 40;
+	}
+
 	const tierCallout = getTierCallout(record);
 	const bodyLineHeight = 24;
 	const blankLineHeight = 22;
@@ -139,6 +152,7 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 		cursorY += blankLineHeight;
 		ctx.font = bodyFont;
 	}
+
 	const bodyCopy = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, bodyCopy, {
 		x: safeZoneLeft,
@@ -147,14 +161,6 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 		lineHeight: bodyLineHeight,
 		blankLineHeight
 	});
-
-	const stats = buildStats(record);
-	if (stats.length) {
-		cursorY += 30;
-		ctx.font = '600 16px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
-		ctx.fillStyle = '#3a3028';
-		cursorY = drawStats(ctx, stats, safeZoneLeft, cursorY, contentWidth);
-	}
 
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
@@ -236,7 +242,6 @@ function paintScoreWatermark(ctx, scoreValue) {
 function buildStats(record) {
 	const mapping = [
 		{ key: 'TCF', label: 'Completed Features' },
-		{ key: 'ACF', label: 'Adjacent Features' },
 		{ key: 'MTS', label: 'Total Product Score' }
 	];
 
@@ -250,7 +255,7 @@ function buildStats(record) {
 }
 
 function drawStats(ctx, stats, x, startY, maxWidth) {
-	const lineHeight = 22;
+	const lineHeight = 26;
 	const verticalGap = 4;
 	const paddingX = 12;
 	const paddingY = 10;

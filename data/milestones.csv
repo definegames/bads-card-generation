@@ -1,9 +1,9 @@
-ID,Addon,Tier,Title,TCF,ACF,MTS,North edge,East edge,South edge,West edge,Text,RU Text,Funny text,Illustration,Notes
-m00.the3f,,0,"Family, Friends, and Fools",0,0,0,T,R,C,T,The first Feature you place should cost 5 or more.,"Первая Фича, которую вы положите, должна стоить 5 или больше.",They believed in you because you struck them with you vision.,,
-m00.legacy,,0,Legacy Pet Project,0,0,0,R,T,R,C,Your Product starts with a random Feature that has twice as many Tickets it should have based on its Score Points.,"Ваш Продукт стартует со случайной Фичей, на которой в два раза больше Задач, чем должно быть по Story Points.",Let's not even start with all that cobweb...,,
-m01.beta,,1,Beta Test,2,2,0,C,C,T,R,Put 5 counters on up to 3 TECH tickets.,"Положите в сумме 5 токенов на 1, 2 или 3 TECH Задачи.",,,
-m01.demo,,1,Demo Version,2,2,0,T,C,T,R,"If you have a Feature in your hand, you can place it right now. Put half the required number of Tickets on it (rounding up).","Если у вас в руке есть Фича, можете добавить её в продукт прямо сейчас. Положите половину Задач на эту Фичу (округлять вверх).",,,
-m02.conference,,2,Conference,6,3,5,R,T,R,C,Each player discards 2 cards.,Каждый игрок сбрасываeт по 2 карты из руки.,,,
-m02.release,,2,Release 1.0,8,3,7,C,R,C,T,Bugs attack! Put 1 Ticket on each of the 3 most expensive Features.,Баги атакуют! Положите по 1 Задаче на каждую из 3 самых дорогих Фич.,,,
-m03.valuation,,3,First Valuation,10,4,13,-,C,-,T,,,,,
-m03.pmf,,3,Product-Market Fit,12,4,11,R,-,R,-,,,,,
+ID,Addon,Tier,Title,TCF,MTS,North edge,East edge,South edge,West edge,Text,RU Text,Funny text,Illustration,Notes
+m00.the3f,,0,"Family, Friends, and Fools",0,0,T,R,C,T,The first Feature you place should cost 5 or more.,"Первая Фича, которую вы положите, должна стоить 5 или больше.",They believed in you because you struck them with you vision.,,
+m00.legacy,,0,Legacy Pet Project,0,0,R,T,R,C,Your Product starts with a random Feature. Put twice as many Tickets on it.,Ваш Продукт стартует со случайной Фичей. Положите на неё в два раза больше Задач.,Let's not even start with all that cobweb...,,
+m01.beta,,1,Beta Test,2,5,C,C,-,-,,,,,
+m01.demo,,1,Demo Version,2,5,T,-,T,-,,,,,
+m02.conference,,2,Conference,5,15,R,T,-,C,,,,,
+m02.release,,2,Release 1.0,6,12,-,R,C,T,,,,,
+m03.valuation,,3,First Valuation,8,24,R,C,T,T,,,,,
+m03.pmf,,3,Product-Market Fit,9,22,C,C,R,R,,,,,

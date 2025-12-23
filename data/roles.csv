@@ -1,9 +1,9 @@
 ID,Addon,Title,Text,RU Text,Funny text,Notes
-,,The Founder,"You have 4 cards in your hand and you can trade cards with other players.
+,,The Founder,"Only you can add Milestones to the Product.
 
-Only you can place Features or Milestones in the Product.","У вас 4 карты в руке и вы можете обмениваться картами с другими игроками.
+You can place an extra Feature on your turn.","Только вы можете добавлять Майлстоуны к Продукту.
 
-Только вы можете добавлять Фичи или Майлстоуны к Продукту.",,
+Вы можете разместить ещё одну Фичу в свой ход.",,
 ,,The Scrum Master,"Whenever Tickets are placed on a Feature, you decide their order.","Каждый раз, когда Тикеты кладутся на Фичу, вы решаете, в каком порядке их класть.",,
 ,,The Architect,"Discard 2 cards to do Refactoring.
 

@@ -16,9 +16,9 @@ ID,Addon,Copies,Category,Title,Slot type,Counter slots,Text,RU Text,Funny text,N
 ,,2,TECH,A Chunk Of Work,▢,3,,,,
 ,,1,TECH,"AI Isn't A Pit, AI Is A Mirror",▢,8,[Action]: Place as many counters on this Ticket as there are cards in your hand.,"[Action]: Положите столько токенов на эту Задачу, сколько карт в вашей руке.",,"Originally, the name was ""AI Isn't A Mind, It's A Mirror"""
 ,,2,TECH,Simple Update,▢,2,,,,
-,,1,DESIGN,Bad On Purpose,▢,3,"🎯: The player who closed this Ticket either:
+,,1,DESIGN,Bad On Purpose,▢,3,"[Close]: The player who closed this Ticket either:
 - draws a card if this is the last Ticket on the Feature
-- discards a card otherwise","🎯: Игрок, который закрывает эту Задачу:
+- discards a card otherwise","[Close]: Игрок, который закрывает эту Задачу:
 - берёт карту, если это была последняя Задача на Фиче
 - сбрасывает карту в ином случае",,
 ,,3,ADMIN,Basically Nothing,▢,1,,,,

@@ -1,6 +1,5 @@
 ID,Addon,Copies,Title,Text,RU Text,Funny text,Notes
 ,,2,Delegate,Move any 1 Ticket to a different Feature.,Переместите 1 любую Задачу на другую Фичу.,,
-,,0,Prediction Markets,Take any specific card from the Player Deck in your hand. Shuffle the Deck.,Возьмите из Player Deck любую конкретную карту себе в руку. Перемешайте колоду.,,This card doesn't do anything for those who don't know what cards there are in the Deck.
 ,,1,Hawaii Team Retreat,"Everyone shuffles their entire hand in the Player Deck. Then, everyone draws a full hand of cards.","Каждый игрок вмешивает свою руку в Player Deck. Затем, каждый игрок набирает полную руку карт.",,
 ,,2,Schedule Maneuvering,Place 4 counters total on any 1 or 2 Tickets.,Положите в сумме 4 токена на любые 1 или 2 Задачи.,,
 ,,1,Rebranding,"Count DESIGN Tickets among the last 10 cards in the Work discard pile.
@@ -18,7 +17,7 @@ Put that many counters on any DESIGN Ticket.","Посчитайте DESIGN За�
 On 1-2: put 2 new Tickets on the same Feature.","Закройте любую TECH Задачу. Киньте кубик.
 
 1-2: положите 2 новых Задачи на ту же Фичу.",,
-,,3,Creatine Microdosing,Commit 2 actions this turn. Playing this card doesn't spend your action.,"Совершите 2 действия в этом ходу. Играя эту карту, вы не тратите действие.",,
+,,3,Creatine Microdosing,Take 2 more turns right now.,Сделайте ещё 2 хода прямо сейчас.,,
 ,,3,Refactoring,"Move 1 Feature with all its Tickets to a differnt valid place in the Product.
 
 Add 1 extra Ticket on top of it. (Even if the Feature was completed.)","Переместите 1 Фичу со всеми Задачами в другое валидное место в Продукте.
@@ -33,11 +32,12 @@ Add 2 extra Tickets on top of each. (Even if either of the Features was complete
 ,,3,Working Overtime,Place 5 counters on any single Ticket.,Положите 5 токенов на 1 любую Задачу.,,
 ,,2,Outsource,"Put this card in front of you.
 
-At the beginning of your turn, roll a die. On 1, discard this cards and all counters on it. On 2-6, add a counter to it (up to 5 counters).
+At the beginning of each turn, roll a die. On 2-6, add a counter on this card. On 1, discard this card and all counters on it.
 
-During your turn, you may discard this card and put all counter from it on Tickets of your choice. That won't spend your action.","Положите эту карту перед собой.
+On your turn, you may put all counter from this card on Tickets of your choice and discard this card. (That won't spend your action.)","Положите эту карту перед собой.
 
-В начале вашего хода, киньте кубик. Если 1, то сбросьте эту карту и все токены на ней. Если 2-6, добавьте один токен на неё.
+В начале каждого хода, киньте кубик. Если 2-6, добавьте токен на эту карту. Если 1, то сбросьте эту карту и все токены на ней.
 
-В ваш ход, вы можете сбросить эту карту и положить все токены с неё на Задачи по вашему выбору. Это не потратит ваше действие.",,
-,Mafia,2,Coup,Swap Roles with any other player.,,,Probably except for the CEO?
+В ваш ход, вы можете положить все токены с этой карты на Задачи по выбору и сбросить эту карту. (Это не потратит ваше действие.)",,
+,,1,TECH Expertise,Put 5 counters on up to 3 TECH Tickets.,"Положите в сумме 5 токенов на 1, 2 или 3 TECH Задачи.",,
+,,1,Shrewd Scheduling,"If you have a Feature in your hand, you can place it right now. Put half the required number of Tickets on it (rounding up).","Если у вас в руке есть Фича, можете добавить её в продукт прямо сейчас. Положите половину Задач на эту Фичу (округлять вверх).",,
