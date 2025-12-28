@@ -342,10 +342,11 @@ async function renderSheetPair(batch, layout) {
 
 	const front = createSheetCanvas();
 	await paintBatch(front.ctx, batch, layout, positions, false);
+	drawCutGuides(front.ctx, layout, positions, false);
 
 	const back = createSheetCanvas();
 	await paintBatch(back.ctx, batch, layout, positions, true);
-	drawBackGuides(back.ctx, layout, positions);
+	drawCutGuides(back.ctx, layout, positions, true);
 
 	return {
 		frontBuffer: front.canvas.toBuffer('image/png'),
@@ -376,16 +377,22 @@ async function paintBatch(ctx, batch, layout, positions, isBack) {
 	);
 }
 
-function drawBackGuides(ctx, layout, positions) {
+function drawCutGuides(ctx, layout, positions, isBack) {
 	if (!positions.length || layout.gap <= 0) {
 		return;
 	}
 
 	const { cardWidth, cardHeight, columns, rows, gap } = layout;
-	const minX = Math.min(...positions.map((pos) => pos.backX));
-	const maxX = Math.max(...positions.map((pos) => pos.backX + cardWidth));
-	const minY = Math.min(...positions.map((pos) => pos.backY));
-	const maxY = Math.max(...positions.map((pos) => pos.backY + cardHeight));
+	const axisX = isBack ? 'backX' : 'frontX';
+	const axisY = isBack ? 'backY' : 'frontY';
+	const definedPositions = positions.filter(Boolean);
+	if (!definedPositions.length) {
+		return;
+	}
+	const minX = Math.min(...definedPositions.map((pos) => pos[axisX]));
+	const maxX = Math.max(...definedPositions.map((pos) => pos[axisX] + cardWidth));
+	const minY = Math.min(...definedPositions.map((pos) => pos[axisY]));
+	const maxY = Math.max(...definedPositions.map((pos) => pos[axisY] + cardHeight));
 
 	ctx.save();
 	ctx.strokeStyle = '#111';
@@ -395,7 +402,7 @@ function drawBackGuides(ctx, layout, positions) {
 	for (let col = 0; col < columns - 1; col++) {
 		const sample = positions[col];
 		if (!sample) continue;
-		const x = sample.backX + cardWidth + gap / 2;
+		const x = sample[axisX] + cardWidth + gap / 2;
 		ctx.beginPath();
 		ctx.moveTo(x, minY);
 		ctx.lineTo(x, maxY);
@@ -405,7 +412,7 @@ function drawBackGuides(ctx, layout, positions) {
 	for (let row = 0; row < rows - 1; row++) {
 		const sample = positions[row * columns];
 		if (!sample) continue;
-		const y = sample.backY + cardHeight + gap / 2;
+		const y = sample[axisY] + cardHeight + gap / 2;
 		ctx.beginPath();
 		ctx.moveTo(minX, y);
 		ctx.lineTo(maxX, y);
