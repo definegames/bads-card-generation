@@ -6,7 +6,7 @@ const fsSync = require('fs');
 const { createCanvas, loadImage } = require('canvas');
 require('./utils/fontRegistry'); // Register fonts
 const PDFDocument = require('pdfkit');
-const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT, TICKET_CARD_SIZE } = require('./utils/constants');
+const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT, TICKET_CARD_SIZE, KEYSTONE_BACK_FILE_NAME } = require('./utils/constants');
 const { resolveOutputPath, LOCALE } = require('./utils/runtimeConfig');
 
 const PRINT_DPI = 300;
@@ -24,6 +24,7 @@ const DEFAULT_MARGIN = Math.round(PRINT_DPI * 0.35); // ~9 mm
 const DEFAULT_GAP = 1;
 const EXTRA_EMPTY_SHEETS = 1;
 const MISC_OUTPUT_DIR = resolveOutputPath('misc');
+const KEYSTONE_BACK_PATH = path.join(MISC_OUTPUT_DIR, KEYSTONE_BACK_FILE_NAME);
 
 const PLAYER_CARD_SIZE_MM = 85;
 const WORK_CARD_SIZE_MM = 78;
@@ -31,6 +32,17 @@ const ROLE_CARD_HEIGHT_MM = 100;
 const ROLE_CARD_WIDTH_MM = Math.round(ROLE_CARD_HEIGHT_MM * (ROLE_CARD_WIDTH / ROLE_CARD_HEIGHT));
 
 const PRINT_SETS = [
+	{
+		key: 'keystones',
+		label: 'Keystones',
+		frontDir: resolveOutputPath('keystones'),
+		filter: (name) => name.endsWith('.png') && !name.startsWith('back-'),
+		cardWidth: CARD_SIZE,
+		cardHeight: CARD_SIZE,
+		printWidthMM: PLAYER_CARD_SIZE_MM,
+		printHeightMM: PLAYER_CARD_SIZE_MM,
+		backStrategy: { type: 'staticImage', path: KEYSTONE_BACK_PATH }
+	},
 	{
 		key: 'milestones',
 		label: 'Milestones',
@@ -110,7 +122,6 @@ const imageCache = new Map();
 
 async function main() {
 	const printDir = resolveOutputPath('print');
-	await fs.rm(printDir, { recursive: true, force: true });
 	await fs.mkdir(printDir, { recursive: true });
 
 	const pdfPages = [];

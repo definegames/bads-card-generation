@@ -22,7 +22,6 @@ async function main() {
 	const csvPath = path.resolve(__dirname, '../data/features.csv');
 	const outputDir = resolveOutputPath('features');
 
-	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
 
 	const csvRaw = await fs.readFile(csvPath, 'utf8');

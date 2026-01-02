@@ -24,7 +24,6 @@ async function main() {
 	const csvPath = path.resolve(__dirname, '../data/milestones.csv');
 	const outputDir = resolveOutputPath('milestones');
 
-	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
 
 	const csvRaw = await fs.readFile(csvPath, 'utf8');
@@ -34,7 +33,17 @@ async function main() {
 		relax_quotes: true
 	});
 
-	const filteredMilestones = milestones.filter((record) => !shouldIgnoreRecord(record));
+	const filteredMilestones = milestones.filter((record) => {
+		if (shouldIgnoreRecord(record)) {
+			return false;
+		}
+		const tierRaw = ((record.Tier ?? '') + '').trim();
+		if (!tierRaw) {
+			return true;
+		}
+		const tierValue = Number(tierRaw);
+		return Number.isNaN(tierValue) || tierValue !== 0;
+	});
 
 	await Promise.all(
 		filteredMilestones.map(async (record) => {

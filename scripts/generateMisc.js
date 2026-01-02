@@ -15,7 +15,6 @@ const { resolveOutputPath } = require('./utils/runtimeConfig');
 
 async function main() {
 	const outputDir = resolveOutputPath('misc');
-	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
 
 	await Promise.all(

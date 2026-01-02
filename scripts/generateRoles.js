@@ -24,7 +24,6 @@ async function main() {
 	const csvPath = path.resolve(__dirname, '../data/roles.csv');
 	const outputDir = resolveOutputPath('roles');
 
-	await fs.rm(outputDir, { recursive: true, force: true });
 	await fs.mkdir(outputDir, { recursive: true });
 
 	const csvRaw = await fs.readFile(csvPath, 'utf8');

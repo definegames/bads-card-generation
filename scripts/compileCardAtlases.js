@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs/promises');
 const { createCanvas, loadImage } = require('canvas');
 require('./utils/fontRegistry'); // Register fonts
-const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT, TICKET_CARD_SIZE } = require('./utils/constants');
+const { CARD_SIZE, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT, TICKET_CARD_SIZE, KEYSTONE_BACK_FILE_NAME } = require('./utils/constants');
 const { resolveOutputPath, LOCALE } = require('./utils/runtimeConfig');
 
 const ATLAS_COLUMNS = 10;
@@ -30,6 +30,22 @@ const CARD_GROUPS = [
 		prefix: 'milestone-backs',
 		dir: resolveOutputPath('milestones'),
 		filter: (name) => name.startsWith('back-') && name.endsWith('.png'),
+		cardWidth: CARD_SIZE,
+		cardHeight: CARD_SIZE
+	},
+	{
+		label: 'Keystone faces',
+		prefix: 'keystone-faces',
+		dir: resolveOutputPath('keystones'),
+		filter: (name) => !name.startsWith('back-') && name.endsWith('.png'),
+		cardWidth: CARD_SIZE,
+		cardHeight: CARD_SIZE
+	},
+	{
+		label: 'Keystone backs',
+		prefix: 'keystone-backs',
+		dir: resolveOutputPath('misc'),
+		filter: (name) => name === KEYSTONE_BACK_FILE_NAME,
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE
 	},
@@ -88,7 +104,6 @@ const CARD_GROUPS = [
 
 async function main() {
 	const atlasesDir = resolveOutputPath('atlases');
-	await fs.rm(atlasesDir, { recursive: true, force: true });
 	await fs.mkdir(atlasesDir, { recursive: true });
 
 	await Promise.all(
