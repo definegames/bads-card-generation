@@ -60,6 +60,13 @@ function extractMatches(items, matchers = [], valueAccessor = (item) => item) {
 	return { matches, rest };
 }
 
+function filterAtlases(atlases = []) {
+	if (!atlases.length) {
+		return atlases;
+	}
+	return atlases.filter((item) => !matchesPattern(item.name, ATLAS_EXCLUDE_PATTERNS));
+}
+
 export default function AtlasLocaleSwitcher({ assetsByLocale }) {
 	const localeOptions = useMemo(() => Object.keys(assetsByLocale || {}).sort(), [assetsByLocale]);
 	const [selectedLocale, setSelectedLocale] = useState(localeOptions[0] || 'default');
@@ -80,9 +87,11 @@ export default function AtlasLocaleSwitcher({ assetsByLocale }) {
 	}
 
 	const currentLocale = assetsByLocale[selectedLocale] ?? { atlases: [], misc: [] };
+	const filteredAtlases = useMemo(() => filterAtlases(currentLocale.atlases ?? []), [currentLocale]);
+	const localeMisc = currentLocale.misc ?? [];
 	const sections = useMemo(() => {
-		let remainingAtlases = [...(currentLocale.atlases ?? [])];
-		let remainingMisc = [...(currentLocale.misc ?? [])];
+		let remainingAtlases = [...filteredAtlases];
+		let remainingMisc = [...localeMisc];
 		return SECTION_CONFIG.map((section) => {
 			const { matches: atlasItems, rest: updatedAtlases } = extractMatches(
 				remainingAtlases,
@@ -102,7 +111,7 @@ export default function AtlasLocaleSwitcher({ assetsByLocale }) {
 				miscItems
 			};
 		});
-	}, [currentLocale]);
+	}, [filteredAtlases, localeMisc]);
 
 	return (
 		<>

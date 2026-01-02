@@ -8,9 +8,7 @@ const {
 	CARD_SIZE,
 	ROLE_CARD_WIDTH,
 	ROLE_CARD_HEIGHT,
-	TICKET_CARD_SIZE,
-	KEYSTONE_BACK_FILE_NAME,
-	MILESTONE_BACK_FILE_NAME
+	TICKET_CARD_SIZE
 } = require('./utils/constants');
 const { resolveOutputPath, LOCALE } = require('./utils/runtimeConfig');
 
@@ -33,26 +31,10 @@ const CARD_GROUPS = [
 		cardHeight: CARD_SIZE
 	},
 	{
-		label: 'Milestone backs',
-		prefix: 'milestone-backs',
-		dir: resolveOutputPath('misc'),
-		filter: (name) => name === MILESTONE_BACK_FILE_NAME,
-		cardWidth: CARD_SIZE,
-		cardHeight: CARD_SIZE
-	},
-	{
 		label: 'Keystone faces',
 		prefix: 'keystone-faces',
 		dir: resolveOutputPath('keystones'),
 		filter: (name) => !name.startsWith('back-') && name.endsWith('.png'),
-		cardWidth: CARD_SIZE,
-		cardHeight: CARD_SIZE
-	},
-	{
-		label: 'Keystone backs',
-		prefix: 'keystone-backs',
-		dir: resolveOutputPath('misc'),
-		filter: (name) => name === KEYSTONE_BACK_FILE_NAME,
 		cardWidth: CARD_SIZE,
 		cardHeight: CARD_SIZE
 	},
