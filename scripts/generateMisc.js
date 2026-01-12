@@ -46,7 +46,7 @@ function paintCardBack(ctx, card, width, height) {
 	ctx.fillStyle = card.background;
 	ctx.fillRect(0, 0, width, height);
 
-	ctx.strokeStyle = '#d4cdc3';
+	ctx.strokeStyle = card.borderColor || '#d4cdc3';
 	ctx.lineWidth = 4;
 	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, width - EDGE_THICKNESS, height - EDGE_THICKNESS);
 

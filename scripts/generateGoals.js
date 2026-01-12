@@ -18,6 +18,7 @@ const { getLocalizedText } = require('./utils/textHelpers');
 
 const GOAL_CARD_BACKGROUND = '#cbd6e6';
 const GOAL_ACCENT_COLOR = '#1f3b68';
+const GOAL_OUTLINE_COLOR = '#0e1083';
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/goals.csv');
@@ -66,7 +67,7 @@ function paintBackground(ctx) {
 	ctx.fillStyle = GOAL_CARD_BACKGROUND;
 	ctx.fillRect(0, 0, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT);
 
-	ctx.strokeStyle = '#0e1083';
+	ctx.strokeStyle = GOAL_OUTLINE_COLOR;
 	ctx.lineWidth = 4;
 	ctx.strokeRect(
 		EDGE_THICKNESS / 2,
@@ -107,7 +108,7 @@ function paintGoalContent(ctx, record, { isBlank = false } = {}) {
 	}
 
 	const dividerY = safeTop + (titleFontSize || 44) + 18;
-	ctx.strokeStyle = '#0e1083';
+	ctx.strokeStyle = GOAL_OUTLINE_COLOR;
 	ctx.lineWidth = 2;
 	ctx.beginPath();
 	ctx.moveTo(safeLeft, dividerY);
