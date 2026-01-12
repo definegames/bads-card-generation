@@ -16,6 +16,8 @@ const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
 
+const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
+
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/abilities.csv');
 	const outputDir = resolveOutputPath('abilities');
@@ -70,6 +72,7 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 	const safeRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
 	const safeWidth = safeRight - safeLeft;
 	const top = EDGE_THICKNESS + CONTENT_PADDING;
+	const headerBottom = paintHeaderRow(ctx, safeRight, { isBlank });
 
 	if (!isBlank) {
 		const title = (record.Title || 'Untitled Ability').trim();
@@ -77,20 +80,21 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 		ctx.textBaseline = 'top';
 		ctx.fillStyle = BODY_TEXT_COLOR;
 		ctx.font = '700 34px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
-		ctx.fillText(title, CARD_SIZE / 2, top);
+		ctx.fillText(title, CARD_SIZE / 2, Math.max(top, headerBottom + 12));
 	}
 
 	ctx.strokeStyle = '#d9cbbd';
 	ctx.lineWidth = 2;
+	const dividerY = Math.max(top, headerBottom + 12) + 48;
 	ctx.beginPath();
-	ctx.moveTo(safeLeft, top + 48);
-	ctx.lineTo(safeRight, top + 48);
+	ctx.moveTo(safeLeft, dividerY);
+	ctx.lineTo(safeRight, dividerY);
 	ctx.stroke();
 
 	if (isBlank) {
 		return;
 	}
-	let cursorY = top + 60;
+	let cursorY = dividerY + 12;
 	ctx.textAlign = 'left';
 	ctx.fillStyle = BODY_TEXT_COLOR;
 	ctx.font = '500 20px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
@@ -116,6 +120,66 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 			blankLineHeight: 20
 		});
 	}
+}
+
+function paintHeaderRow(ctx, safeZoneRight, { isBlank = false } = {}) {
+	const scoreValue = isBlank ? '' : '1';
+	const pillMeasurementValue = isBlank ? BLANK_SCORE_WIDTH_TOKEN : scoreValue;
+	const pillMetrics = measureScorePill(ctx, pillMeasurementValue);
+	return drawScorePill(ctx, scoreValue, safeZoneRight, pillMetrics, { isBlank });
+}
+
+function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {
+	ctx.save();
+	ctx.beginPath();
+	ctx.moveTo(x + radius, y);
+	ctx.lineTo(x + width - radius, y);
+	ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+	ctx.lineTo(x + width, y + height - radius);
+	ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+	ctx.lineTo(x + radius, y + height);
+	ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+	ctx.lineTo(x, y + radius);
+	ctx.quadraticCurveTo(x, y, x + radius, y);
+	ctx.closePath();
+	ctx.fill();
+	if (stroke) {
+		ctx.stroke();
+	}
+	ctx.restore();
+}
+
+function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = false } = {}) {
+	const pillX = safeZoneRight - metrics.width;
+	const pillY = EDGE_THICKNESS + 6;
+
+	ctx.fillStyle = '#fff';
+	ctx.strokeStyle = '#d8cbbb';
+	ctx.lineWidth = 2;
+	drawRoundedRect(ctx, pillX, pillY, metrics.width, metrics.height, 14, true);
+
+	if (!isBlank && String(scoreValue || '').trim()) {
+		ctx.fillStyle = '#a0692b';
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.font = '700 24px "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.fillText(scoreValue, pillX + metrics.width / 2, pillY + metrics.height / 2);
+	}
+
+	return pillY + metrics.height;
+}
+
+function measureScorePill(ctx, scoreValue) {
+	ctx.save();
+	ctx.font = '700 24px "Montserrat", sans-serif';
+	const scoreWidth = ctx.measureText(scoreValue).width;
+	ctx.restore();
+	const pillPaddingX = 18;
+	const pillHeight = 44;
+	return {
+		width: scoreWidth + pillPaddingX * 2,
+		height: pillHeight
+	};
 }
 
 function drawTextBlock(ctx, raw = '', options) {
