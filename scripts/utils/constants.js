@@ -43,7 +43,8 @@ const TICKET_DIRECTIVE_COLORS = {
 };
 const MISC_CARD_TYPES = [
 	{ key: 'player-deck', label: 'Player Deck', background: '#fff6cf' },
-	{ key: 'work-deck', label: 'Work Deck', background: '#ffe0df', width: TICKET_CARD_SIZE, height: TICKET_CARD_SIZE }
+	{ key: 'work-deck', label: 'Work Deck', background: '#ffe0df', width: TICKET_CARD_SIZE, height: TICKET_CARD_SIZE },
+	{ key: 'goal-deck', label: 'Goal', background: '#cbd6e6', width: ROLE_CARD_WIDTH, height: ROLE_CARD_HEIGHT, monogram: false }
 ];
 
 module.exports = {

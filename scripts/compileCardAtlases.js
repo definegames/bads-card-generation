@@ -73,6 +73,14 @@ const CARD_GROUPS = [
 		sorter: prioritizeFounderBack
 	},
 	{
+		label: 'Goal faces',
+		prefix: 'goal-faces',
+		dir: resolveOutputPath('goals'),
+		filter: (name) => name.endsWith('.png'),
+		cardWidth: ROLE_CARD_WIDTH,
+		cardHeight: ROLE_CARD_HEIGHT
+	},
+	{
 		label: 'Ticket faces',
 		prefix: 'ticket-faces',
 		dir: resolveOutputPath('tickets'),

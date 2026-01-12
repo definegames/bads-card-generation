@@ -31,6 +31,12 @@ const SECTION_CONFIG = [
 		title: 'Milestones',
 		atlasMatchers: [/milestone/i],
 		miscMatchers: [/milestone-back/i]
+	},
+	{
+		key: 'goals',
+		title: 'Goals',
+		atlasMatchers: [/goal/i],
+		miscMatchers: [/goal-deck/i]
 	}
 ];
 

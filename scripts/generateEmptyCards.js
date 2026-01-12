@@ -8,6 +8,7 @@ const { drawAbilityCard } = require('./generateAbilities');
 const { drawKeystoneFront } = require('./generateKeystones');
 const { drawMilestoneFront } = require('./generateMilestones');
 const { drawRoleCard } = require('./generateRoles');
+const { drawGoalCard } = require('./generateGoals');
 const { drawTicketCard } = require('./generateTickets');
 const { drawProblemCard } = require('./generateProblems');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
@@ -22,6 +23,7 @@ async function main() {
 		{ task: () => drawKeystoneFront(path.join(miscDir, 'keystone-empty.png'), createKeystoneRecord(), { blank: true }) },
 		{ task: () => drawMilestoneFront(path.join(miscDir, 'milestone-empty.png'), createMilestoneRecord(), { blank: true }) },
 		{ task: () => drawRoleCard(path.join(miscDir, 'role-empty.png'), createRoleRecord(), { blank: true }) },
+		{ task: () => drawGoalCard(path.join(miscDir, 'goal-empty.png'), createGoalRecord(), { blank: true }) },
 		{ task: () => drawTicketCard(path.join(miscDir, 'ticket-empty.png'), createTicketRecord(), { blank: true }) },
 		{ task: () => drawProblemCard(path.join(miscDir, 'problem-empty.png'), createProblemRecord(), { blank: true }) }
 	];
@@ -90,6 +92,14 @@ function createRoleRecord() {
 		Title: '',
 		Text: '',
 		'Funny text': '',
+		__blank: true
+	};
+}
+
+function createGoalRecord() {
+	return {
+		Title: '',
+		Text: '',
 		__blank: true
 	};
 }

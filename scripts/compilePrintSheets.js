@@ -33,6 +33,7 @@ const EXTRA_EMPTY_SHEETS = 1;
 const MISC_OUTPUT_DIR = resolveOutputPath('misc');
 const KEYSTONE_BACK_PATH = path.join(MISC_OUTPUT_DIR, KEYSTONE_BACK_FILE_NAME);
 const MILESTONE_BACK_PATH = path.join(MISC_OUTPUT_DIR, MILESTONE_BACK_FILE_NAME);
+const GOAL_BACK_PATH = path.join(MISC_OUTPUT_DIR, 'goal-deck.png');
 
 const PLAYER_CARD_SIZE_MM = 85;
 const WORK_CARD_SIZE_MM = 78;
@@ -102,6 +103,18 @@ const PRINT_SETS = [
 		backStrategy: { type: 'pairedPrefix', prefix: 'back-' },
 		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'role-empty.png'),
 		resolveEmptyCardBackPath: resolveRoleEmptyBackPath
+	},
+	{
+		key: 'goals',
+		label: 'Goals',
+		frontDir: resolveOutputPath('goals'),
+		filter: (name) => name.endsWith('.png'),
+		cardWidth: ROLE_CARD_WIDTH,
+		cardHeight: ROLE_CARD_HEIGHT,
+		printWidthMM: ROLE_CARD_WIDTH_MM,
+		printHeightMM: ROLE_CARD_HEIGHT_MM,
+		backStrategy: { type: 'staticImage', path: GOAL_BACK_PATH },
+		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'goal-empty.png')
 	},
 	{
 		key: 'tickets',
