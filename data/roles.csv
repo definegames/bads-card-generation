@@ -10,6 +10,6 @@ You can place an extra Feature on your turn.","Только вы можете д
 Discard 3 cards and do Heavy Refactoring.","Сбросьте 2 карты, чтобы сделать Refactoring.
 
 Сбросьте 3 карты, чтобы сделать Heavy Refactoring.",,
-,,The Manager,"When drawing cards at upkeep, draw 1 more, then put one at the bottom of the Player Deck.","Каждый раз, когда вы берёте карты в начале хода, возьмите на одну больше, затем положите одну из них под низ Player Deck.",,"Define upkeep strictly in the rules, it should only point to drawing a card from the Player Deck at the beginning of a turn."
+,,The Manager,"When drawing cards at upkeep, draw 1 more, then put one at the bottom of the Runway Deck.","Каждый раз, когда вы берёте карты в начале хода, возьмите на одну больше, затем положите одну из них под низ Runway Deck.",,"Define upkeep strictly in the rules, it should only point to drawing a card from the Runway Deck at the beginning of a turn."
 ,,The 100x Engineer,"When placing counters on a single TECH Ticket, place +1d6 counters extra on the same Ticket.","Когда вы кладёте токены строго на один TECH Тикет, положите ещё 1d6 токенов на тот же Тикет.",,
 ,,The Generalist,"When placing counters, if you placed exactly 1 counter on each Ticket, place an extra counter on any Ticket.","Когда вы кладёте токены, если вы положили ровно по 1 токену на каждый Тикет, положите ещё один токен на любой Тикет.",,
