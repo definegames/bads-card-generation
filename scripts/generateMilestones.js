@@ -28,6 +28,15 @@ const DEADLINE_BADGE_COLOR = '#5b2324';
 const MILESTONE_BACK_BASE = '#f7efe3';
 const MILESTONE_BACK_GLOW = '#fefaf2';
 
+const SCORE_STACK_HEADER_HEIGHT = 26;
+const SCORE_STACK_HEADER_GAP = 10;
+const SCORE_STACK_ITEM_HEIGHT = 44;
+const SCORE_STACK_ITEM_GAP = 10;
+const SCORE_STACK_ITEM_RADIUS = 14;
+const SCORE_STACK_ITEM_PADDING_X = 14;
+
+const SCORE_STACK_ITEM_COLORS = ['#4ea865', '#347b4f', SCORE_PANEL_COLOR];
+
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/milestones.csv');
 	const outputDir = resolveOutputPath('milestones');
@@ -126,7 +135,7 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 	ctx.font = bodyFont;
 
 	let cursorY = EDGE_THICKNESS + 90;
-	const minimumScore = formatMinimumScore(record['Minimum Score']);
+	const minimumScoreValues = formatMinimumScoreValues(record['Minimum Score']);
 	const deadlineValue = formatDeadlineValue(record.Deadline);
 
 	const bodyLineHeight = 24;
@@ -154,38 +163,161 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 	}
 
 	drawInfoBadges(ctx, {
-		scoreValue: minimumScore,
+		scoreValues: minimumScoreValues,
 		deadlineValue,
 		safeZoneBottom
 	});
 }
 
-function drawInfoBadges(ctx, { scoreValue, deadlineValue, safeZoneBottom }) {
-	const badges = [];
-	if (scoreValue) {
-		badges.push({ label: 'SCORE', value: scoreValue, fill: SCORE_PANEL_COLOR });
-	}
-	if (deadlineValue) {
-		badges.push({ label: 'DEADLINE', value: deadlineValue, fill: DEADLINE_BADGE_COLOR });
-	}
-	if (!badges.length) {
+function drawInfoBadges(ctx, { scoreValues, deadlineValue, safeZoneBottom }) {
+	const hasScore = Array.isArray(scoreValues) && scoreValues.some((value) => String(value ?? '').trim());
+	const hasDeadline = Boolean(String(deadlineValue ?? '').trim());
+	if (!hasScore && !hasDeadline) {
 		return;
 	}
+
+	const gap = INFO_BADGE_GAP;
 	const radius = INFO_BADGE_RADIUS;
 	const diameter = radius * 2;
-	const gap = INFO_BADGE_GAP;
-	const totalWidth = badges.length * diameter + Math.max(badges.length - 1, 0) * gap;
-	let centerX = CARD_SIZE / 2 - totalWidth / 2 + radius;
-	const centerY = safeZoneBottom - radius - 16;
-	badges.forEach((badge) => {
-		drawInfoBadge(ctx, {
-			...badge,
-			centerX,
-			centerY,
+
+	const scoreWidth = hasScore ? diameter : 0;
+	const scoreHeight = hasScore
+		? SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP + SCORE_STACK_ITEM_HEIGHT * 3 + SCORE_STACK_ITEM_GAP * 2
+		: 0;
+	const deadlineWidth = hasDeadline ? diameter : 0;
+	const deadlineHeight = hasDeadline ? SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP + diameter : 0;
+
+	const itemsCount = Number(hasScore) + Number(hasDeadline);
+	const totalWidth = scoreWidth + deadlineWidth + Math.max(itemsCount - 1, 0) * gap;
+
+	const bottomMargin = 16;
+	const sharedTopY = safeZoneBottom - Math.max(scoreHeight, deadlineHeight) - bottomMargin;
+	const scoreTopY = sharedTopY;
+	const deadlineHeaderY = sharedTopY;
+	const scoreStackTopY = sharedTopY + SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP;
+	const scoreStackHeight = SCORE_STACK_ITEM_HEIGHT * 3 + SCORE_STACK_ITEM_GAP * 2;
+	const alignedDeadlineCenterY = scoreStackTopY + scoreStackHeight / 2;
+	const deadlineCenterY = hasScore ? alignedDeadlineCenterY : sharedTopY + SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP + radius;
+
+	let cursorX = CARD_SIZE / 2 - totalWidth / 2;
+	if (hasScore) {
+		drawScoreFrame(ctx, {
+			x: cursorX,
+			y: scoreTopY,
+			width: scoreWidth,
+			height: scoreHeight,
+			radius: SCORE_STACK_ITEM_RADIUS,
+			values: scoreValues
+		});
+		cursorX += scoreWidth + gap;
+	}
+
+	if (hasDeadline) {
+		ctx.save();
+		ctx.fillStyle = SCORE_PANEL_COLOR;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'top';
+		ctx.font = '900 20px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+		ctx.fillText('DEADLINE', cursorX + radius, deadlineHeaderY);
+		ctx.restore();
+
+		drawDeadlineBadge(ctx, {
+			value: deadlineValue,
+			fill: DEADLINE_BADGE_COLOR,
+			centerX: cursorX + radius,
+			centerY: deadlineCenterY,
 			radius
 		});
-		centerX += diameter + gap;
-	});
+	}
+}
+
+function drawDeadlineBadge(ctx, { value, centerX, centerY, radius, fill = DEADLINE_BADGE_COLOR }) {
+	ctx.save();
+	ctx.beginPath();
+	ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+	ctx.closePath();
+	ctx.fillStyle = fill;
+	ctx.fill();
+
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.fillStyle = SCORE_PANEL_LABEL_COLOR;
+	const valueFontSize = fitBadgeValueFont(ctx, value, radius);
+	ctx.font = `900 ${valueFontSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.fillText(String(value), centerX, centerY);
+	ctx.restore();
+}
+
+function drawScoreFrame(ctx, { x, y, width, values }) {
+	const safeValues = normalizeMinimumScoreValues(values);
+	const hasAny = safeValues.some((value) => String(value ?? '').trim());
+	if (!hasAny) {
+		return;
+	}
+
+	ctx.save();
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'top';
+	ctx.fillStyle = SCORE_PANEL_COLOR;
+	ctx.font = '900 20px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+	ctx.fillText('SCORE', x + width / 2, y);
+
+	let cursorY = y + SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP;
+	const labels = ['1st', '2nd', '3rd'];
+	const labelColor = '#b7b0a6';
+	const valueColor = SCORE_PANEL_LABEL_COLOR;
+	const labelFont = '800 18px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+	const valueFont = '900 20px "Montserrat", "Noto Color Emoji", sans-serif';
+	ctx.font = labelFont;
+	const labelWidthMax = Math.max(
+		...labels.map((label) => ctx.measureText(`${label}:`).width)
+	);
+	const valueStartX = x + SCORE_STACK_ITEM_PADDING_X + labelWidthMax + 10;
+
+	for (let i = 0; i < 3; i += 1) {
+		const frameY = cursorY + i * (SCORE_STACK_ITEM_HEIGHT + SCORE_STACK_ITEM_GAP);
+		const fill = SCORE_STACK_ITEM_COLORS[i] ?? SCORE_PANEL_COLOR;
+
+		ctx.save();
+		ctx.fillStyle = fill;
+		roundRect(ctx, x, frameY, width, SCORE_STACK_ITEM_HEIGHT, SCORE_STACK_ITEM_RADIUS);
+		ctx.fill();
+
+		ctx.strokeStyle = `${SCORE_PANEL_LABEL_COLOR}55`;
+		ctx.lineWidth = 3;
+		ctx.stroke();
+
+		const rawValue = String(safeValues[i] ?? '').trim();
+		const displayValue = rawValue ? rawValue : '—';
+		const centerY = frameY + SCORE_STACK_ITEM_HEIGHT / 2;
+
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'middle';
+
+		ctx.globalAlpha = 0.9;
+		ctx.fillStyle = labelColor;
+		ctx.font = labelFont;
+		ctx.fillText(`${labels[i]}:`, x + SCORE_STACK_ITEM_PADDING_X, centerY);
+
+		ctx.globalAlpha = rawValue ? 1 : 0.65;
+		ctx.fillStyle = valueColor;
+		ctx.font = valueFont;
+		ctx.fillText(displayValue, valueStartX, centerY);
+		ctx.restore();
+	}
+
+	ctx.restore();
+}
+
+function roundRect(ctx, x, y, width, height, radius) {
+	const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+	ctx.beginPath();
+	ctx.moveTo(x + r, y);
+	ctx.arcTo(x + width, y, x + width, y + height, r);
+	ctx.arcTo(x + width, y + height, x, y + height, r);
+	ctx.arcTo(x, y + height, x, y, r);
+	ctx.arcTo(x, y, x + width, y, r);
+	ctx.closePath();
 }
 
 function drawInfoBadge(ctx, { label, value, centerX, centerY, radius, fill = SCORE_PANEL_COLOR }) {
@@ -226,16 +358,24 @@ function fitBadgeValueFont(ctx, value, radius) {
 	return minSize;
 }
 
-function formatMinimumScore(value) {
+function normalizeMinimumScoreValues(values) {
+	if (!Array.isArray(values)) {
+		return ['', '', ''];
+	}
+	const trimmed = values.map((value) => String(value ?? '').trim()).filter(Boolean);
+	return [trimmed[0] ?? '', trimmed[1] ?? '', trimmed[2] ?? ''];
+}
+
+function formatMinimumScoreValues(value) {
 	const raw = String(value ?? '').trim();
 	if (!raw) {
-		return '';
+		return [];
 	}
-	const numeric = Number(raw);
-	if (Number.isFinite(numeric)) {
-		return `${numeric}`;
-	}
-	return raw;
+	const parts = raw
+		.split(',')
+		.map((piece) => String(piece ?? '').trim())
+		.filter(Boolean);
+	return parts;
 }
 
 function formatDeadlineValue(value) {
