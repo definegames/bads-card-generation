@@ -23,8 +23,12 @@ const FOUNDER_TITLE = 'The Founder';
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/roles.csv');
 	const outputDir = resolveOutputPath('roles');
+	const miscDir = resolveOutputPath('misc');
 
-	await fs.mkdir(outputDir, { recursive: true });
+	await Promise.all([
+		fs.mkdir(outputDir, { recursive: true }),
+		fs.mkdir(miscDir, { recursive: true })
+	]);
 
 	const csvRaw = await fs.readFile(csvPath, 'utf8');
 	const roles = parse(csvRaw, {
@@ -47,13 +51,15 @@ async function main() {
 			const safeTitle = sanitizeFileName(title) || 'Role';
 			const facePath = path.join(outputDir, `${safeTitle}.png`);
 			await drawRoleCard(facePath, record);
-
-			const backPath = path.join(outputDir, `${withBackPrefix(safeTitle)}.png`);
-			await drawRoleBack(backPath, record);
 		})
 	);
 
-	console.log(`Generated ${validRoles.length * 2} role card face/back images in ${outputDir}`);
+	const sharedBackPath = path.join(miscDir, 'role-back.png');
+	await drawRoleBack(sharedBackPath, {});
+
+	console.log(
+		`Generated ${validRoles.length} role card faces in ${outputDir} and shared back at ${sharedBackPath}`
+	);
 }
 
 async function drawRoleCard(filePath, record, options = {}) {
@@ -68,7 +74,7 @@ async function drawRoleBack(filePath, record, options = {}) {
 	const canvas = createCanvas(ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT);
 	const ctx = canvas.getContext('2d');
 	paintBackground(ctx);
-	paintRoleBack(ctx, record, { isBlank: options.blank === true || record.__blank === true });
+	paintRoleBack(ctx, { isBlank: options.blank === true || record.__blank === true });
 	await fs.writeFile(filePath, canvas.toBuffer('image/png'));
 }
 
@@ -92,7 +98,7 @@ function paintBackground(ctx) {
 	ctx.fillRect(EDGE_THICKNESS, EDGE_THICKNESS, ROLE_CARD_WIDTH - EDGE_THICKNESS * 2, ROLE_CARD_HEIGHT - EDGE_THICKNESS * 2);
 }
 
-function paintRoleBack(ctx, record, { isBlank = false } = {}) {
+function paintRoleBack(ctx, { isBlank = false } = {}) {
 	const centerX = ROLE_CARD_WIDTH / 2;
 	const centerY = ROLE_CARD_HEIGHT / 2;
 
@@ -122,10 +128,6 @@ function paintRoleBack(ctx, record, { isBlank = false } = {}) {
 	ctx.fillStyle = BODY_TEXT_COLOR;
 	ctx.font = '600 20px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
 	ctx.fillText('ROLE CARD', centerX, centerY);
-
-	if (isFounderRecord(record)) {
-		drawFounderStar(ctx, centerX, EDGE_THICKNESS + 100);
-	}
 }
 
 function paintRoleContent(ctx, record, { isBlank = false } = {}) {
@@ -254,10 +256,6 @@ function drawWrappedLine(ctx, text, x, startY, maxWidth, lineHeight) {
 
 function sanitizeFileName(value) {
 	return value.replace(/[^a-z0-9._-]+/gi, '_');
-}
-
-function withBackPrefix(baseName) {
-	return `back-${baseName}`;
 }
 
 function isFounderRecord(record = {}) {

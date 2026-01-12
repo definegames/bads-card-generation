@@ -17,9 +17,7 @@ const ATLAS_ROWS = 7;
 const CARDS_PER_ATLAS = ATLAS_COLUMNS * ATLAS_ROWS;
 const FOUNDER_TITLE = 'The Founder';
 const FOUNDER_FACE_FILE = `${sanitizeFileName(FOUNDER_TITLE)}.png`;
-const FOUNDER_BACK_FILE = `back-${sanitizeFileName(FOUNDER_TITLE)}.png`;
 const prioritizeFounderFace = createFilePriorityComparator(FOUNDER_FACE_FILE);
-const prioritizeFounderBack = createFilePriorityComparator(FOUNDER_BACK_FILE);
 
 const CARD_GROUPS = [
 	{
@@ -58,19 +56,10 @@ const CARD_GROUPS = [
 		label: 'Role faces',
 		prefix: 'role-faces',
 		dir: resolveOutputPath('roles'),
-		filter: (name) => name.endsWith('.png') && !name.startsWith('back-'),
+		filter: (name) => name.endsWith('.png'),
 		cardWidth: ROLE_CARD_WIDTH,
 		cardHeight: ROLE_CARD_HEIGHT,
 		sorter: prioritizeFounderFace
-	},
-	{
-		label: 'Role backs',
-		prefix: 'role-backs',
-		dir: resolveOutputPath('roles'),
-		filter: (name) => name.endsWith('.png') && name.startsWith('back-'),
-		cardWidth: ROLE_CARD_WIDTH,
-		cardHeight: ROLE_CARD_HEIGHT,
-		sorter: prioritizeFounderBack
 	},
 	{
 		label: 'Goal faces',

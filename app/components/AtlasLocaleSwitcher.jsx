@@ -18,7 +18,8 @@ const SECTION_CONFIG = [
 	{
 		key: 'roles',
 		title: 'Roles',
-		atlasMatchers: [/role/i]
+		atlasMatchers: [/role/i],
+		miscMatchers: [/role-back/i]
 	},
 	{
 		key: 'keystones',

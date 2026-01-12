@@ -34,6 +34,7 @@ const MISC_OUTPUT_DIR = resolveOutputPath('misc');
 const KEYSTONE_BACK_PATH = path.join(MISC_OUTPUT_DIR, KEYSTONE_BACK_FILE_NAME);
 const MILESTONE_BACK_PATH = path.join(MISC_OUTPUT_DIR, MILESTONE_BACK_FILE_NAME);
 const GOAL_BACK_PATH = path.join(MISC_OUTPUT_DIR, 'goal-deck.png');
+const ROLE_BACK_PATH = path.join(MISC_OUTPUT_DIR, 'role-back.png');
 
 const PLAYER_CARD_SIZE_MM = 85;
 const WORK_CARD_SIZE_MM = 78;
@@ -95,14 +96,13 @@ const PRINT_SETS = [
 		key: 'roles',
 		label: 'Roles',
 		frontDir: resolveOutputPath('roles'),
-		filter: (name) => name.endsWith('.png') && !name.startsWith('back-'),
+		filter: (name) => name.endsWith('.png'),
 		cardWidth: ROLE_CARD_WIDTH,
 		cardHeight: ROLE_CARD_HEIGHT,
 		printWidthMM: ROLE_CARD_WIDTH_MM,
 		printHeightMM: ROLE_CARD_HEIGHT_MM,
-		backStrategy: { type: 'pairedPrefix', prefix: 'back-' },
-		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'role-empty.png'),
-		resolveEmptyCardBackPath: resolveRoleEmptyBackPath
+		backStrategy: { type: 'staticImage', path: ROLE_BACK_PATH },
+		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'role-empty.png')
 	},
 	{
 		key: 'goals',
@@ -141,26 +141,6 @@ const PRINT_SETS = [
 		emptyCardPath: path.join(MISC_OUTPUT_DIR, 'problem-empty.png')
 	}
 ];
-
-async function resolveRoleEmptyBackPath() {
-	const roleDir = resolveOutputPath('roles');
-	let entries;
-	try {
-		entries = await fs.readdir(roleDir);
-	} catch (error) {
-		if (error.code === 'ENOENT') {
-			throw new Error('Cannot resolve a role back for empty fillers because no role outputs were found. Run the role generator first.');
-		}
-		throw error;
-	}
-	const candidates = entries
-		.filter((name) => name.startsWith('back-') && name.endsWith('.png'))
-		.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
-	if (!candidates.length) {
-		throw new Error('No role back images were found to pair with empty role fillers.');
-	}
-	return path.join(roleDir, candidates[0]);
-}
 
 const imageCache = new Map();
 

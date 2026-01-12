@@ -10,6 +10,7 @@ const MISC_DECK_KEYS = new Set([
 	'player-deck',
 	'work-deck',
 	'goal-deck',
+	'role-back',
 	path.parse(KEYSTONE_BACK_FILE_NAME).name,
 	path.parse(MILESTONE_BACK_FILE_NAME).name
 ]);
