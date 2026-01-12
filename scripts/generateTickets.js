@@ -59,19 +59,31 @@ async function drawTicketCard(filePath, record, options = {}) {
 	const canvas = createCanvas(TICKET_CARD_SIZE, TICKET_CARD_SIZE);
 	const ctx = canvas.getContext('2d');
 
-	paintBackground(ctx);
+	paintBackground(ctx, record);
 	paintTicket(ctx, record, { isBlank });
 
 	await fs.writeFile(filePath, canvas.toBuffer('image/png'));
 }
 
-function paintBackground(ctx) {
+function paintBackground(ctx, record) {
 	ctx.fillStyle = '#fffdf8';
 	ctx.fillRect(0, 0, TICKET_CARD_SIZE, TICKET_CARD_SIZE);
 
-	ctx.strokeStyle = '#d9cbbd';
-	ctx.lineWidth = 4;
-	ctx.strokeRect(2, 2, TICKET_CARD_SIZE - 4, TICKET_CARD_SIZE - 4);
+	const category = String(record?.Category || '').trim().toUpperCase();
+	const categoryColors = CATEGORY_COLORS[category] || { background: '#edf2f7', foreground: '#2d3748' };
+
+	// Thin edge outline using the category tag color.
+	ctx.strokeStyle = categoryColors.foreground;
+	ctx.lineWidth = 1;
+	drawRoundedRectPath(ctx, 0.5, 0.5, TICKET_CARD_SIZE - 1, TICKET_CARD_SIZE - 1, 12);
+	ctx.stroke();
+
+	// Replace the old beige border with the category tag color.
+	ctx.strokeStyle = categoryColors.foreground;
+	ctx.lineWidth = 6;
+	// Rounded inner border so corners are inset/rounded.
+	drawRoundedRectPath(ctx, 2, 2, TICKET_CARD_SIZE - 4, TICKET_CARD_SIZE - 4, 14);
+	ctx.stroke();
 }
 
 function paintTicket(ctx, record, { isBlank = false } = {}) {
@@ -295,6 +307,21 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
 	ctx.closePath();
 	ctx.fill();
 	ctx.restore();
+}
+
+function drawRoundedRectPath(ctx, x, y, width, height, radius) {
+	const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+	ctx.beginPath();
+	ctx.moveTo(x + r, y);
+	ctx.lineTo(x + width - r, y);
+	ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+	ctx.lineTo(x + width, y + height - r);
+	ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+	ctx.lineTo(x + r, y + height);
+	ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+	ctx.lineTo(x, y + r);
+	ctx.quadraticCurveTo(x, y, x + r, y);
+	ctx.closePath();
 }
 
 function normalizeCopies(value) {
