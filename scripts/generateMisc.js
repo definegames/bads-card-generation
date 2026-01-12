@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs/promises');
-const { createCanvas, loadImage } = require('canvas');
+const { createCanvas } = require('canvas');
 require('./utils/fontRegistry'); // Register fonts
 const {
 	CARD_SIZE,
@@ -16,7 +16,6 @@ const { resolveOutputPath } = require('./utils/runtimeConfig');
 async function main() {
 	const outputDir = resolveOutputPath('misc');
 	await fs.mkdir(outputDir, { recursive: true });
-	const runwayPath = path.resolve(__dirname, '../images/runway.jpg');
 
 	await Promise.all(
 		MISC_CARD_TYPES.map(async (card) => {
@@ -25,12 +24,7 @@ async function main() {
 			const canvas = createCanvas(width, height);
 			const ctx = canvas.getContext('2d');
 			if (card.key === 'player-deck') {
-				const image = await loadImage(runwayPath);
-				drawImageCover(ctx, image, width, height);
-				// Keep border styling consistent with other backs.
-				ctx.strokeStyle = '#d4cdc3';
-				ctx.lineWidth = 4;
-				ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, width - EDGE_THICKNESS, height - EDGE_THICKNESS);
+				paintRunwayBack(ctx, width, height);
 			} else {
 				paintCardBack(ctx, card, width, height);
 			}
@@ -82,19 +76,34 @@ function drawLabel(ctx, card, width, height, labelSize) {
 	});
 }
 
-function drawImageCover(ctx, image, targetWidth, targetHeight) {
-	const sourceWidth = image.width;
-	const sourceHeight = image.height;
-	if (!sourceWidth || !sourceHeight) {
-		return;
-	}
+function paintRunwayBack(ctx, width, height) {
+	// Minty green background.
+	ctx.fillStyle = '#45c080';
+	ctx.fillRect(0, 0, width, height);
 
-	const scale = Math.max(targetWidth / sourceWidth, targetHeight / sourceHeight);
-	const drawWidth = sourceWidth * scale;
-	const drawHeight = sourceHeight * scale;
-	const dx = (targetWidth - drawWidth) / 2;
-	const dy = (targetHeight - drawHeight) / 2;
-	ctx.drawImage(image, dx, dy, drawWidth, drawHeight);
+	// Subtle $ watermark.
+	const watermarkSize = Math.floor(Math.min(width, height) * 0.9);
+	ctx.save();
+	ctx.globalAlpha = 0.12;
+	ctx.fillStyle = '#ffffff';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.font = `900 ${watermarkSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.fillText('$', width / 2, height / 2 - Math.floor(height * 0.03));
+	ctx.restore();
+
+	// Border.
+	ctx.strokeStyle = '#7fd6a6';
+	ctx.lineWidth = 4;
+	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, width - EDGE_THICKNESS, height - EDGE_THICKNESS);
+
+	// RUNWAY label.
+	const labelSize = Math.floor(Math.min(width, height) * 0.16);
+	ctx.fillStyle = '#0b3b22';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.font = `900 ${labelSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.fillText('RUNWAY', width / 2, height / 2);
 }
 
 if (require.main === module) {
