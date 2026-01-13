@@ -1,9 +1,9 @@
 ID,Addon,Copies,Title,Text,RU Text,Funny text,Notes
 ,,2,Delegate,Move all Tickets from any Feature to any other Feature.,Переместите все Задачи с одной Фичи на любую другую Фичу.,,
-,,1,Hawaii Team Retreat,"Everyone shuffles their entire hand in the Runway Deck. Then, everyone draws a full hand of cards.","Каждый игрок вмешивает свою руку в Runway Deck. Затем, каждый игрок набирает полную руку карт.",,
+,,1,Hawaii Team Retreat,Anyone can discard any number of cards and remove that many Bugs.,,,
 ,,2,Schedule Maneuvering,Place 5 counters total on any 1 or 2 Tickets.,Положите в сумме 5 токенов на любые 1 или 2 Задачи.,,
-,,1,Rebranding,Count currently open DESIGN Tickets. Put that many counters on any DESIGN Ticket.,Посчитайте открытые DESIGN Задачи. Положите столько токенов на любую DESIGN задачу.,,
-,,1,Fingers In All Pies,Give away any number of cards from your hand to other players. Draw that many cards.,Отдайте любое количество карт из руки другим игрокам. Возьмите столько же карт.,,Dubious title
+,,1,Rebranding,Count currently open DESIGN Tickets. Put that many counters on any 1 DESIGN Ticket.,Посчитайте открытые DESIGN Задачи. Положите столько токенов на любую 1 DESIGN задачу.,,
+,,1,Red Bug Redemption,"If all open Tickets have Bugs on them, remove 1 Bug from each Ticket.",,,
 ,,2,No-Code Solution,Close any TECH Ticket that has no counters on it so far. Put 2 Bugs on the next Ticket.,"Закройте любую TECH Задачу, на которой ещё нет ни одного токена. Положите 2 Бага на следующую Задачу.",,
 ,,1,Deflect Workload,Close all Tickets on any Feature. Add twice as many Tickets to any other Feature.,Закройте все Задачи на любой Фиче. Добавьте вдвое больше Задач на любую другую Фичу.,,
 ,,2,Hackathon,"Everyone rolls a die. Sum up the results.
@@ -52,3 +52,4 @@ On your turn, you may discard this card and put all counter from it on Tickets o
 ,,1,TECH Expertise,Put 8 counters on up to 3 TECH Tickets.,"Положите в сумме 8 токенов на 1, 2 или 3 TECH Задачи.",,
 ,,1,Shrewd Scheduling,"If you have a Feature in your hand, you can place it right now. Put half the required number of Tickets on it (rounding up).","Если у вас в руке есть Фича, можете добавить её в продукт прямо сейчас. Положите половину Задач на эту Фичу (округлять вверх).",,
 ,,1,Pretty Please,"Discard top 5 cards from the Runway Deck, and add 1 counter to the Deadline of the current Milestone.",Сбросьте 5 верхних карт из Runway Deck и добавьте 1 токен на Дедлайн текущего Майлстоуна.,,
+,,3,Bug Hunter 3000,"Roll a die. On 1-4, remove 1 Bug. On 5-6, remove 2 Bugs.",,,

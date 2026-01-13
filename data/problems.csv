@@ -1,21 +1,23 @@
 ID,Addon,Copies,Title,Text,RU Text,Funny text,Notes
-,,2,Sick Leave,"Put 2 counters on this card and put it beside yourself. At upkeep, remove one counter from it. At 0, discard this card.
+,,1,Sick Leave,"Put 2 counters on this card and put it beside yourself. At upkeep, remove one counter from it. At 0, discard this card.
 
 As long as this card is laying beside you, you cannot discard cards to place counters on Tickets.","Положите 2 токена на эту карту и поместите её рядом с собой. В начале своего хода, уберите 1 токен. Если 0, сбросьте карту.
 
 Пока эта карта лежит рядом с вами, вы не можете сбрасывать карты, чтобы помещать токены на Задачи.",,Formerly known as Burnout.
-,,2,Unexpected Failure,"Place 2 Tickets on the most expensive completed Feature. In case of a tie, let The Founder choose.","Поместите 2 Задачи на самую дорогую Завершённую Фичу. В случае, если есть несколько таких Фич, выбирает The Founder.",,
+,,1,Unexpected Workload,"Place 2 Tickets on the most expensive completed Feature. In case of a tie, let The Founder choose.","Поместите 2 Задачи на самую дорогую Завершённую Фичу. В случае, если есть несколько таких Фич, выбирает The Founder.",,
 ,,2,US-North-1 Outage,Everyone discards 1 card.,Все сбрасывают по 1 карте.,,
 ,,1,Heavenflare Down,Everyone discards 2 cards.,Все сбрасывают по 2 карты.,,
 ,,2,Sunset A Feature,"Remove 1 Feature from the Product whose removal won't break the Product graph into parts.
 
 For each Ticket discarded alongside, place 1 counter on any Open Ticket.","Уберите 1 Фичу из Продукта, если её удаление не разделит Продукт на части.
 
-За каждую Задачу, сброшенную вместе с Фичей, положите 1 токен на любую Открытую Задачу.",At least we can spend our time on something we really care about!,
-,,3,Lagging Behind,"If the Product has at least 4/8/12 Features (either Completed and not) and if the Tier 1/2/3 Milestone is not in the Product yet, everyone discards 2 cards.","Если в Продукте хотя бы 4/8/12 Фич (как Завершённых, так и нет) и если Майлстоун 1/2/3 Уровня ещё не в Продукте, то все сбрасывают по 2 карты.",,
+За каждую Задачу, сброшенную вместе с Фичей, положите 1 токен на любую Открытую Задачу.",,"""At least we can spend our time on something we really care about!"""
+,,1,Lagging Behind,"If the Product has at least 4/8/12 Features (either Completed and not) and if the 1st/2nd/3rd Milestone is not in the Product yet, everyone discards 2 cards.",,,
 ,,2,Feature Creep,"Take the first Feature from the bottom of the Runway Deck. Put it on any valid place in the Product. Put 1 extra Ticket on it. (Besides the ones required based on Score Points.)
 
 If there is no valid place for the Feature, discard it. Shuffle the deck.","Возьмите первую Фичу со дна Runway Deck колоды. Положите её на любое валидное место в Продукте. Положите на неё одну дополнительную Задачу. (Помимо тех, которые полагаются по Score Points.)
 
 Если валидного места нет, сбросьте ту Фичу. Перемешайте колоду.",,"Formerly, the unplaced Feature was put back in the deck."
-,,1,Bug Attack,Put 1 Ticket on each of the 3 most expensive Features. Put 2 Bugs on each of those Tickets.,Положите по 1 Задаче на каждую из 3 самых дорогих Фич. Положите по 2 Бага на каждую из этих Задач.,,
+,,1,Release Is Coming,Put 1 Ticket on each of any 3 Features. Put 2 Bugs on each of those Tickets.,,,
+,,2,Bug Attack,Roll a die. Put that many Bugs on any Tickets.,,,
+,,1,Revelation,Everyone turn their current Goals face up.,,,

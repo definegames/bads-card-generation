@@ -1,2 +1,19 @@
 ID,Addon,Copies,Title,Text,RU Text
-,,1,Bugmaster,Have 4 Bugs in the Product at the same time.,Иметь одновременно 4 Бага в Продукте.
+,,2,Competitor's Agent,Have 3 Bugs in the Product at the same time.,Иметь одновременно 3 Бага в Продукте.
+,,2,Circle Mania,Your turn: Connect a Feature with a circular connector.,
+,,2,Square Obsession,Your turn: Connect a Feature with a square connector.,
+,,2,Diamond Craze,Your turn: Connect a Feature with a diamond connector.,
+,,3,Overperformer,Your turn: Close 3 Tickets in one turn.,
+,,2,Overkill,Have 5 more Story Points in the Product than needed for the current Milestone.,
+,,1,Incredible Impact,Your turn: Place a Feature that has 8 Story Points.,
+,,2,Solid Work,Your turn: Place a Feature that has 4 Story Points.,
+,,3,Daily Job,Your turn: Place a Feature that has 2 Story Points.,
+,,2,Bug Hunter,Your turn: Remove a Bug,
+,,3,I'm An Engineer,Your turn: Move a Feature to a different place in the Product.,
+,,2,Dedicated Worker,Your turn: Place 6 or more counters on a single Ticket.,
+,,2,Optionality As A Blessing,Have 4 or more cards in your hand.,
+,,1,Delusions Of Grandeur,Have 10 Completed Features in the Product.,
+,,1,Stockpiling,Have 2x or more Tickets on a Feature than it has Story Points.,
+,,3,Smart Move,Your turn: Place a Feature so that it's adjacent to 2 other cards.,
+,,2,Brilliant Move,Your turn: Place a Feature so that it's adjacent to 3 other cards.,
+,,1,Genius Move,Your turn: Place a Feature so that it's adjacent to 4 other cards.,
