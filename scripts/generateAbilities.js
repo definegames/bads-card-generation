@@ -72,7 +72,7 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 	const safeRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
 	const safeWidth = safeRight - safeLeft;
 	const top = EDGE_THICKNESS + CONTENT_PADDING;
-	const headerBottom = paintHeaderRow(ctx, safeRight, { isBlank });
+	const headerBottom = paintHeaderRow(ctx, record, safeRight, { isBlank });
 
 	if (!isBlank) {
 		const title = (record.Title || 'Untitled Ability').trim();
@@ -122,11 +122,25 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 	}
 }
 
-function paintHeaderRow(ctx, safeZoneRight, { isBlank = false } = {}) {
-	const scoreValue = isBlank ? '' : '1';
-	const pillMeasurementValue = isBlank ? BLANK_SCORE_WIDTH_TOKEN : scoreValue;
+
+function normalizePointsValue(record = {}) {
+	const raw = record.Points ?? '';
+	const trimmed = String(raw).trim();
+	if (!trimmed) {
+		return '';
+	}
+	const numeric = Number(trimmed);
+	if (Number.isFinite(numeric)) {
+		return String(Math.max(0, Math.floor(numeric)));
+	}
+	return trimmed;
+}
+
+function paintHeaderRow(ctx, record, safeZoneRight, { isBlank = false } = {}) {
+	const pointsValue = isBlank ? '' : normalizePointsValue(record);
+	const pillMeasurementValue = isBlank ? BLANK_SCORE_WIDTH_TOKEN : (pointsValue || '1');
 	const pillMetrics = measureScorePill(ctx, pillMeasurementValue);
-	return drawScorePill(ctx, scoreValue, safeZoneRight, pillMetrics, { isBlank });
+	return drawScorePill(ctx, pointsValue, safeZoneRight, pillMetrics, { isBlank });
 }
 
 function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {

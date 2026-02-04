@@ -1,55 +1,39 @@
-ID,Addon,Copies,Title,Text,RU Text,Funny text,Notes
-,,2,Delegate,Move all Tickets from any Feature to any other Feature.,Переместите все Задачи с одной Фичи на любую другую Фичу.,,
-,,1,Hawaii Team Retreat,Anyone can discard any number of cards and remove that many Bugs.,,,
-,,2,Schedule Maneuvering,Place 5 counters total on any 1 or 2 Tickets.,Положите в сумме 5 токенов на любые 1 или 2 Задачи.,,
-,,1,Rebranding,Count currently open DESIGN Tickets. Put that many counters on any 1 DESIGN Ticket.,Посчитайте открытые DESIGN Задачи. Положите столько токенов на любую 1 DESIGN задачу.,,
-,,1,Red Bug Redemption,"If all open Tickets have Bugs on them, remove 1 Bug from each Ticket.",,,
-,,2,No-Code Solution,Close any TECH Ticket that has no counters on it so far. Put 2 Bugs on the next Ticket.,"Закройте любую TECH Задачу, на которой ещё нет ни одного токена. Положите 2 Бага на следующую Задачу.",,
-,,1,Deflect Workload,Close all Tickets on any Feature. Add twice as many Tickets to any other Feature.,Закройте все Задачи на любой Фиче. Добавьте вдвое больше Задач на любую другую Фичу.,,
-,,2,Hackathon,"Everyone rolls a die. Sum up the results.
+ID,Addon,Copies,Points,Title,Text,RU Text,Funny text,Notes
+,,2,2,Kick Down The Road,Move all Tickets from any Feature to any other Feature.,,,
+,,1,3,Hawaii Team Retreat,Anyone can discard any number of cards and remove that many Bugs.,,,
+,,2,5,Kanban Tetris,Place 5 counters total on any 1 or 2 Tickets.,,,
+,,1,1,Rebranding,Count currently open DESIGN Tickets. Put that many counters on any 1 DESIGN Ticket.,,,
+,,1,1,Red Bug Redemption,"If all open Tickets have Bugs on them, remove 1 Bug from each Ticket.",,,
+,,2,1,No-Code Solution,Close any TECH Ticket that has no counters on it so far. Put 2 Bugs on the next Ticket.,,,
+,,1,1,Workload Deflect,Close all Tickets on any Feature. Add twice as many Tickets to any other Feature.,,,
+,,1,1,Hackathon,"Everyone rolls a die. Sum up the results.
 
 Subtract the number of cards in players' hands.
 Subtract the number of non-Completed Features.
 
-If the result is still positive, put that many counters on any Tickets you want.","Все кидают по кубику. Сложите результаты.
-
-Вычтите количество карт в руках у игроков.
-Вычтите количество не-Завершённых Фич.
-
-Если результат всё ещё положительный, то положите столько токенов на любые Задачи.",,
-,,2,Script Kiddie,"Remove 2 counters from any Ticket. Put 5 counters on any TECH Ticket, even if it says you cannot do that.","Уберите 2 токена с любой Задачи. Положите 5 токенов на любую TECH Задачу, даже если там написано, что вы не можете этого сделать.",,
-,,3,Tech Debt,"Close any TECH Ticket. Roll a die.
+If the result is still positive, put that many counters on any Tickets you want.",,,
+,,2,1,Script Kiddie,"Remove 2 counters from any Ticket. Put 5 counters on any TECH Ticket, even if it says you cannot do that.",,,
+,,3,1,Tech Debt,"Close any TECH Ticket. Roll a die.
 
 On 1-2: put 2 new Tickets on the same Feature.
 
-On 3-4: put 3 Bugs on the next Ticket.","Закройте любую TECH Задачу. Киньте кубик.
+On 3-4: put 3 Bugs on the next Ticket.",,,
+,,3,1,Creatine Microdosing,Draw 1 card and do 2 more actions right now.,,,
+,,3,1,Refactoring,"Move 1 Feature with all its Tickets to a differnt valid place in the Product.
 
-1-2: положите 2 новых Задачи на ту же Фичу.
+Add 1 extra Ticket on top of it. (Even if the Feature was completed.)",,,
+,,2,1,Heavy Refactoring,"Move up to 2 Features with all their Tickets to different valid places in the Product.
 
-3-4: положите 3 Бага на следующую задачу.",,
-,,3,Creatine Microdosing,Draw 1 card and do 2 more actions right now.,Возьмите 1 карту и совершите ещё 2 действия прямо сейчас.,,
-,,3,Refactoring,"Move 1 Feature with all its Tickets to a differnt valid place in the Product.
-
-Add 1 extra Ticket on top of it. (Even if the Feature was completed.)","Переместите 1 Фичу со всеми Задачами в другое валидное место в Продукте.
-
-Добавьте 1 дополнительную Задачу на неё. (Даже если она была Завершена.)",,
-,,2,Heavy Refactoring,"Move up to 2 Features with all their Tickets to different valid places in the Product.
-
-Add 2 extra Tickets on top of each. (Even if either of the Features was completed.)","Переместите 2 Фичи со всеми Задачами в другие валидные места в Продукте.
-
-Добавьте 2 дополнительные Задачи на неё. (Даже если она была Завершена.)",,
-,,2,Jack Of All Trades,"Place 2 counters on each of 3 Tickets of different categories (i.e. TECH, DESIGN, etc).","Положите по 2 токена на 3 Задачи разных категорий (TECH, DESIGN и так далее).",,
-,,3,Working Overtime,Place 7 counters on any single Ticket.,Положите 7 токенов на 1 любую Задачу.,,
-,,2,Outsource,"Put this card in front of you. Place 1 counter on it.
+Add 2 extra Tickets on top of each. (Even if either of the Features was completed.)",,,
+,,2,1,Jack Of All Trades,"Place 2 counters on each of 3 Tickets of different categories (i.e. TECH, DESIGN, etc).",,,
+,,3,1,Working Overtime,Place 7 counters on any single Ticket.,,,
+,,2,1,Outsource,"Put this card in front of you. Place 1 counter on it.
 
 At the beginning of your turn, roll a die. On 3-6, add 1 counter. On 1-2, remove 1 counter. If cannot remove it, discard this card.
 
-On your turn, you may discard this card and put all counter from it on Tickets of your choice. (That won't spend your action.)","Положите эту карту перед собой. Поместите на неё 1 токен.
-
-В начале вашего хода, киньте кубик. Если 3-6, добавьте 1 токен. Если 1-2, уберите 1 токен. Если не можете убрать, сбросьте эту карту.
-
-В ваш ход, вы можете сбросить эту карту и положить все токены на Задачи по выбору. (Это не потратит ваше действие.)",,
-,,1,TECH Expertise,Put 8 counters on up to 3 TECH Tickets.,"Положите в сумме 8 токенов на 1, 2 или 3 TECH Задачи.",,
-,,1,Shrewd Scheduling,"If you have a Feature in your hand, you can place it right now. Put half the required number of Tickets on it (rounding up).","Если у вас в руке есть Фича, можете добавить её в продукт прямо сейчас. Положите половину Задач на эту Фичу (округлять вверх).",,
-,,1,Pretty Please,"Discard top 5 cards from the Runway Deck, and add 1 counter to the Deadline of the current Milestone.",Сбросьте 5 верхних карт из Runway Deck и добавьте 1 токен на Дедлайн текущего Майлстоуна.,,
-,,3,Bug Hunter 3000,"Roll a die. On 1-4, remove 1 Bug. On 5-6, remove 2 Bugs.",,,
+On your turn, you may discard this card and put all counter from it on Tickets of your choice. (That won't spend your action.)",,,
+,,1,1,TECH Expertise,Put 8 counters on up to 3 TECH Tickets.,,,
+,,1,1,Shrewd Scheduling,"If you have a Feature in your hand, you can place it right now. Put half the required number of Tickets on it (rounding up).",,,
+,,1,1,Pretty Please,"Discard top 5 cards from the Runway Deck, and add 1 counter to the Deadline of the current Milestone.",,,
+,,3,1,Bug Hunter 3000,"Roll a die. On 1-4, remove 1 Bug. On 5-6, remove 2 Bugs.",,,
+,,1,1,Better Call Nick,Negate a problem card. You can play this card at any time a problem is revealed.,,,
