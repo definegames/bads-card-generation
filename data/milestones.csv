@@ -1,7 +1,7 @@
 ID,Addon,Title,Minimum Score,Deadline,North edge,East edge,South edge,West edge,Text,RU Text,Funny text,Illustration,Notes
-m.beta,,Beta Test,"7,13,20",3,C,C,-,-,,,,,
-m.demo,,Demo Version,"5,10,16",2,T,-,-,T,At least 1 Ticket must be opened when you place this Milestone.,,,,
-m.conference,,Conference,"6,13,17",3,R,T,-,C,Your Product must have at least 1 Feature with 4+ Story Points.,,,,
-m.release,,Release 1.0,"6,12,18",4,-,R,C,T,,,,,
-m.valuation,,First Valuation,"5,11,17",4,R,C,T,T,,,,,
-m.pmf,,Product-Market Fit,"7,14,20",5,C,C,R,R,,,,,
+m.beta,,Beta Test,"7,13,20",4,C,C,-,-,You can place this Milestone adjacent to Features that are In Progress.,,,,
+m.demo,,Demo Version,"5,10,16",3,T,-,-,T,At least 1 Ticket must be opened when you place this Milestone.,,,,
+m.conference,,Conference,"6,13,17",4,R,T,-,C,Your Product must have at least 1 Feature with 4 or 8 Story Points.,,,,
+m.release,,Release 1.0,"6,12,18",4,-,R,C,T,Each incomplete Feature costs -1 Story Point to the Product when calculating score for this Milestone.,,,,
+m.valuation,,First Valuation,"5,11,17",4,R,C,T,T,"Pick a number. Features that cost that many Story Points, cost +1 Story Point more when calculating score for this Milestone.",,,,
+m.pmf,,Product-Market Fit,"7,14,20",5,C,C,R,R,Pick one connector type. Features with at least 1 connector of that type cost +1 Story Point when calculating score for this Milestone.,,,,

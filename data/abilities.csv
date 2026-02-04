@@ -1,39 +1,36 @@
 ID,Addon,Copies,Points,Title,Text,RU Text,Funny text,Notes
-,,2,2,Kick Down The Road,Move all Tickets from any Feature to any other Feature.,,,
-,,1,3,Hawaii Team Retreat,Anyone can discard any number of cards and remove that many Bugs.,,,
-,,2,5,Kanban Tetris,Place 5 counters total on any 1 or 2 Tickets.,,,
-,,1,1,Rebranding,Count currently open DESIGN Tickets. Put that many counters on any 1 DESIGN Ticket.,,,
-,,1,1,Red Bug Redemption,"If all open Tickets have Bugs on them, remove 1 Bug from each Ticket.",,,
-,,2,1,No-Code Solution,Close any TECH Ticket that has no counters on it so far. Put 2 Bugs on the next Ticket.,,,
-,,1,1,Workload Deflect,Close all Tickets on any Feature. Add twice as many Tickets to any other Feature.,,,
-,,1,1,Hackathon,"Everyone rolls a die. Sum up the results.
+,,2,2,Kick It Down The Road,Move all Tickets from any Feature to any other Feature.,,,
+,,1,2,Hawaii Team Retreat,Anyone can discard any number of cards and remove that many Bugs.,,,
+,,1,3,Kanban Tetris,"Take all Tickets from 2 Features and place them back in any order, at least 1 Ticket on each of those Features.",,,
+,,1,1,Brand Guidelines,Count currently open DESIGN Tickets. Put that many counters on any 1 DESIGN Ticket.,,,
+,,1,2,Dead Bug Redemption,Remove 1 Bug from each Ticket or Feature that has Bugs.,,,
+,,2,1,Illiterate Programming,"Close any TECH Ticket that has no counters on it. If there is another Ticket below, put 2 Bugs on it.",,,
+,,1,1,Hydra Management,Close all Tickets on any Feature. Add twice as many Tickets to any adjacent Feature.,,,
+,,1,2,Hackathon,"Everyone rolls a die. Sum up the results.
 
 Subtract the number of cards in players' hands.
 Subtract the number of non-Completed Features.
 
 If the result is still positive, put that many counters on any Tickets you want.",,,
-,,2,1,Script Kiddie,"Remove 2 counters from any Ticket. Put 5 counters on any TECH Ticket, even if it says you cannot do that.",,,
 ,,3,1,Tech Debt,"Close any TECH Ticket. Roll a die.
 
 On 1-2: put 2 new Tickets on the same Feature.
 
-On 3-4: put 3 Bugs on the next Ticket.",,,
-,,3,1,Creatine Microdosing,Draw 1 card and do 2 more actions right now.,,,
+On 3-4: put 3 Bugs on the Feature or Ticket below.",,,
+,,3,2,Creatine Microdosing,Draw 1 card and do 2 more actions right now.,,,
 ,,3,1,Refactoring,"Move 1 Feature with all its Tickets to a differnt valid place in the Product.
 
 Add 1 extra Ticket on top of it. (Even if the Feature was completed.)",,,
-,,2,1,Heavy Refactoring,"Move up to 2 Features with all their Tickets to different valid places in the Product.
+,,2,2,Heavy Refactoring,"Move up to 2 Features with all their Tickets to different valid places in the Product.
 
 Add 2 extra Tickets on top of each. (Even if either of the Features was completed.)",,,
-,,2,1,Jack Of All Trades,"Place 2 counters on each of 3 Tickets of different categories (i.e. TECH, DESIGN, etc).",,,
-,,3,1,Working Overtime,Place 7 counters on any single Ticket.,,,
+,,2,3,Full Stack Jack,"Place 2 counters on 1 Ticket of each category: TECH, MARKETING, and DESIGN. (6 counters in total.)",,,
 ,,2,1,Outsource,"Put this card in front of you. Place 1 counter on it.
 
 At the beginning of your turn, roll a die. On 3-6, add 1 counter. On 1-2, remove 1 counter. If cannot remove it, discard this card.
 
 On your turn, you may discard this card and put all counter from it on Tickets of your choice. (That won't spend your action.)",,,
-,,1,1,TECH Expertise,Put 8 counters on up to 3 TECH Tickets.,,,
-,,1,1,Shrewd Scheduling,"If you have a Feature in your hand, you can place it right now. Put half the required number of Tickets on it (rounding up).",,,
-,,1,1,Pretty Please,"Discard top 5 cards from the Runway Deck, and add 1 counter to the Deadline of the current Milestone.",,,
-,,3,1,Bug Hunter 3000,"Roll a die. On 1-4, remove 1 Bug. On 5-6, remove 2 Bugs.",,,
-,,1,1,Better Call Nick,Negate a problem card. You can play this card at any time a problem is revealed.,,,
+,,1,1,Fast-Track,"If you have a Feature in your hand, you can place it right now. Put half the required number of Tickets on it (rounding up).",,,
+,,1,3,We're Almost There,Discard top 5 cards from the Runway Deck. Add 1 counter to the Deadline of the current Milestone.,,,
+,,3,2,Bug Runner 2049,"Roll a die. On 1-2, remove 1 Bug. On 3-4, remove 3 Bugs. On 5-6, remove 3 Bugs.",,,
+,,1,1,Better Call Claude,Negate a Problem card. You can play this card at any time when a Problem is revealed.,,,
