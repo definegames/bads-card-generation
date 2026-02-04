@@ -31,10 +31,9 @@ const TIER_CALLOUTS = {
 	}
 };
 const CATEGORY_COLORS = {
-	DESIGN: { background: '#ffe3f3', foreground: '#a32c68' },
-	TECH: { background: '#d9f5ff', foreground: '#005d8f' },
-	MARKETING: { background: '#fff2d6', foreground: '#a35a00' },
-	ADMIN: { background: '#f0f0f0', foreground: '#808080' }
+	BACKEND: { background: '#dff6c2', foreground: '#243c2c' },
+	FRONTEND: { background: '#ffe7c2', foreground: '#a35a00' },
+	LLM: { background: '#d9f0ff', foreground: '#0052cc' }
 };
 const TICKET_DIRECTIVE_COLORS = {
 	open: '#2f855a',

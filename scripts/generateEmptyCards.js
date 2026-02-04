@@ -106,7 +106,7 @@ function createGoalRecord() {
 
 function createTicketRecord() {
 	return {
-		Category: 'TECH',
+		Category: 'BACKEND',
 		Title: '',
 		'Counter slots': 0,
 		'Slot type': '▢',
