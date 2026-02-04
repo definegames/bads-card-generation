@@ -31,9 +31,9 @@ const TIER_CALLOUTS = {
 	}
 };
 const CATEGORY_COLORS = {
-	BACKEND: { background: '#dff6c2', foreground: '#243c2c' },
-	FRONTEND: { background: '#ffe7c2', foreground: '#a35a00' },
-	LLM: { background: '#d9f0ff', foreground: '#0052cc' }
+	DESIGN: { background: '#eb84cc', foreground: '#c5378a' },
+	MARKETING: { background: '#ffc774', foreground: '#be700f' },
+	TECH: { background: '#d9f0ff', foreground: '#236ad4' }
 };
 const TICKET_DIRECTIVE_COLORS = {
 	open: '#2f855a',
