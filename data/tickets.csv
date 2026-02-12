@@ -1,40 +1,40 @@
 ID,Addon,Copies,Category,Title,Slot type,Counter slots,Text,RU Text,Funny text,Notes
-,,1,TECH,Crippling Safetyism,▢,10,"Until this Ticket is closed, all other TECH Tickets are turned face down and cannot be worked on.","Пока эта Задача не закрыта, все остальные TECH Задачи переворачиваются рубашкой вверх, и над ними нельзя работать.",,
-,,1,TECH,Pre-Release,▢,3,You can only place counters on this Ticket when there are 2 or fewer non-Completed Features in the Product.,"Вы можете класть токены на эту Задачу, только если есть 2 или меньше не-Завершённых Фичи в вашем Продукте.",,
+,,1,TECH,Crippling Safetyism,▢,6,"Until this Ticket is closed, all other TECH Tickets are turned face down and cannot be worked on.","Пока эта Задача не закрыта, все остальные TECH Задачи переворачиваются рубашкой вверх, и над ними нельзя работать.",,
+,,1,TECH,Pre-Release Tweaks,▢,3,You can only place counters on this Ticket when there are 2 or fewer non-Completed Features in the Product.,"Вы можете класть токены на эту Задачу, только если есть 2 или меньше не-Завершённых Фичи в вашем Продукте.",,
 ,,2,DESIGN,Quick Hit,▢,2,,,,
 ,,1,TECH,We Need A 100x Engineer!,▢,5,You can only place exactly 5 counters on this Ticket.,Вы можете положить только ровно 5 токенов на эту Задачу.,,
 ,,1,TECH,API Integrations,▢,3,"When starting, place 1 counter on this Ticket for every 5 TECH Tickets in the Work discard pile.","Начиная работать над этой Задачей, добавьте 1 токен на неё за каждые 5 TECH Тикетов в Work-сбросе.",You've done some work along the way but now it's time to consolidate.,"Probably should be in reverse? If 3 or fewer, then API integration is fast?"
-,,1,DESIGN,Hard To Grasp,▢,12,"[Action]: Roll a die. If even, place that many counters on this Ticket. If odd, remove that many from it.","[Action]: Киньте кубик. Если чётно, добавьте столько токенов на эту Задачу. Если нечётно, уберите с неё столько токенов.",,
-,,1,DESIGN,A Dozen Sigma Mockups,▢,12,[Open]: Place 1 counter on this Ticket for every DESIGN Ticket in the discard pile.,[Open]: Поместите 1 токен на этот Тикет за каждую DESIGN Задачу в сбросе.,,
-,,2,MARKETING,Slopification,▢,10,You can only place 1 counter on this Ticket per turn.,Вы можете положить только 1 токен в ход на эту Задачу.,,
-,,1,DESIGN,You'll Need A Vacation,▢,10,[Action]: Discard 3 cards from your hand to close this Ticket at once.,"[Action]: Cбросьте 3 карты из руки, чтобы сразу закрыть эту Задачу.",,
-,,1,ANY,Wildcard,▢,5,This Ticket belongs to all categories at once.,Эта Задача принадлежит сразу ко всем категориям.,,
-,,1,ADMIN,Cracked Inspired,▢,5,"[Action]: Roll a die. On 6, place as many counters on this Ticket as there are on the most expensive adjacent Ticket (on 4 sides).","[Action]: Киньте кубик. Если 6, положите столько токенов на эту Задачу, сколько есть на самой дорогой прилегающей Задаче (по 4 сторонам).",,
+,,1,DESIGN,Hard To Grasp,▢,6,"[Action]: Roll a die. If even, place that many counters on this Ticket. If odd, remove that many from it.","[Action]: Киньте кубик. Если чётно, добавьте столько токенов на эту Задачу. Если нечётно, уберите с неё столько токенов.",,
+,,1,DESIGN,More Mockups,▢,6,[Open]: Place 1 counter on this Ticket for every DESIGN Ticket in the discard pile.,[Open]: Поместите 1 токен на этот Тикет за каждую DESIGN Задачу в сбросе.,,
+,,2,MARKETING,Slopification,▢,5,You can only place 1 counter on this Ticket per turn.,Вы можете положить только 1 токен в ход на эту Задачу.,,
+,,1,DESIGN,You'll Need A Vacation,▢,6,[Action]: Discard all cards from your hand to close this Ticket at once.,"[Action]: Cбросьте все карты из руки, чтобы сразу закрыть эту Задачу.",,
+,,1,MARKETING,PR Stunt,▢,3,,,,
+,,1,MARKETING,Big Announcement,▢,3,,,,
 ,,2,MARKETING,Fix A Typo,▢,1,,,,
 ,,2,TECH,Fix The Typo,▢,1,"[Close]: If the Ticket under this one is a TECH Ticket, roll a die. On 5-6, close it as well.","[Close]: Если под этой Задачей лежит ещё одна TECH Задача, киньте кубик. Если 5-6, закройте её тоже.",,
 ,,2,DESIGN,More Mockups,▢,3,,,,
 ,,2,TECH,A Chunk Of Work,▢,3,,,,
-,,1,TECH,"AI Isn't A Pit, AI Is A Mirror",▢,8,[Action]: Place as many counters on this Ticket as there are cards in your hand.,"[Action]: Положите столько токенов на эту Задачу, сколько карт в вашей руке.",,"Originally, the name was ""AI Isn't A Mind, It's A Mirror"""
+,,1,TECH,"AI Isn't A Pit, AI Is A Mirror",▢,6,[Action]: Place as many counters on this Ticket as there are cards in your hand.,"[Action]: Положите столько токенов на эту Задачу, сколько карт в вашей руке.",,"Originally, the name was ""AI Isn't A Mind, It's A Mirror"""
 ,,2,TECH,Simple Update,▢,2,,,,
 ,,1,DESIGN,Bad On Purpose,▢,3,"[Close]: The player who closed this Ticket either:
 - draws a card if this is the last Ticket on the Feature
 - discards a card otherwise","[Close]: Игрок, который закрывает эту Задачу:
 - берёт карту, если это была последняя Задача на Фиче
 - сбрасывает карту в ином случае",,
-,,3,ADMIN,Basically Nothing,▢,1,,,,
+,,3,DESIGN,Basically Nothing,▢,1,,,,
 ,,1,DESIGN,Generate The Logo,▢,0,"You cannot place counters on this Ticket.
 
 [Action]: Roll a die. On 4+, close this Ticket.","Вы не можете класть токены на эту Задачу.
 
 [Action]: Киньте кубик. Если 4+, закройте эту Задачу.",,
-,,1,ADMIN,Rote Work,▢,10,,,,
-,,1,TECH,Merging Databases,▢,5,"[Open]: Place 4 counters on this Ticket. For each currently open TECH Ticket in the Product, remove 1 counter.","[Open]: Положите 4 токена на эту Задачу. За каждую открытую сейчас TECH Задачу в Продукте, снимите 1 токен.",,Probably reformulate the text.
-,,2,ADMIN,Just Another Ticket,▢,3,,,,
-,,3,ADMIN,Just A One-Liner,▢,2,,,,
-,,1,ADMIN,Crasher,▢,4,Discard a card every time you place counters on this Ticket.,"Сбросьте 1 карту каждый раз, когда кладёте токены на эту Задачу.",,It was formerly called Burnout.
-,,1,ADMIN,Reprioritization,▢,4,"Pull one counter from every adjacent Ticket (on 4 sides), if possible.","Стяните по одному токену с каждого из прилегающих (по 4 сторонам) Тикетов, если это возможно.",,
+,,1,MARKETING,Freezing Emails,▢,5,,,,
+,,1,TECH,Merging Databases,▢,4,,,,Probably reformulate the text.
+,,2,MARKETING,Just Another Ticket,▢,3,,,,
+,,3,MARKETING,Just A One-Liner,▢,2,,,,
+,,1,TECH,Crasher,▢,4,Discard a card every time you place counters on this Ticket.,"Сбросьте 1 карту каждый раз, когда кладёте токены на эту Задачу.",,It was formerly called Burnout.
+,,1,MARKETING,Reprioritization,▢,4,"[Open]: Pull one counter from every adjacent Ticket (on 4 sides), if possible.","Стяните по одному токену с каждого из прилегающих (по 4 сторонам) Тикетов, если это возможно.",,
 ,,1,TECH,Prompt Engineering,▢,3,"You cannot conventionally place a counter on this Ticket.
 
-[Action]: Roll a die. On 5-6, place 1 counter on this Ticket.","Вы не можете класть токены на эту Задачу обычным способом.
+[Action]: Roll a die. On 4-6, place 1 counter on this Ticket.","Вы не можете класть токены на эту Задачу обычным способом.
 
-[Action]: Киньте кубик. Если 5-6, поместите 1 токен на эту Задачу.",,
+[Action]: Киньте кубик. Если 4-6, поместите 1 токен на эту Задачу.",,

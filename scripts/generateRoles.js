@@ -11,6 +11,7 @@ const {
 	BODY_TEXT_COLOR,
 	ROLE_CARD_HEIGHT,
 	ROLE_CARD_WIDTH,
+	RECT_CARD_SCALE,
 	ROLE_CARD_BACKGROUND,
 	ROLE_ACCENT_COLOR
 } = require('./utils/constants');
@@ -19,6 +20,7 @@ const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
 
 const FOUNDER_TITLE = 'The Founder';
+const s = (value) => Math.round(value * RECT_CARD_SCALE);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/roles.csv');
@@ -83,7 +85,7 @@ function paintBackground(ctx) {
 	ctx.fillRect(0, 0, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT);
 
 	ctx.strokeStyle = '#d4cdc3';
-	ctx.lineWidth = 4;
+	ctx.lineWidth = s(4);
 	ctx.strokeRect(
 		EDGE_THICKNESS / 2,
 		EDGE_THICKNESS / 2,
@@ -102,14 +104,14 @@ function paintRoleBack(ctx, { isBlank = false } = {}) {
 	const centerX = ROLE_CARD_WIDTH / 2;
 	const centerY = ROLE_CARD_HEIGHT / 2;
 
-	const glow = ctx.createRadialGradient(centerX, centerY, 40, centerX, centerY, ROLE_CARD_HEIGHT / 2);
+	const glow = ctx.createRadialGradient(centerX, centerY, s(40), centerX, centerY, ROLE_CARD_HEIGHT / 2);
 	glow.addColorStop(0, `${ROLE_ACCENT_COLOR}33`);
 	glow.addColorStop(1, `${ROLE_ACCENT_COLOR}00`);
 	ctx.fillStyle = glow;
 	ctx.fillRect(EDGE_THICKNESS, EDGE_THICKNESS, ROLE_CARD_WIDTH - EDGE_THICKNESS * 2, ROLE_CARD_HEIGHT - EDGE_THICKNESS * 2);
 
 	ctx.strokeStyle = `${ROLE_ACCENT_COLOR}66`;
-	ctx.lineWidth = 6;
+	ctx.lineWidth = s(6);
 	ctx.beginPath();
 	ctx.arc(centerX, centerY, ROLE_CARD_WIDTH * 0.32, 0, Math.PI * 2);
 	ctx.stroke();
@@ -126,7 +128,7 @@ function paintRoleBack(ctx, { isBlank = false } = {}) {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = '600 20px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+	ctx.font = `600 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 	ctx.fillText('ROLE CARD', centerX, centerY);
 }
 
@@ -151,9 +153,9 @@ function paintRoleContent(ctx, record, { isBlank = false } = {}) {
 		ctx.fillText(title, ROLE_CARD_WIDTH / 2, titleY);
 	}
 
-	const dividerY = titleY + (titleFontSize || 44) + 18;
+	const dividerY = titleY + (titleFontSize || s(44)) + s(18);
 	ctx.strokeStyle = '#d9cbbd';
-	ctx.lineWidth = 2;
+	ctx.lineWidth = s(2);
 	ctx.beginPath();
 	ctx.moveTo(safeLeft, dividerY);
 	ctx.lineTo(safeRight, dividerY);
@@ -163,40 +165,40 @@ function paintRoleContent(ctx, record, { isBlank = false } = {}) {
 		return;
 	}
 
-	let cursorY = dividerY + 24;
+	let cursorY = dividerY + s(24);
 	const text = getLocalizedText(record, ['Text']);
 	if (text) {
 		ctx.textAlign = 'left';
-		ctx.font = '500 20px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 		cursorY = drawTextBlock(ctx, text, {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: 28,
-			blankLineHeight: 24
+			lineHeight: s(28),
+			blankLineHeight: s(24)
 		});
 	}
 
 	const funny = (record['Funny text'] || '').trim();
 	if (funny) {
-		cursorY += 24;
-		ctx.font = 'italic 500 18px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		cursorY += s(24);
+		ctx.font = `italic 500 ${s(18)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 		ctx.fillStyle = '#5c4d40';
 		cursorY = drawTextBlock(ctx, funny, {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: 24,
-			blankLineHeight: 20
+			lineHeight: s(24),
+			blankLineHeight: s(20)
 		});
 	}
 
 	if (isFounder && !isBlank) {
-		cursorY += 40;
-		const starDefaultY = ROLE_CARD_HEIGHT - EDGE_THICKNESS - CONTENT_PADDING - 40;
-		const starMinY = cursorY + 34;
-		const starCenterY = Math.min(starDefaultY, Math.max(starMinY, safeTop + 80));
-		drawFounderStar(ctx, ROLE_CARD_WIDTH / 2, starCenterY + 40, { outerRadius: 36, innerRadius: 18 });
+		cursorY += s(40);
+		const starDefaultY = ROLE_CARD_HEIGHT - EDGE_THICKNESS - CONTENT_PADDING - s(40);
+		const starMinY = cursorY + s(34);
+		const starCenterY = Math.min(starDefaultY, Math.max(starMinY, safeTop + s(80)));
+		drawFounderStar(ctx, ROLE_CARD_WIDTH / 2, starCenterY + s(40), { outerRadius: s(36), innerRadius: s(18) });
 	}
 }
 
@@ -265,7 +267,7 @@ function isFounderRecord(record = {}) {
 function drawFounderStar(ctx, x, y, { outerRadius = 60, innerRadius = 28 } = {}) {
 	ctx.save();
 	ctx.shadowColor = '#00000033';
-	ctx.shadowBlur = 12;
+	ctx.shadowBlur = s(12);
 	drawStarPath(ctx, x, y, 5, outerRadius, innerRadius);
 	const gradient = ctx.createLinearGradient(x, y - outerRadius, x, y + outerRadius);
 	gradient.addColorStop(0, '#fff3b0');
@@ -273,7 +275,7 @@ function drawFounderStar(ctx, x, y, { outerRadius = 60, innerRadius = 28 } = {})
 	ctx.fillStyle = gradient;
 	ctx.fill();
 	ctx.shadowBlur = 0;
-	ctx.lineWidth = 4;
+	ctx.lineWidth = s(4);
 	ctx.strokeStyle = '#d08a00';
 	ctx.stroke();
 	ctx.restore();
@@ -300,9 +302,9 @@ function drawStarPath(ctx, cx, cy, spikes, outerRadius, innerRadius) {
 }
 
 function fitTitleFont(ctx, text, maxWidth) {
-	const baseSize = 42;
-	const minSize = 22;
-	for (let size = baseSize; size >= minSize; size -= 2) {
+	const baseSize = s(42);
+	const minSize = s(22);
+	for (let size = baseSize; size >= minSize; size -= s(2)) {
 		const font = `800 ${size}px "Montserrat", "Noto Color Emoji", sans-serif`;
 		ctx.font = font;
 		if (ctx.measureText(text).width <= maxWidth || size === minSize) {

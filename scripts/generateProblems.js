@@ -5,7 +5,7 @@ const fs = require('fs/promises');
 const { createCanvas } = require('canvas');
 const { parse } = require('csv-parse/sync');
 require('./utils/fontRegistry'); // Register fonts
-const { TICKET_CARD_SIZE, BODY_TEXT_COLOR } = require('./utils/constants');
+const { TICKET_CARD_SIZE, SMALL_CARD_SCALE, BODY_TEXT_COLOR } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
@@ -14,6 +14,7 @@ const BACKGROUND_COLOR = '#fffdf8';
 const BORDER_COLOR = '#d9cbbd';
 const TITLE_COLOR = '#c52233';
 const FUNNY_TEXT_COLOR = '#7a4a38';
+const s = (value) => Math.round(value * SMALL_CARD_SCALE);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/problems.csv');
@@ -59,12 +60,12 @@ function paintBackground(ctx) {
 	ctx.fillRect(0, 0, TICKET_CARD_SIZE, TICKET_CARD_SIZE);
 
 	ctx.strokeStyle = BORDER_COLOR;
-	ctx.lineWidth = 4;
-	ctx.strokeRect(2, 2, TICKET_CARD_SIZE - 4, TICKET_CARD_SIZE - 4);
+	ctx.lineWidth = s(4);
+	ctx.strokeRect(s(2), s(2), TICKET_CARD_SIZE - s(4), TICKET_CARD_SIZE - s(4));
 }
 
 function paintProblem(ctx, record, { isBlank = false } = {}) {
-	const padding = 28;
+	const padding = s(28);
 	const safeLeft = padding;
 	const safeRight = TICKET_CARD_SIZE - padding;
 	const contentWidth = safeRight - safeLeft;
@@ -74,13 +75,13 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 		ctx.fillStyle = TITLE_COLOR;
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
-		ctx.font = '700 30px "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.font = `700 ${s(30)}px "Montserrat", "Noto Color Emoji", sans-serif`;
 		ctx.fillText(title, safeLeft, padding);
 	}
 
-	const delimiterY = padding + 48;
+	const delimiterY = padding + s(48);
 	ctx.strokeStyle = '#edd9cf';
-	ctx.lineWidth = 2;
+	ctx.lineWidth = s(2);
 	ctx.beginPath();
 	ctx.moveTo(safeLeft, delimiterY);
 	ctx.lineTo(safeRight, delimiterY);
@@ -90,29 +91,29 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 		return;
 	}
 
-	let cursorY = delimiterY + 18;
+	let cursorY = delimiterY + s(18);
 	const mainText = getLocalizedText(record, ['Text']);
 	if (mainText) {
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = '500 20px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 		cursorY = drawTextBlock(ctx, mainText, {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: 26
+			lineHeight: s(26)
 		});
 	}
 
 	const funny = (record['Funny text'] || '').trim();
 	if (funny) {
-		cursorY += 16;
+		cursorY += s(16);
 		ctx.fillStyle = FUNNY_TEXT_COLOR;
-		ctx.font = 'italic 500 20px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.font = `italic 500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 		drawTextBlock(ctx, funny, {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: 26
+			lineHeight: s(26)
 		});
 	}
 }

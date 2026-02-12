@@ -11,6 +11,7 @@ const {
 	BODY_TEXT_COLOR,
 	CATEGORY_COLORS,
 	TICKET_CARD_SIZE,
+	SMALL_CARD_SCALE,
 	TICKET_DIRECTIVE_COLORS
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
@@ -22,8 +23,9 @@ const DIRECTIVE_ICON_STYLES = [
 	{ marker: '[Close]:', letter: 'C', color: TICKET_DIRECTIVE_COLORS.close },
 	{ marker: '[Action]:', letter: 'A', color: TICKET_DIRECTIVE_COLORS.action }
 ];
-const DIRECTIVE_ICON_SIZE = 34;
-const DIRECTIVE_ICON_GAP = 14;
+const s = (value) => Math.round(value * SMALL_CARD_SCALE);
+const DIRECTIVE_ICON_SIZE = s(34);
+const DIRECTIVE_ICON_GAP = s(14);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/tickets.csv');
@@ -74,20 +76,20 @@ function paintBackground(ctx, record) {
 
 	// Thin edge outline using the category tag color.
 	ctx.strokeStyle = categoryColors.foreground;
-	ctx.lineWidth = 1;
-	drawRoundedRectPath(ctx, 0.5, 0.5, TICKET_CARD_SIZE - 1, TICKET_CARD_SIZE - 1, 12);
+	ctx.lineWidth = Math.max(1, s(1));
+	drawRoundedRectPath(ctx, 0.5, 0.5, TICKET_CARD_SIZE - 1, TICKET_CARD_SIZE - 1, s(12));
 	ctx.stroke();
 
 	// Replace the old beige border with the category tag color.
 	ctx.strokeStyle = categoryColors.foreground;
-	ctx.lineWidth = 6;
+	ctx.lineWidth = s(6);
 	// Rounded inner border so corners are inset/rounded.
-	drawRoundedRectPath(ctx, 2, 2, TICKET_CARD_SIZE - 4, TICKET_CARD_SIZE - 4, 14);
+	drawRoundedRectPath(ctx, s(2), s(2), TICKET_CARD_SIZE - s(4), TICKET_CARD_SIZE - s(4), s(14));
 	ctx.stroke();
 }
 
 function paintTicket(ctx, record, { isBlank = false } = {}) {
-	const padding = 24;
+	const padding = s(24);
 	const safeLeft = padding;
 	const safeRight = TICKET_CARD_SIZE - padding;
 	const contentWidth = safeRight - safeLeft;
@@ -95,16 +97,16 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 	const category = (record.Category || 'ERROR!!!').trim().toUpperCase();
 	const categoryColors = CATEGORY_COLORS[category] || { background: '#edf2f7', foreground: '#2d3748' };
 
-	const badgeY = padding - 8;
+	const badgeY = padding - s(8);
 	if (!isBlank) {
-		ctx.font = '700 18px "Montserrat", "Noto Color Emoji", sans-serif';
-		const badgeWidth = ctx.measureText(category).width + 24;
+		ctx.font = `700 ${s(18)}px "Montserrat", "Noto Color Emoji", sans-serif`;
+		const badgeWidth = ctx.measureText(category).width + s(24);
 		ctx.fillStyle = categoryColors.background;
-		drawRoundedRect(ctx, safeLeft, badgeY, badgeWidth, 32, 10);
+		drawRoundedRect(ctx, safeLeft, badgeY, badgeWidth, s(32), s(10));
 		ctx.fillStyle = categoryColors.foreground;
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'middle';
-		ctx.fillText(category, safeLeft + 12, badgeY + 16);
+		ctx.fillText(category, safeLeft + s(12), badgeY + s(16));
 	}
 
 	const title = (record.Title || 'Ticket').trim();
@@ -112,19 +114,19 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = '600 24px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
-		ctx.fillText(title, safeLeft, badgeY + 44);
+		ctx.font = `600 ${s(24)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
+		ctx.fillText(title, safeLeft, badgeY + s(44));
 	}
 
-	const slotsTop = badgeY + 90;
+	const slotsTop = badgeY + s(90);
 	const slotResult = isBlank ? { rows: 0, height: 0 } : paintCounterSlots(ctx, record, safeLeft, slotsTop, contentWidth);
 	const slotRows = slotResult.rows;
 	const slotHeight = slotResult.height;
 
-	const slotBlockBottom = slotRows ? slotsTop + slotHeight + 18 : slotsTop;
-	const dividerY = slotBlockBottom + 6;
+	const slotBlockBottom = slotRows ? slotsTop + slotHeight + s(18) : slotsTop;
+	const dividerY = slotBlockBottom + s(6);
 	ctx.strokeStyle = '#e8d9cc';
-	ctx.lineWidth = 2;
+	ctx.lineWidth = s(2);
 	ctx.beginPath();
 	ctx.moveTo(safeLeft, dividerY);
 	ctx.lineTo(safeRight, dividerY);
@@ -134,31 +136,31 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 		return;
 	}
 
-	let cursorY = dividerY + 18;
+	let cursorY = dividerY + s(18);
 	const text = getLocalizedText(record, ['Text']);
 	if (text.trim()) {
-		ctx.font = '500 18px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.font = `500 ${s(18)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 		cursorY = drawTextBlock(ctx, text, {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: 24,
-			blankLineHeight: 22,
+			lineHeight: s(24),
+			blankLineHeight: s(22),
 			renderDirectiveIcons: true
 		});
 	}
 
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
-		cursorY += 16;
-		ctx.font = 'italic 500 16px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		cursorY += s(16);
+		ctx.font = `italic 500 ${s(16)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 		ctx.fillStyle = '#574334';
 		drawTextBlock(ctx, funny, {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: 22,
-			blankLineHeight: 18
+			lineHeight: s(22),
+			blankLineHeight: s(18)
 		});
 	}
 }
@@ -171,8 +173,8 @@ function paintCounterSlots(ctx, record, left, top, maxWidth) {
 	}
 
 	const slotsPerRow = 6;
-	const glyphSize = 32;
-	const rowSpacing = glyphSize + 14;
+	const glyphSize = s(32);
+	const rowSpacing = glyphSize + s(14);
 	const gutter = glyphSize * 0.5;
 	const startX = left + gutter;
 	const endX = left + Math.max(maxWidth - gutter, gutter);
@@ -254,7 +256,7 @@ function drawDirectiveIcon(ctx, style, x, y, lineHeight) {
 	ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
 	ctx.fill();
 	ctx.fillStyle = '#fffdf8';
-	ctx.font = '700 14px "Montserrat", "Noto Color Emoji", sans-serif';
+	ctx.font = `700 ${s(14)}px "Montserrat", "Noto Color Emoji", sans-serif`;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText(style.letter, centerX, centerY);

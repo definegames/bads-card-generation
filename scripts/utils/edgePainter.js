@@ -1,4 +1,4 @@
-const { CARD_SIZE, EDGE_THICKNESS } = require('./constants');
+const { CARD_SIZE, EDGE_THICKNESS, LARGE_CARD_SCALE } = require('./constants');
 
 const EDGE_DEFINITIONS = [
 	{ key: 'North edge', position: 'north' },
@@ -16,10 +16,11 @@ function paintEdgesAndDividers(ctx, record = {}) {
 	});
 }
 
-const CONNECTOR_LINE_WIDTH = 8;
+const CONNECTOR_LINE_WIDTH = Math.round(8 * LARGE_CARD_SCALE);
 const CONNECTOR_SIZE = EDGE_THICKNESS * 2.8;
 const CONNECTOR_RADIUS = CONNECTOR_SIZE * 0.5;
 const CONNECTOR_STROKE = '#1e1b16';
+const EDGE_CENTER_OFFSET = Math.round(20 * LARGE_CARD_SCALE);
 
 function drawConnector(ctx, position, rawCode) {
 	const code = normalizeConnectorCode(rawCode);
@@ -89,13 +90,13 @@ function drawDiamond(ctx, center, size) {
 function edgeCenter(position) {
 	switch (position) {
 		case 'north':
-			return { x: CARD_SIZE / 2, y: -20 };
+			return { x: CARD_SIZE / 2, y: -EDGE_CENTER_OFFSET };
 		case 'south':
-			return { x: CARD_SIZE / 2, y: CARD_SIZE + 20 };
+			return { x: CARD_SIZE / 2, y: CARD_SIZE + EDGE_CENTER_OFFSET };
 		case 'east':
-			return { x: CARD_SIZE + 20, y: CARD_SIZE / 2 };
+			return { x: CARD_SIZE + EDGE_CENTER_OFFSET, y: CARD_SIZE / 2 };
 		case 'west':
-			return { x: -20, y: CARD_SIZE / 2 };
+			return { x: -EDGE_CENTER_OFFSET, y: CARD_SIZE / 2 };
 		default:
 			return null;
 	}

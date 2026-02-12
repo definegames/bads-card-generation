@@ -10,7 +10,8 @@ const {
 	CONTENT_PADDING,
 	BODY_TEXT_COLOR,
 	ROLE_CARD_HEIGHT,
-	ROLE_CARD_WIDTH
+	ROLE_CARD_WIDTH,
+	RECT_CARD_SCALE
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
@@ -19,6 +20,7 @@ const { getLocalizedText } = require('./utils/textHelpers');
 const GOAL_CARD_BACKGROUND = '#cbd6e6';
 const GOAL_ACCENT_COLOR = '#1f3b68';
 const GOAL_OUTLINE_COLOR = '#0e1083';
+const s = (value) => Math.round(value * RECT_CARD_SCALE);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/goals.csv');
@@ -68,7 +70,7 @@ function paintBackground(ctx) {
 	ctx.fillRect(0, 0, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT);
 
 	ctx.strokeStyle = GOAL_OUTLINE_COLOR;
-	ctx.lineWidth = 4;
+	ctx.lineWidth = s(4);
 	ctx.strokeRect(
 		EDGE_THICKNESS / 2,
 		EDGE_THICKNESS / 2,
@@ -107,9 +109,9 @@ function paintGoalContent(ctx, record, { isBlank = false } = {}) {
 		ctx.fillText(title, ROLE_CARD_WIDTH / 2, safeTop);
 	}
 
-	const dividerY = safeTop + (titleFontSize || 44) + 18;
+	const dividerY = safeTop + (titleFontSize || s(44)) + s(18);
 	ctx.strokeStyle = GOAL_OUTLINE_COLOR;
-	ctx.lineWidth = 2;
+	ctx.lineWidth = s(2);
 	ctx.beginPath();
 	ctx.moveTo(safeLeft, dividerY);
 	ctx.lineTo(safeRight, dividerY);
@@ -127,19 +129,19 @@ function paintGoalContent(ctx, record, { isBlank = false } = {}) {
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = '500 20px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+	ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 	drawTextBlock(ctx, text, {
 		x: safeLeft,
-		y: dividerY + 24,
+		y: dividerY + s(24),
 		maxWidth: contentWidth,
-		lineHeight: 28,
-		blankLineHeight: 24
+		lineHeight: s(28),
+		blankLineHeight: s(24)
 	});
 }
 
 function fitTitleFont(ctx, title, maxWidth) {
-	let size = 30;
-	const minSize = 20;
+	let size = s(30);
+	const minSize = s(20);
 	while (size >= minSize) {
 		ctx.font = `700 ${size}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 		if (ctx.measureText(title).width <= maxWidth) {
@@ -148,7 +150,7 @@ function fitTitleFont(ctx, title, maxWidth) {
 				font: ctx.font
 			};
 		}
-		size -= 2;
+		size -= s(2);
 	}
 	ctx.font = `700 ${minSize}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 	return { size: minSize, font: ctx.font };

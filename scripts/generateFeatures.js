@@ -9,6 +9,7 @@ const {
 	CARD_SIZE,
 	EDGE_THICKNESS,
 	CONTENT_PADDING,
+	LARGE_CARD_SCALE,
 	BACKGROUND_COLOR,
 	BODY_TEXT_COLOR
 } = require('./utils/constants');
@@ -17,6 +18,7 @@ const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
 const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
+const s = (value) => Math.round(value * LARGE_CARD_SCALE);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/features.csv');
@@ -82,33 +84,33 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 
 	const title = (record.Title || 'Untitled Feature').trim();
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = '700 30px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+	ctx.font = `700 ${s(30)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
-	ctx.fillText(title, safeZoneLeft, headerBottom + 16);
+	ctx.fillText(title, safeZoneLeft, headerBottom + s(16));
 
-	let cursorY = headerBottom + 60;
+	let cursorY = headerBottom + s(60);
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = '500 19px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+	ctx.font = `500 ${s(19)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 	const description = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, description, {
 		x: safeZoneLeft,
 		y: cursorY,
 		maxWidth: contentWidth,
-		lineHeight: 26,
-		blankLineHeight: 24
+		lineHeight: s(26),
+		blankLineHeight: s(24)
 	});
 
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
 		const funnyOptions = {
 			maxWidth: contentWidth,
-			lineHeight: 22,
-			blankLineHeight: 20
+			lineHeight: s(22),
+			blankLineHeight: s(20)
 		};
-		ctx.font = 'italic 500 18px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+		ctx.font = `italic 500 ${s(18)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 		const funnyHeight = measureTextBlockHeight(ctx, funny, funnyOptions);
-		const funnyGap = 18;
+		const funnyGap = s(18);
 		const minFunnyY = cursorY + funnyGap;
 		const bottomAlignedY = safeZoneBottom - funnyHeight;
 		const funnyY = Math.max(minFunnyY, bottomAlignedY);
@@ -140,7 +142,7 @@ function paintScoreWatermark(ctx, scoreValue) {
 	ctx.save();
 	ctx.globalAlpha = 0.1;
 	ctx.fillStyle = '#1c140d';
-	ctx.font = '900 320px "Montserrat", "Noto Sans", "Noto Color Emoji", sans-serif';
+	ctx.font = `900 ${s(320)}px "Montserrat", "Noto Sans", "Noto Color Emoji", sans-serif`;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText(text, CARD_SIZE / 2, CARD_SIZE / 2);
@@ -289,18 +291,18 @@ function sanitizeFileName(value) {
 
 function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = false } = {}) {
 	const pillX = safeZoneRight - metrics.width;
-	const pillY = EDGE_THICKNESS + 6;
+	const pillY = EDGE_THICKNESS + s(6);
 
 	ctx.fillStyle = '#fff';
 	ctx.strokeStyle = '#d8cbbb';
-	ctx.lineWidth = 2;
-	drawRoundedRect(ctx, pillX, pillY, metrics.width, metrics.height, 14, true);
+	ctx.lineWidth = s(2);
+	drawRoundedRect(ctx, pillX, pillY, metrics.width, metrics.height, s(14), true);
 
 	if (!isBlank && String(scoreValue || '').trim()) {
 		ctx.fillStyle = '#a0692b';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
-		ctx.font = '700 24px "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.font = `700 ${s(24)}px "Montserrat", "Noto Color Emoji", sans-serif`;
 		ctx.fillText(scoreValue, pillX + metrics.width / 2, pillY + metrics.height / 2);
 	}
 
@@ -309,11 +311,11 @@ function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = fals
 
 function measureScorePill(ctx, scoreValue) {
 	ctx.save();
-	ctx.font = '700 24px "Montserrat", sans-serif';
+	ctx.font = `700 ${s(24)}px "Montserrat", sans-serif`;
 	const scoreWidth = ctx.measureText(scoreValue).width;
 	ctx.restore();
-	const pillPaddingX = 18;
-	const pillHeight = 44;
+	const pillPaddingX = s(18);
+	const pillHeight = s(44);
 	return {
 		width: scoreWidth + pillPaddingX * 2,
 		height: pillHeight

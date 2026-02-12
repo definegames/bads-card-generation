@@ -8,6 +8,12 @@ const {
 	CARD_SIZE,
 	EDGE_THICKNESS,
 	CONTENT_PADDING,
+	TICKET_CARD_SIZE,
+	ROLE_CARD_WIDTH,
+	ROLE_CARD_HEIGHT,
+	LARGE_CARD_SCALE,
+	SMALL_CARD_SCALE,
+	RECT_CARD_SCALE,
 	BODY_TEXT_COLOR,
 	MISC_CARD_TYPES
 } = require('./utils/constants');
@@ -37,11 +43,14 @@ async function main() {
 }
 
 function paintCardBack(ctx, card, width, height) {
+	const cardScale = resolveCardScale(width, height);
+	const borderWidth = Math.max(1, Math.round(4 * cardScale));
+
 	ctx.fillStyle = card.background;
 	ctx.fillRect(0, 0, width, height);
 
 	ctx.strokeStyle = card.borderColor || '#d4cdc3';
-	ctx.lineWidth = 4;
+	ctx.lineWidth = borderWidth;
 	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, width - EDGE_THICKNESS, height - EDGE_THICKNESS);
 
 	const monogramSize = Math.floor(Math.min(width, height) * 0.55);
@@ -77,6 +86,9 @@ function drawLabel(ctx, card, width, height, labelSize) {
 }
 
 function paintRunwayBack(ctx, width, height) {
+	const cardScale = resolveCardScale(width, height);
+	const borderWidth = Math.max(1, Math.round(4 * cardScale));
+
 	// Minty green background.
 	ctx.fillStyle = '#45c080';
 	ctx.fillRect(0, 0, width, height);
@@ -94,7 +106,7 @@ function paintRunwayBack(ctx, width, height) {
 
 	// Border.
 	ctx.strokeStyle = '#7fd6a6';
-	ctx.lineWidth = 4;
+	ctx.lineWidth = borderWidth;
 	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, width - EDGE_THICKNESS, height - EDGE_THICKNESS);
 
 	// RUNWAY label.
@@ -104,6 +116,19 @@ function paintRunwayBack(ctx, width, height) {
 	ctx.textBaseline = 'middle';
 	ctx.font = `900 ${labelSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
 	ctx.fillText('RUNWAY', width / 2, height / 2);
+}
+
+function resolveCardScale(width, height) {
+	if (width === TICKET_CARD_SIZE && height === TICKET_CARD_SIZE) {
+		return SMALL_CARD_SCALE;
+	}
+	if (width === ROLE_CARD_WIDTH && height === ROLE_CARD_HEIGHT) {
+		return RECT_CARD_SCALE;
+	}
+	if (width === CARD_SIZE && height === CARD_SIZE) {
+		return LARGE_CARD_SCALE;
+	}
+	return Math.min(width, height) / CARD_SIZE;
 }
 
 if (require.main === module) {

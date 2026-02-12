@@ -5,7 +5,7 @@ const fs = require('fs/promises');
 const { createCanvas } = require('canvas');
 const { parse } = require('csv-parse/sync');
 require('./utils/fontRegistry'); // Register fonts
-const { CARD_SIZE, EDGE_THICKNESS, CONTENT_PADDING, BODY_TEXT_COLOR, KEYSTONE_BACK_FILE_NAME } = require('./utils/constants');
+const { CARD_SIZE, EDGE_THICKNESS, CONTENT_PADDING, LARGE_CARD_SCALE, BODY_TEXT_COLOR, KEYSTONE_BACK_FILE_NAME } = require('./utils/constants');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
@@ -17,6 +17,7 @@ const KEYSTONE_BACK_BORDER = '#b3caf6';
 const KEYSTONE_BACK_GRADIENT_START = '#f8fbff';
 const KEYSTONE_BACK_GRADIENT_END = '#bed5ff';
 const KEYSTONE_BACK_TEXT = '#1f2d46';
+const s = (value) => Math.round(value * LARGE_CARD_SCALE);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/keystones.csv');
@@ -95,40 +96,40 @@ function paintKeystoneCopy(ctx, record, { isBlank = false } = {}) {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'top';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = '700 32px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
-	ctx.fillText((record.Title || '').trim(), CARD_SIZE / 2, EDGE_THICKNESS + 18);
+	ctx.font = `700 ${s(32)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.fillText((record.Title || '').trim(), CARD_SIZE / 2, EDGE_THICKNESS + s(18));
 
 	ctx.strokeStyle = KEYSTONE_DIVIDER_COLOR;
-	ctx.lineWidth = 2;
+	ctx.lineWidth = s(2);
 	ctx.beginPath();
-	ctx.moveTo(safeZoneLeft, EDGE_THICKNESS + 70);
-	ctx.lineTo(safeZoneRight, EDGE_THICKNESS + 70);
+	ctx.moveTo(safeZoneLeft, EDGE_THICKNESS + s(70));
+	ctx.lineTo(safeZoneRight, EDGE_THICKNESS + s(70));
 	ctx.stroke();
 
 	ctx.textAlign = 'left';
-	ctx.font = '500 20px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+	ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 	ctx.fillStyle = BODY_TEXT_COLOR;
 
-	let cursorY = EDGE_THICKNESS + 86;
+	let cursorY = EDGE_THICKNESS + s(86);
 	const bodyCopy = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, bodyCopy, {
 		x: safeZoneLeft,
 		y: cursorY,
 		maxWidth: contentWidth,
-		lineHeight: 26,
-		blankLineHeight: 24
+		lineHeight: s(26),
+		blankLineHeight: s(24)
 	});
 
 	const funny = (record['Funny text'] || '').trim();
 	if (funny) {
-		cursorY += 16;
-		ctx.font = 'italic 500 18px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif';
+		cursorY += s(16);
+		ctx.font = `italic 500 ${s(18)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
 		cursorY = drawTextBlock(ctx, funny, {
 			x: safeZoneLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: 22,
-			blankLineHeight: 20
+			lineHeight: s(22),
+			blankLineHeight: s(20)
 		});
 	}
 }
@@ -150,7 +151,7 @@ function paintKeystoneBack(ctx, { isBlank = false } = {}) {
 	ctx.fillStyle = KEYSTONE_BACK_TEXT;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.font = '700 58px "Montserrat", "Noto Sans", "Noto Color Emoji", sans-serif';
+	ctx.font = `700 ${s(58)}px "Montserrat", "Noto Sans", "Noto Color Emoji", sans-serif`;
 	ctx.fillText('Keystone', CARD_SIZE / 2, CARD_SIZE / 2);
 }
 

@@ -9,6 +9,7 @@ const {
 	CARD_SIZE,
 	EDGE_THICKNESS,
 	CONTENT_PADDING,
+	LARGE_CARD_SCALE,
 	BACKGROUND_COLOR,
 	BODY_TEXT_COLOR
 } = require('./utils/constants');
@@ -17,6 +18,7 @@ const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
 
 const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
+const s = (value) => Math.round(value * LARGE_CARD_SCALE);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/abilities.csv');
@@ -63,7 +65,7 @@ function paintBackground(ctx) {
 	ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
 
 	ctx.strokeStyle = '#d4cdc3';
-	ctx.lineWidth = 4;
+	ctx.lineWidth = s(4);
 	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, CARD_SIZE - EDGE_THICKNESS, CARD_SIZE - EDGE_THICKNESS);
 }
 
@@ -79,13 +81,13 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = '700 34px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
-		ctx.fillText(title, CARD_SIZE / 2, Math.max(top, headerBottom + 12));
+		ctx.font = `700 ${s(34)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+		ctx.fillText(title, CARD_SIZE / 2, Math.max(top, headerBottom + s(12)));
 	}
 
 	ctx.strokeStyle = '#d9cbbd';
-	ctx.lineWidth = 2;
-	const dividerY = Math.max(top, headerBottom + 12) + 48;
+	ctx.lineWidth = s(2);
+	const dividerY = Math.max(top, headerBottom + s(12)) + s(48);
 	ctx.beginPath();
 	ctx.moveTo(safeLeft, dividerY);
 	ctx.lineTo(safeRight, dividerY);
@@ -94,30 +96,30 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 	if (isBlank) {
 		return;
 	}
-	let cursorY = dividerY + 12;
+	let cursorY = dividerY + s(12);
 	ctx.textAlign = 'left';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = '500 20px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+	ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 	const description = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, description, {
 		x: safeLeft,
 		y: cursorY,
 		maxWidth: safeWidth,
-		lineHeight: 28,
-		blankLineHeight: 24
+		lineHeight: s(28),
+		blankLineHeight: s(24)
 	});
 
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
-		cursorY += 20;
-		ctx.font = 'italic 500 18px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif';
+		cursorY += s(20);
+		ctx.font = `italic 500 ${s(18)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 		ctx.fillStyle = '#5c4d40';
 		drawTextBlock(ctx, funny, {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: safeWidth,
-			lineHeight: 24,
-			blankLineHeight: 20
+			lineHeight: s(24),
+			blankLineHeight: s(20)
 		});
 	}
 }
@@ -165,18 +167,18 @@ function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {
 
 function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = false } = {}) {
 	const pillX = safeZoneRight - metrics.width;
-	const pillY = EDGE_THICKNESS + 6;
+	const pillY = EDGE_THICKNESS + s(6);
 
 	ctx.fillStyle = '#fff';
 	ctx.strokeStyle = '#d8cbbb';
-	ctx.lineWidth = 2;
-	drawRoundedRect(ctx, pillX, pillY, metrics.width, metrics.height, 14, true);
+	ctx.lineWidth = s(2);
+	drawRoundedRect(ctx, pillX, pillY, metrics.width, metrics.height, s(14), true);
 
 	if (!isBlank && String(scoreValue || '').trim()) {
 		ctx.fillStyle = '#a0692b';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
-		ctx.font = '700 24px "Montserrat", "Noto Color Emoji", sans-serif';
+		ctx.font = `700 ${s(24)}px "Montserrat", "Noto Color Emoji", sans-serif`;
 		ctx.fillText(scoreValue, pillX + metrics.width / 2, pillY + metrics.height / 2);
 	}
 
@@ -185,11 +187,11 @@ function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = fals
 
 function measureScorePill(ctx, scoreValue) {
 	ctx.save();
-	ctx.font = '700 24px "Montserrat", sans-serif';
+	ctx.font = `700 ${s(24)}px "Montserrat", sans-serif`;
 	const scoreWidth = ctx.measureText(scoreValue).width;
 	ctx.restore();
-	const pillPaddingX = 18;
-	const pillHeight = 44;
+	const pillPaddingX = s(18);
+	const pillHeight = s(44);
 	return {
 		width: scoreWidth + pillPaddingX * 2,
 		height: pillHeight
