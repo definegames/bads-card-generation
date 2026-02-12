@@ -60,14 +60,14 @@ function paintCardBack(ctx, card, width, height) {
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		ctx.fillStyle = '#ffffff18';
-		ctx.font = `900 ${monogramSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
+		ctx.font = `900 ${monogramSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 		ctx.fillText(card.label.slice(0, 1), width / 2, height / 2);
 	}
 
 	ctx.fillStyle = card.textColor || BODY_TEXT_COLOR;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.font = `800 ${labelSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.font = `800 ${labelSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	drawLabel(ctx, card, width, height, labelSize);
 
 }
@@ -100,7 +100,7 @@ function paintRunwayBack(ctx, width, height) {
 	ctx.fillStyle = '#ffffff';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.font = `900 ${watermarkSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.font = `900 ${watermarkSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	ctx.fillText('$', width / 2, height / 2 - Math.floor(height * 0.03));
 	ctx.restore();
 
@@ -114,7 +114,7 @@ function paintRunwayBack(ctx, width, height) {
 	ctx.fillStyle = '#0b3b22';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.font = `900 ${labelSize}px "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.font = `900 ${labelSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	ctx.fillText('RUNWAY', width / 2, height / 2);
 }
 

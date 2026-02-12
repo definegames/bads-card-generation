@@ -96,7 +96,7 @@ function paintKeystoneCopy(ctx, record, { isBlank = false } = {}) {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'top';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `700 ${s(32)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.font = `700 ${s(32)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	ctx.fillText((record.Title || '').trim(), CARD_SIZE / 2, EDGE_THICKNESS + s(18));
 
 	ctx.strokeStyle = KEYSTONE_DIVIDER_COLOR;
@@ -107,7 +107,7 @@ function paintKeystoneCopy(ctx, record, { isBlank = false } = {}) {
 	ctx.stroke();
 
 	ctx.textAlign = 'left';
-	ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
+	ctx.font = `500 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	ctx.fillStyle = BODY_TEXT_COLOR;
 
 	let cursorY = EDGE_THICKNESS + s(86);
@@ -123,7 +123,7 @@ function paintKeystoneCopy(ctx, record, { isBlank = false } = {}) {
 	const funny = (record['Funny text'] || '').trim();
 	if (funny) {
 		cursorY += s(16);
-		ctx.font = `italic 500 ${s(18)}px "Noto Sans", "Noto Color Emoji", "Montserrat", "Noto Color Emoji", sans-serif`;
+		ctx.font = `italic 500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 		cursorY = drawTextBlock(ctx, funny, {
 			x: safeZoneLeft,
 			y: cursorY,
@@ -151,7 +151,7 @@ function paintKeystoneBack(ctx, { isBlank = false } = {}) {
 	ctx.fillStyle = KEYSTONE_BACK_TEXT;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.font = `700 ${s(58)}px "Montserrat", "Noto Sans", "Noto Color Emoji", sans-serif`;
+	ctx.font = `700 ${s(58)}px "Inter", "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
 	ctx.fillText('Keystone', CARD_SIZE / 2, CARD_SIZE / 2);
 }
 

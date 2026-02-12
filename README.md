@@ -12,13 +12,17 @@ yarn install
 
 ### 2. Download fonts
 
-The card generators require fonts to be placed in the `fonts/` directory. Download these three font files:
+The card generators require fonts to be placed in the `fonts/` directory. Download these font files:
 
 ```bash
 mkdir -p fonts
 cd fonts
 
-# Noto Sans (for body text)
+# Inter (default UI/body font)
+wget "https://github.com/rsms/inter/raw/master/docs/font-files/Inter-Regular.ttf"
+wget "https://github.com/rsms/inter/raw/master/docs/font-files/Inter-Bold.ttf"
+
+# Noto Sans (fallback text font)
 wget "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf"
 wget "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Bold.ttf"
 

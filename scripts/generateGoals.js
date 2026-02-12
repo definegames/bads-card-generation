@@ -129,7 +129,7 @@ function paintGoalContent(ctx, record, { isBlank = false } = {}) {
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+	ctx.font = `500 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	drawTextBlock(ctx, text, {
 		x: safeLeft,
 		y: dividerY + s(24),
@@ -143,7 +143,7 @@ function fitTitleFont(ctx, title, maxWidth) {
 	let size = s(30);
 	const minSize = s(20);
 	while (size >= minSize) {
-		ctx.font = `700 ${size}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+		ctx.font = `700 ${size}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 		if (ctx.measureText(title).width <= maxWidth) {
 			return {
 				size,
@@ -152,7 +152,7 @@ function fitTitleFont(ctx, title, maxWidth) {
 		}
 		size -= s(2);
 	}
-	ctx.font = `700 ${minSize}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+	ctx.font = `700 ${minSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	return { size: minSize, font: ctx.font };
 }
 

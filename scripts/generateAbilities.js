@@ -81,7 +81,7 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = `700 ${s(34)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+		ctx.font = `700 ${s(34)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 		ctx.fillText(title, CARD_SIZE / 2, Math.max(top, headerBottom + s(12)));
 	}
 
@@ -99,7 +99,7 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 	let cursorY = dividerY + s(12);
 	ctx.textAlign = 'left';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `500 ${s(20)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+	ctx.font = `500 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 	const description = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, description, {
 		x: safeLeft,
@@ -112,7 +112,7 @@ function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
 		cursorY += s(20);
-		ctx.font = `italic 500 ${s(18)}px "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+		ctx.font = `italic 500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 		ctx.fillStyle = '#5c4d40';
 		drawTextBlock(ctx, funny, {
 			x: safeLeft,
@@ -178,7 +178,7 @@ function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = fals
 		ctx.fillStyle = '#a0692b';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
-		ctx.font = `700 ${s(24)}px "Montserrat", "Noto Color Emoji", sans-serif`;
+		ctx.font = `700 ${s(24)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
 		ctx.fillText(scoreValue, pillX + metrics.width / 2, pillY + metrics.height / 2);
 	}
 
@@ -187,7 +187,7 @@ function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = fals
 
 function measureScorePill(ctx, scoreValue) {
 	ctx.save();
-	ctx.font = `700 ${s(24)}px "Montserrat", sans-serif`;
+	ctx.font = `700 ${s(24)}px "Inter", "Noto Sans", "Montserrat", sans-serif`;
 	const scoreWidth = ctx.measureText(scoreValue).width;
 	ctx.restore();
 	const pillPaddingX = s(18);
