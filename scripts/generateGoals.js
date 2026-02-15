@@ -6,9 +6,6 @@ const { createCanvas } = require('canvas');
 const { parse } = require('csv-parse/sync');
 require('./utils/fontRegistry'); // Register fonts
 const {
-	EDGE_THICKNESS,
-	CONTENT_PADDING,
-	BODY_TEXT_COLOR,
 	ROLE_CARD_HEIGHT,
 	ROLE_CARD_WIDTH,
 	RECT_CARD_SCALE
@@ -17,9 +14,20 @@ const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
 
-const GOAL_CARD_BACKGROUND = '#cbd6e6';
-const GOAL_ACCENT_COLOR = '#1f3b68';
-const GOAL_OUTLINE_COLOR = '#0e1083';
+const GOAL_CARD_BACKGROUND = '#efebff';
+const GOAL_TEXT_COLOR = '#000000';
+const GOAL_TITLE_X = 70;
+const GOAL_TITLE_Y = 127;
+const GOAL_TITLE_FONT = '500 48px "Inter", sans-serif';
+const GOAL_DIVIDER_X = 227;
+const GOAL_DIVIDER_Y = 247;
+const GOAL_DIVIDER_WIDTH = 313;
+const GOAL_DIVIDER_COLOR = '#a3a3a3';
+const GOAL_DIVIDER_LINE_WIDTH = 1;
+const GOAL_TEXT_X = 128;
+const GOAL_TEXT_Y = 309;
+const GOAL_TEXT_FONT = '400 40px "Inter", sans-serif';
+const GOAL_TEXT_LINE_HEIGHT = Math.round(40 * 1.2);
 const s = (value) => Math.round(value * RECT_CARD_SCALE);
 
 async function main() {
@@ -68,53 +76,26 @@ async function drawGoalCard(filePath, record, options = {}) {
 function paintBackground(ctx) {
 	ctx.fillStyle = GOAL_CARD_BACKGROUND;
 	ctx.fillRect(0, 0, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT);
-
-	ctx.strokeStyle = GOAL_OUTLINE_COLOR;
-	ctx.lineWidth = s(4);
-	ctx.strokeRect(
-		EDGE_THICKNESS / 2,
-		EDGE_THICKNESS / 2,
-		ROLE_CARD_WIDTH - EDGE_THICKNESS,
-		ROLE_CARD_HEIGHT - EDGE_THICKNESS
-	);
-
-	const gradient = ctx.createLinearGradient(0, 0, ROLE_CARD_WIDTH, ROLE_CARD_HEIGHT);
-	gradient.addColorStop(0, `${GOAL_ACCENT_COLOR}22`);
-	gradient.addColorStop(0.5, `${GOAL_ACCENT_COLOR}00`);
-	gradient.addColorStop(1, `${GOAL_ACCENT_COLOR}18`);
-	ctx.fillStyle = gradient;
-	ctx.fillRect(
-		EDGE_THICKNESS,
-		EDGE_THICKNESS,
-		ROLE_CARD_WIDTH - EDGE_THICKNESS * 2,
-		ROLE_CARD_HEIGHT - EDGE_THICKNESS * 2
-	);
 }
 
 function paintGoalContent(ctx, record, { isBlank = false } = {}) {
-	const safeLeft = EDGE_THICKNESS + CONTENT_PADDING;
-	const safeRight = ROLE_CARD_WIDTH - EDGE_THICKNESS - CONTENT_PADDING;
-	const safeTop = EDGE_THICKNESS + CONTENT_PADDING;
-	const contentWidth = safeRight - safeLeft;
+	const contentWidth = ROLE_CARD_WIDTH - GOAL_TEXT_X * 2;
 
 	const title = String(record.Title || 'Goal').trim();
-	let titleFontSize = 0;
 	if (!isBlank) {
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
-		ctx.fillStyle = BODY_TEXT_COLOR;
-		const fitted = fitTitleFont(ctx, title, contentWidth);
-		titleFontSize = fitted.size;
-		ctx.font = fitted.font;
-		ctx.fillText(title, ROLE_CARD_WIDTH / 2, safeTop);
+		ctx.fillStyle = GOAL_TEXT_COLOR;
+		ctx.font = GOAL_TITLE_FONT;
+		ctx.fillText(title, ROLE_CARD_WIDTH / 2, GOAL_TITLE_Y);
 	}
 
-	const dividerY = safeTop + (titleFontSize || s(44)) + s(18);
-	ctx.strokeStyle = GOAL_OUTLINE_COLOR;
-	ctx.lineWidth = s(2);
+	ctx.strokeStyle = GOAL_DIVIDER_COLOR;
+	ctx.lineWidth = GOAL_DIVIDER_LINE_WIDTH;
+	ctx.lineCap = 'round';
 	ctx.beginPath();
-	ctx.moveTo(safeLeft, dividerY);
-	ctx.lineTo(safeRight, dividerY);
+	ctx.moveTo(GOAL_DIVIDER_X, GOAL_DIVIDER_Y);
+	ctx.lineTo(GOAL_DIVIDER_X + GOAL_DIVIDER_WIDTH, GOAL_DIVIDER_Y);
 	ctx.stroke();
 
 	if (isBlank) {
@@ -128,32 +109,15 @@ function paintGoalContent(ctx, record, { isBlank = false } = {}) {
 
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
-	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `500 ${s(20)}px "Inter", sans-serif`;
+	ctx.fillStyle = GOAL_TEXT_COLOR;
+	ctx.font = GOAL_TEXT_FONT;
 	drawTextBlock(ctx, text, {
-		x: safeLeft,
-		y: dividerY + s(24),
+		x: GOAL_TEXT_X,
+		y: GOAL_TEXT_Y,
 		maxWidth: contentWidth,
-		lineHeight: s(28),
-		blankLineHeight: s(24)
+		lineHeight: GOAL_TEXT_LINE_HEIGHT,
+		blankLineHeight: GOAL_TEXT_LINE_HEIGHT
 	});
-}
-
-function fitTitleFont(ctx, title, maxWidth) {
-	let size = s(30);
-	const minSize = s(20);
-	while (size >= minSize) {
-		ctx.font = `700 ${size}px "Inter", sans-serif`;
-		if (ctx.measureText(title).width <= maxWidth) {
-			return {
-				size,
-				font: ctx.font
-			};
-		}
-		size -= s(2);
-	}
-	ctx.font = `700 ${minSize}px "Inter", sans-serif`;
-	return { size: minSize, font: ctx.font };
 }
 
 function drawTextBlock(ctx, raw = '', options) {
