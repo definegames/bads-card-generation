@@ -7,22 +7,52 @@ const { parse } = require('csv-parse/sync');
 require('./utils/fontRegistry'); // Register fonts
 const {
 	CARD_SIZE,
-	EDGE_THICKNESS,
-	CONTENT_PADDING,
-	LARGE_CARD_TITLE_LEFT,
-	LARGE_CARD_TITLE_TOP,
-	LARGE_CARD_TITLE_FONT_SIZE,
-	LARGE_CARD_TITLE_FONT_WEIGHT,
 	LARGE_CARD_SCALE,
-	BACKGROUND_COLOR,
 	BODY_TEXT_COLOR
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
-const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
+
 const s = (value) => Math.round(value * LARGE_CARD_SCALE);
+const TITLE_X = 119;
+const TITLE_Y = 159;
+const TITLE_MAX_WIDTH = CARD_SIZE - TITLE_X * 2;
+const FUNNY_TEXT_Y = 777;
+const FUNNY_TEXT_MAX_WIDTH = CARD_SIZE - 119 * 2;
+const FEATURE_PILL_X = 853;
+const FEATURE_PILL_Y = 32;
+const FEATURE_PILL_WIDTH = 120;
+const FEATURE_PILL_HEIGHT = 100;
+const FEATURE_PILL_RADIUS = 25;
+
+const SCORE_STYLES = {
+	1: {
+		watermark: '#f0f0f0',
+		pillBackground: '#efefef',
+		pillBorder: '#c5c5c5',
+		pillText: '#7b7d7b'
+	},
+	2: {
+		watermark: '#eaffeb',
+		pillBackground: '#efefef',
+		pillBorder: '#aed9b0',
+		pillText: '#72a774'
+	},
+	4: {
+		watermark: '#ebf4ff',
+		pillBackground: '#efefef',
+		pillBorder: '#bcdafe',
+		pillText: '#5c82b1'
+	},
+	8: {
+		watermark: '#faedff',
+		pillBackground: '#efefef',
+		pillBorder: '#d3b7de',
+		pillText: '#a265b9'
+	}
+};
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/features.csv');
@@ -59,12 +89,6 @@ async function drawFeatureCard(filePath, record, options = {}) {
 	const ctx = canvas.getContext('2d');
 
 	paintBackground(ctx);
-	if (!isBlank) {
-		const watermarkScore = formatScore(record['Score Points']);
-		if (watermarkScore !== '') {
-			paintScoreWatermark(ctx, watermarkScore);
-		}
-	}
 	paintEdgesAndDividers(ctx, record);
 	paintFeatureContent(ctx, record, { isBlank });
 
@@ -72,70 +96,71 @@ async function drawFeatureCard(filePath, record, options = {}) {
 }
 
 function paintBackground(ctx) {
-	ctx.fillStyle = BACKGROUND_COLOR;
+	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
 }
 
 function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
-	const safeZoneLeft = EDGE_THICKNESS + CONTENT_PADDING;
-	const safeZoneRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-	const safeZoneBottom = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-	const contentWidth = safeZoneRight - safeZoneLeft;
-	const headerBottom = paintHeaderRow(ctx, record, safeZoneRight, { isBlank });
+	const scoreValue = isBlank ? '' : formatScore(record['Score Points']);
+	const scoreStyle = resolveScoreStyle(scoreValue);
+	const headerBottom = paintHeaderRow(ctx, scoreValue, scoreStyle, { isBlank });
+
 	if (isBlank) {
 		return;
 	}
 
+	if (scoreValue !== '') {
+		paintScoreWatermark(ctx, scoreValue, scoreStyle);
+	}
+
 	const title = (record.Title || 'Untitled Feature').trim();
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `${LARGE_CARD_TITLE_FONT_WEIGHT} ${LARGE_CARD_TITLE_FONT_SIZE}px "Inter", sans-serif`;
+	ctx.font = '500 64px "Inter", sans-serif';
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
-	ctx.fillText(title, LARGE_CARD_TITLE_LEFT, LARGE_CARD_TITLE_TOP);
+	ctx.fillText(title, TITLE_X, TITLE_Y, TITLE_MAX_WIDTH);
 
 	let cursorY = headerBottom + s(60);
 	ctx.fillStyle = BODY_TEXT_COLOR;
 	ctx.font = `500 ${s(19)}px "Inter", sans-serif`;
 	const description = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, description, {
-		x: safeZoneLeft,
+		x: TITLE_X,
 		y: cursorY,
-		maxWidth: contentWidth,
+		maxWidth: TITLE_MAX_WIDTH,
 		lineHeight: s(26),
-		blankLineHeight: s(24)
+		blankLineHeight: s(24),
+		align: 'left'
 	});
 
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
-		const funnyOptions = {
-			maxWidth: contentWidth,
-			lineHeight: s(22),
-			blankLineHeight: s(20)
-		};
-		ctx.font = `italic 500 ${s(18)}px "Inter", sans-serif`;
-		const funnyHeight = measureTextBlockHeight(ctx, funny, funnyOptions);
-		const funnyGap = s(18);
-		const minFunnyY = cursorY + funnyGap;
-		const bottomAlignedY = safeZoneBottom - funnyHeight;
-		const funnyY = Math.max(minFunnyY, bottomAlignedY);
-		ctx.fillStyle = '#5c4d40';
+		ctx.font = 'italic 400 36px "Inter", sans-serif';
+		ctx.fillStyle = '#949494';
 		drawTextBlock(ctx, funny, {
-			x: safeZoneLeft,
-			y: funnyY,
-			...funnyOptions
+			x: CARD_SIZE / 2,
+			y: FUNNY_TEXT_Y,
+			maxWidth: FUNNY_TEXT_MAX_WIDTH,
+			lineHeight: s(32),
+			blankLineHeight: s(32),
+			align: 'center'
 		});
 	}
 }
 
-function paintHeaderRow(ctx, record, safeZoneRight, { isBlank = false } = {}) {
-	const scoreValue = isBlank ? '' : formatScore(record['Score Points']);
-	const pillMeasurementValue = isBlank ? BLANK_SCORE_WIDTH_TOKEN : scoreValue;
-	const pillMetrics = measureScorePill(ctx, pillMeasurementValue);
-	const scoreBottom = drawScorePill(ctx, scoreValue, safeZoneRight, pillMetrics, { isBlank });
-	return scoreBottom;
+function resolveScoreStyle(scoreValue) {
+	const normalized = Number(scoreValue);
+	if (Number.isFinite(normalized) && SCORE_STYLES[normalized]) {
+		return SCORE_STYLES[normalized];
+	}
+	return SCORE_STYLES[1];
 }
 
-function paintScoreWatermark(ctx, scoreValue) {
+function paintHeaderRow(ctx, scoreValue, scoreStyle, { isBlank = false } = {}) {
+	return drawScorePill(ctx, scoreValue, scoreStyle, { isBlank });
+}
+
+function paintScoreWatermark(ctx, scoreValue, scoreStyle) {
 	if (scoreValue === null || scoreValue === undefined) {
 		return;
 	}
@@ -143,14 +168,11 @@ function paintScoreWatermark(ctx, scoreValue) {
 	if (!text) {
 		return;
 	}
-	ctx.save();
-	ctx.globalAlpha = 0.1;
-	ctx.fillStyle = '#1c140d';
-	ctx.font = `900 ${s(320)}px "Inter", sans-serif`;
+	ctx.fillStyle = scoreStyle.watermark;
+	ctx.font = `700 ${s(320)}px "Inter", sans-serif`;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText(text, CARD_SIZE / 2, CARD_SIZE / 2);
-	ctx.restore();
 }
 
 function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {
@@ -174,7 +196,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {
 }
 
 function drawTextBlock(ctx, raw = '', options) {
-	const { x, y, maxWidth, lineHeight, blankLineHeight = lineHeight } = options;
+	const { x, y, maxWidth, lineHeight, blankLineHeight = lineHeight, align = 'left' } = options;
 	const normalized = String(raw ?? '')
 		.replace(/\r/g, '')
 		.replace(/\t/g, '    ');
@@ -184,7 +206,7 @@ function drawTextBlock(ctx, raw = '', options) {
 
 	const lines = normalized.split('\n');
 	let cursorY = y;
-	ctx.textAlign = 'left';
+	ctx.textAlign = align;
 	ctx.textBaseline = 'top';
 
 	lines.forEach((line) => {
@@ -192,57 +214,12 @@ function drawTextBlock(ctx, raw = '', options) {
 			cursorY += blankLineHeight;
 			return;
 		}
-		cursorY = drawWrappedLine(ctx, line, x, cursorY, maxWidth, lineHeight);
+		cursorY = drawWrappedLine(ctx, line, x, cursorY, maxWidth, lineHeight, align);
 	});
 	return cursorY;
 }
 
-function measureTextBlockHeight(ctx, raw = '', options) {
-	const { maxWidth, lineHeight, blankLineHeight = lineHeight } = options;
-	const normalized = String(raw ?? '')
-		.replace(/\r/g, '')
-		.replace(/\t/g, '    ');
-	if (!normalized.trim()) {
-		return 0;
-	}
-
-	const lines = normalized.split('\n');
-	let height = 0;
-	lines.forEach((line) => {
-		if (!line.trim()) {
-			height += blankLineHeight;
-			return;
-		}
-		height += measureWrappedLineHeight(ctx, line, maxWidth, lineHeight);
-	});
-	return height;
-}
-
-function measureWrappedLineHeight(ctx, text, maxWidth, lineHeight) {
-	const tokens = text.match(/\S+\s*/g) || [];
-	if (!tokens.length) {
-		return lineHeight;
-	}
-	let line = '';
-	let height = 0;
-	tokens.forEach((token, index) => {
-		const testLine = line + token;
-		const metrics = ctx.measureText(testLine);
-		if (metrics.width > maxWidth && line) {
-			height += lineHeight;
-			line = token.trimStart();
-		} else {
-			line = testLine;
-		}
-
-		if (index === tokens.length - 1) {
-			height += lineHeight;
-		}
-	});
-	return height;
-}
-
-function drawWrappedLine(ctx, text, x, startY, maxWidth, lineHeight) {
+function drawWrappedLine(ctx, text, x, startY, maxWidth, lineHeight, align = 'left') {
 	const tokens = text.match(/\S+\s*/g) || [];
 	let line = '';
 	let cursorY = startY;
@@ -293,37 +270,24 @@ function sanitizeFileName(value) {
 	return value.replace(/[^a-z0-9._-]+/gi, '_');
 }
 
-function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = false } = {}) {
-	const pillX = safeZoneRight - metrics.width;
-	const pillY = EDGE_THICKNESS + s(6);
+function drawScorePill(ctx, scoreValue, scoreStyle, { isBlank = false } = {}) {
+	const pillX = FEATURE_PILL_X;
+	const pillY = FEATURE_PILL_Y;
 
-	ctx.fillStyle = '#fff';
-	ctx.strokeStyle = '#d8cbbb';
-	ctx.lineWidth = s(2);
-	drawRoundedRect(ctx, pillX, pillY, metrics.width, metrics.height, s(14), true);
+	ctx.fillStyle = scoreStyle.pillBackground;
+	ctx.strokeStyle = scoreStyle.pillBorder;
+	ctx.lineWidth = 2;
+	drawRoundedRect(ctx, pillX, pillY, FEATURE_PILL_WIDTH, FEATURE_PILL_HEIGHT, FEATURE_PILL_RADIUS, true);
 
 	if (!isBlank && String(scoreValue || '').trim()) {
-		ctx.fillStyle = '#a0692b';
+		ctx.fillStyle = scoreStyle.pillText;
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
-		ctx.font = `700 ${s(24)}px "Inter", sans-serif`;
-		ctx.fillText(scoreValue, pillX + metrics.width / 2, pillY + metrics.height / 2);
+		ctx.font = '700 72px "Inter", sans-serif';
+		ctx.fillText(scoreValue, pillX + FEATURE_PILL_WIDTH / 2, pillY + FEATURE_PILL_HEIGHT / 2);
 	}
 
-	return pillY + metrics.height;
-}
-
-function measureScorePill(ctx, scoreValue) {
-	ctx.save();
-	ctx.font = `700 ${s(24)}px "Inter", sans-serif`;
-	const scoreWidth = ctx.measureText(scoreValue).width;
-	ctx.restore();
-	const pillPaddingX = s(18);
-	const pillHeight = s(44);
-	return {
-		width: scoreWidth + pillPaddingX * 2,
-		height: pillHeight
-	};
+	return pillY + FEATURE_PILL_HEIGHT;
 }
 
 if (require.main === module) {
