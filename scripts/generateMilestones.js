@@ -8,42 +8,63 @@ require('./utils/fontRegistry'); // Register fonts
 const {
 	CARD_SIZE,
 	EDGE_THICKNESS,
-	CONTENT_PADDING,
-	LARGE_CARD_TITLE_LEFT,
-	LARGE_CARD_TITLE_TOP,
-	LARGE_CARD_TITLE_FONT_SIZE,
-	LARGE_CARD_TITLE_FONT_WEIGHT,
 	LARGE_CARD_SCALE,
-	BODY_TEXT_COLOR,
 	MILESTONE_BACK_FILE_NAME,
 	TEXT_BLOCK_LINE_HEIGHT
 } = require('./utils/constants');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
-const { getLocalizedText } = require('./utils/textHelpers');
 
-const MILESTONE_FACE_BACKGROUND = '#dff6c2';
+const MILESTONE_FACE_BACKGROUND = '#ffffff';
+const MILESTONE_BODY_TEXT_COLOR = '#000000';
 const SCORE_PANEL_COLOR = '#243c2c';
-const SCORE_PANEL_LABEL_COLOR = '#f0e6d8';
 const s = (value) => Math.round(value * LARGE_CARD_SCALE);
-const INFO_BADGE_RADIUS = s(70);
-const INFO_BADGE_GAP = s(28);
-const INFO_BADGE_VALUE_COLOR = '#ffffff';
-const INFO_BADGE_VALUE_ALPHA = 0.35;
-const DEADLINE_BADGE_COLOR = '#5b2324';
-const MILESTONE_BACK_BASE = '#f7efe3';
-const MILESTONE_BACK_GLOW = '#fefaf2';
-
-const SCORE_STACK_HEADER_HEIGHT = s(26);
-const SCORE_STACK_HEADER_GAP = s(10);
-const SCORE_STACK_ITEM_HEIGHT = s(44);
-const SCORE_STACK_ITEM_GAP = s(10);
-const SCORE_STACK_ITEM_RADIUS = s(14);
-const SCORE_STACK_ITEM_PADDING_X = s(14);
+const MILESTONE_TITLE_Y = 159;
+const MILESTONE_TITLE_MAX_WIDTH = CARD_SIZE - 119 * 2;
+const MILESTONE_FUNNY_TEXT_Y = 777;
+const MILESTONE_FUNNY_TEXT_MAX_WIDTH = CARD_SIZE - 119 * 2;
 const MILESTONE_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
 
-const SCORE_STACK_ITEM_COLORS = ['#4ea865', '#347b4f', SCORE_PANEL_COLOR];
+const SCORE_TITLE_TEXT = 'SCORE';
+const SCORE_TITLE_X = 318;
+const SCORE_TITLE_Y = 326;
+const SCORE_TITLE_COLOR = '#000000';
+const SCORE_TITLE_FONT = '900 40px "Inter", sans-serif';
+const SCORE_ROW_X = 184;
+const SCORE_ROW_WIDTH = 268;
+const SCORE_ROW_HALF_WIDTH = 134;
+const SCORE_ROW_HEIGHT = 81;
+const SCORE_ROW_RADIUS = 5;
+const SCORE_ROW_BORDER_WIDTH = 3;
+const SCORE_ROW_BORDER_COLOR = '#526c4d';
+const SCORE_ROW_LEFT_COLOR = '#d9d9d9';
+const SCORE_ROW_LABEL_COLOR = '#8c8c8c';
+const SCORE_ROW_LABEL_FONT = '300 48px "Inter", sans-serif';
+const SCORE_ROW_VALUE_COLOR = '#000000';
+const SCORE_ROW_VALUE_FONT = '900 48px "Inter", sans-serif';
+const SCORE_ROW_TOPS = [390, 507, 624];
+const SCORE_ROW_RIGHT_COLORS = ['#b4ee99', '#8dd36c', '#47cf08'];
+
+const DEADLINE_TITLE_TEXT = 'DEADLINE';
+const DEADLINE_TITLE_X = 678.5;
+const DEADLINE_TITLE_Y = 326;
+const DEADLINE_TITLE_COLOR = '#000000';
+const DEADLINE_TITLE_FONT = '900 40px "Inter", sans-serif';
+const DEADLINE_OUTER_X = 521;
+const DEADLINE_OUTER_Y = 390;
+const DEADLINE_OUTER_SIZE = 315;
+const DEADLINE_OUTER_COLOR = '#9e7e7e';
+const DEADLINE_INNER_X = 553;
+const DEADLINE_INNER_Y = 422;
+const DEADLINE_INNER_SIZE = 251;
+const DEADLINE_VALUE_COLOR = '#aa1515';
+const DEADLINE_VALUE_FONT = '900 140px "Inter", sans-serif';
+
+const FUNNY_TEXT_COLOR = '#949494';
+const FUNNY_TEXT_FONT = 'italic 400 36px "Inter", sans-serif';
+const MILESTONE_BACK_BASE = '#f7efe3';
+const MILESTONE_BACK_GLOW = '#fefaf2';
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/milestones.csv');
@@ -111,257 +132,132 @@ async function drawMilestoneBack(filePath, record = {}, options = {}) {
 }
 
 function paintCopy(ctx, record, { isBlank = false } = {}) {
-	const safeZoneLeft = EDGE_THICKNESS + CONTENT_PADDING;
-	const safeZoneRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-	const contentWidth = safeZoneRight - safeZoneLeft;
-	const safeZoneBottom = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-
-// Title (smaller font)
 	if (!isBlank) {
-		ctx.textAlign = 'left';
-		ctx.textBaseline = 'top';
-		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = `${LARGE_CARD_TITLE_FONT_WEIGHT} ${LARGE_CARD_TITLE_FONT_SIZE}px "Inter", sans-serif`;
-		ctx.fillText((record.Title || '').trim(), LARGE_CARD_TITLE_LEFT, LARGE_CARD_TITLE_TOP);
-	}
-
-	// Divider line
-	ctx.strokeStyle = '#d9cbbd';
-	ctx.lineWidth = s(2);
-	ctx.beginPath();
-	ctx.moveTo(safeZoneLeft, EDGE_THICKNESS + s(56));
-	ctx.lineTo(safeZoneRight, EDGE_THICKNESS + s(56));
-	ctx.stroke();
-
-	if (isBlank) {
-		return;
-	}
-
-	// Body copy (smaller font)
-	ctx.textAlign = 'left';
-	const bodyFont = `500 ${s(18)}px "Inter", sans-serif`;
-	ctx.font = bodyFont;
-
-	let cursorY = EDGE_THICKNESS + s(90);
-	const minimumScoreValues = formatMinimumScoreValues(record['Minimum Score']);
-	const deadlineValue = formatDeadlineValue(record.Deadline);
-
-	const bodyCopy = getLocalizedText(record, ['Text']);
-	cursorY = drawTextBlock(ctx, bodyCopy, {
-		x: safeZoneLeft,
-		y: cursorY,
-		maxWidth: contentWidth,
-		lineHeight: MILESTONE_TEXT_LINE_HEIGHT,
-		blankLineHeight: MILESTONE_TEXT_LINE_HEIGHT
-	});
-
-	const funny = record['Funny text'];
-	if (funny && funny.trim()) {
-		cursorY += s(18);
-		ctx.font = `italic 500 ${s(18)}px "Inter", sans-serif`;
-		cursorY = drawTextBlock(ctx, funny, {
-			x: safeZoneLeft,
-			y: cursorY,
-			maxWidth: contentWidth,
-			lineHeight: MILESTONE_TEXT_LINE_HEIGHT,
-			blankLineHeight: MILESTONE_TEXT_LINE_HEIGHT
-		});
-	}
-
-	drawInfoBadges(ctx, {
-		scoreValues: minimumScoreValues,
-		deadlineValue,
-		safeZoneBottom
-	});
-}
-
-function drawInfoBadges(ctx, { scoreValues, deadlineValue, safeZoneBottom }) {
-	const hasScore = Array.isArray(scoreValues) && scoreValues.some((value) => String(value ?? '').trim());
-	const hasDeadline = Boolean(String(deadlineValue ?? '').trim());
-	if (!hasScore && !hasDeadline) {
-		return;
-	}
-
-	const gap = INFO_BADGE_GAP;
-	const radius = INFO_BADGE_RADIUS;
-	const diameter = radius * 2;
-
-	const scoreWidth = hasScore ? diameter : 0;
-	const scoreHeight = hasScore
-		? SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP + SCORE_STACK_ITEM_HEIGHT * 3 + SCORE_STACK_ITEM_GAP * 2
-		: 0;
-	const deadlineWidth = hasDeadline ? diameter : 0;
-	const deadlineHeight = hasDeadline ? SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP + diameter : 0;
-
-	const itemsCount = Number(hasScore) + Number(hasDeadline);
-	const totalWidth = scoreWidth + deadlineWidth + Math.max(itemsCount - 1, 0) * gap;
-
-	const bottomMargin = s(16);
-	const sharedTopY = safeZoneBottom - Math.max(scoreHeight, deadlineHeight) - bottomMargin;
-	const scoreTopY = sharedTopY;
-	const deadlineHeaderY = sharedTopY;
-	const scoreStackTopY = sharedTopY + SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP;
-	const scoreStackHeight = SCORE_STACK_ITEM_HEIGHT * 3 + SCORE_STACK_ITEM_GAP * 2;
-	const alignedDeadlineCenterY = scoreStackTopY + scoreStackHeight / 2;
-	const deadlineCenterY = hasScore ? alignedDeadlineCenterY : sharedTopY + SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP + radius;
-
-	let cursorX = CARD_SIZE / 2 - totalWidth / 2;
-	if (hasScore) {
-		drawScoreFrame(ctx, {
-			x: cursorX,
-			y: scoreTopY,
-			width: scoreWidth,
-			height: scoreHeight,
-			radius: SCORE_STACK_ITEM_RADIUS,
-			values: scoreValues
-		});
-		cursorX += scoreWidth + gap;
-	}
-
-	if (hasDeadline) {
-		ctx.save();
-		ctx.fillStyle = SCORE_PANEL_COLOR;
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
-		ctx.font = `900 ${s(20)}px "Inter", sans-serif`;
-		ctx.fillText('DEADLINE', cursorX + radius, deadlineHeaderY);
-		ctx.restore();
+		ctx.fillStyle = MILESTONE_BODY_TEXT_COLOR;
+		ctx.font = '500 64px "Inter", sans-serif';
+		ctx.fillText((record.Title || '').trim(), CARD_SIZE / 2, MILESTONE_TITLE_Y, MILESTONE_TITLE_MAX_WIDTH);
 
-		drawDeadlineBadge(ctx, {
-			value: deadlineValue,
-			fill: DEADLINE_BADGE_COLOR,
-			centerX: cursorX + radius,
-			centerY: deadlineCenterY,
-			radius
+		drawScoreBlock(ctx, record);
+		drawDeadlineBlock(ctx, record);
+
+		const funny = (record['Funny text'] || '').trim();
+		if (funny) {
+			ctx.font = FUNNY_TEXT_FONT;
+			ctx.fillStyle = FUNNY_TEXT_COLOR;
+			drawTextBlock(ctx, funny, {
+				x: CARD_SIZE / 2,
+				y: MILESTONE_FUNNY_TEXT_Y,
+				maxWidth: MILESTONE_FUNNY_TEXT_MAX_WIDTH,
+				lineHeight: MILESTONE_TEXT_LINE_HEIGHT,
+				blankLineHeight: MILESTONE_TEXT_LINE_HEIGHT,
+				align: 'center'
+			});
+		}
+	}
+}
+
+function drawScoreBlock(ctx, record) {
+	const scoreValues = normalizeMinimumScoreValues(formatMinimumScoreValues(record['Minimum Score']));
+	const labels = ['1st', '2nd', '3rd'];
+
+	ctx.save();
+	ctx.fillStyle = SCORE_TITLE_COLOR;
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'top';
+	ctx.font = SCORE_TITLE_FONT;
+	ctx.fillText(SCORE_TITLE_TEXT, SCORE_TITLE_X, SCORE_TITLE_Y);
+	ctx.restore();
+
+	for (let index = 0; index < 3; index += 1) {
+		drawScoreRow(ctx, {
+			x: SCORE_ROW_X,
+			y: SCORE_ROW_TOPS[index],
+			label: labels[index],
+			value: scoreValues[index] || '',
+			rightColor: SCORE_ROW_RIGHT_COLORS[index]
 		});
 	}
 }
 
-function drawDeadlineBadge(ctx, { value, centerX, centerY, radius, fill = DEADLINE_BADGE_COLOR }) {
+function drawScoreRow(ctx, { x, y, label, value, rightColor }) {
 	ctx.save();
-	ctx.beginPath();
-	ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-	ctx.closePath();
-	ctx.fillStyle = fill;
-	ctx.fill();
+	roundedRectPath(ctx, x, y, SCORE_ROW_WIDTH, SCORE_ROW_HEIGHT, SCORE_ROW_RADIUS);
+	ctx.clip();
+	ctx.fillStyle = SCORE_ROW_LEFT_COLOR;
+	ctx.fillRect(x, y, SCORE_ROW_HALF_WIDTH, SCORE_ROW_HEIGHT);
+	ctx.fillStyle = rightColor;
+	ctx.fillRect(x + SCORE_ROW_HALF_WIDTH, y, SCORE_ROW_HALF_WIDTH, SCORE_ROW_HEIGHT);
+	ctx.restore();
 
+	ctx.save();
+	ctx.strokeStyle = SCORE_ROW_BORDER_COLOR;
+	ctx.lineWidth = SCORE_ROW_BORDER_WIDTH;
+	roundedRectPath(ctx, x, y, SCORE_ROW_WIDTH, SCORE_ROW_HEIGHT, SCORE_ROW_RADIUS);
+	ctx.stroke();
+	ctx.restore();
+
+	ctx.save();
+	ctx.fillStyle = SCORE_ROW_LABEL_COLOR;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillStyle = SCORE_PANEL_LABEL_COLOR;
-	const valueFontSize = fitBadgeValueFont(ctx, value, radius);
-	ctx.font = `900 ${valueFontSize}px "Inter", sans-serif`;
-	ctx.fillText(String(value), centerX, centerY);
+	ctx.font = SCORE_ROW_LABEL_FONT;
+	ctx.fillText(label, x + SCORE_ROW_HALF_WIDTH / 2, y + SCORE_ROW_HEIGHT / 2);
+	ctx.restore();
+
+	ctx.save();
+	ctx.fillStyle = SCORE_ROW_VALUE_COLOR;
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.font = SCORE_ROW_VALUE_FONT;
+	ctx.fillText(String(value || ''), x + SCORE_ROW_HALF_WIDTH + SCORE_ROW_HALF_WIDTH / 2, y + SCORE_ROW_HEIGHT / 2);
 	ctx.restore();
 }
 
-function drawScoreFrame(ctx, { x, y, width, values }) {
-	const safeValues = normalizeMinimumScoreValues(values);
-	const hasAny = safeValues.some((value) => String(value ?? '').trim());
-	if (!hasAny) {
-		return;
-	}
+function drawDeadlineBlock(ctx, record) {
+	const deadlineValue = formatDeadlineValue(record.Deadline);
 
 	ctx.save();
+	ctx.fillStyle = DEADLINE_TITLE_COLOR;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'top';
-	ctx.fillStyle = SCORE_PANEL_COLOR;
-	ctx.font = `900 ${s(20)}px "Inter", sans-serif`;
-	ctx.fillText('SCORE', x + width / 2, y);
-
-	let cursorY = y + SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP;
-	const labels = ['1st', '2nd', '3rd'];
-	const labelColor = '#b7b0a6';
-	const valueColor = SCORE_PANEL_LABEL_COLOR;
-	const labelFont = `800 ${s(18)}px "Inter", sans-serif`;
-	const valueFont = `900 ${s(20)}px "Inter", sans-serif`;
-	ctx.font = labelFont;
-	const labelWidthMax = Math.max(
-		...labels.map((label) => ctx.measureText(`${label}:`).width)
-	);
-	const valueStartX = x + SCORE_STACK_ITEM_PADDING_X + labelWidthMax + s(10);
-
-	for (let i = 0; i < 3; i += 1) {
-		const frameY = cursorY + i * (SCORE_STACK_ITEM_HEIGHT + SCORE_STACK_ITEM_GAP);
-		const fill = SCORE_STACK_ITEM_COLORS[i] ?? SCORE_PANEL_COLOR;
-
-		ctx.save();
-		ctx.fillStyle = fill;
-		roundRect(ctx, x, frameY, width, SCORE_STACK_ITEM_HEIGHT, SCORE_STACK_ITEM_RADIUS);
-		ctx.fill();
-
-		ctx.strokeStyle = `${SCORE_PANEL_LABEL_COLOR}55`;
-		ctx.lineWidth = s(3);
-		ctx.stroke();
-
-		const rawValue = String(safeValues[i] ?? '').trim();
-		const displayValue = rawValue ? rawValue : '—';
-		const centerY = frameY + SCORE_STACK_ITEM_HEIGHT / 2;
-
-		ctx.textAlign = 'left';
-		ctx.textBaseline = 'middle';
-
-		ctx.globalAlpha = 0.9;
-		ctx.fillStyle = labelColor;
-		ctx.font = labelFont;
-		ctx.fillText(`${labels[i]}:`, x + SCORE_STACK_ITEM_PADDING_X, centerY);
-
-		ctx.globalAlpha = rawValue ? 1 : 0.65;
-		ctx.fillStyle = valueColor;
-		ctx.font = valueFont;
-		ctx.fillText(displayValue, valueStartX, centerY);
-		ctx.restore();
-	}
-
+	ctx.font = DEADLINE_TITLE_FONT;
+	ctx.fillText(DEADLINE_TITLE_TEXT, DEADLINE_TITLE_X, DEADLINE_TITLE_Y);
 	ctx.restore();
-}
 
-function roundRect(ctx, x, y, width, height, radius) {
-	const r = Math.max(0, Math.min(radius, width / 2, height / 2));
-	ctx.beginPath();
-	ctx.moveTo(x + r, y);
-	ctx.arcTo(x + width, y, x + width, y + height, r);
-	ctx.arcTo(x + width, y + height, x, y + height, r);
-	ctx.arcTo(x, y + height, x, y, r);
-	ctx.arcTo(x, y, x + width, y, r);
-	ctx.closePath();
-}
-
-function drawInfoBadge(ctx, { label, value, centerX, centerY, radius, fill = SCORE_PANEL_COLOR }) {
 	ctx.save();
+	ctx.fillStyle = DEADLINE_OUTER_COLOR;
 	ctx.beginPath();
-	ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-	ctx.closePath();
-	ctx.fillStyle = fill;
+	ctx.arc(DEADLINE_OUTER_X + DEADLINE_OUTER_SIZE / 2, DEADLINE_OUTER_Y + DEADLINE_OUTER_SIZE / 2, DEADLINE_OUTER_SIZE / 2, 0, Math.PI * 2);
 	ctx.fill();
+	ctx.restore();
 
+	ctx.save();
+	ctx.fillStyle = MILESTONE_FACE_BACKGROUND;
+	ctx.beginPath();
+	ctx.arc(DEADLINE_INNER_X + DEADLINE_INNER_SIZE / 2, DEADLINE_INNER_Y + DEADLINE_INNER_SIZE / 2, DEADLINE_INNER_SIZE / 2, 0, Math.PI * 2);
+	ctx.fill();
+	ctx.restore();
+
+	ctx.save();
+	ctx.fillStyle = DEADLINE_VALUE_COLOR;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillStyle = SCORE_PANEL_LABEL_COLOR;
-	ctx.font = `700 ${s(20)}px "Inter", sans-serif`;
-	ctx.fillText(label, centerX, centerY);
-
-	ctx.save();
-	ctx.fillStyle = INFO_BADGE_VALUE_COLOR;
-	ctx.globalAlpha = INFO_BADGE_VALUE_ALPHA;
-	const valueFontSize = fitBadgeValueFont(ctx, value, radius);
-	ctx.font = `900 ${valueFontSize}px "Inter", sans-serif`;
-	ctx.fillText(value, centerX, centerY);
-	ctx.restore();
+	ctx.font = DEADLINE_VALUE_FONT;
+	ctx.fillText(String(deadlineValue || ''), DEADLINE_INNER_X + DEADLINE_INNER_SIZE / 2, DEADLINE_INNER_Y + DEADLINE_INNER_SIZE / 2);
 	ctx.restore();
 }
 
-function fitBadgeValueFont(ctx, value, radius) {
-	const maxWidth = radius * 1.6;
-	let size = Math.min(radius * 1.5, s(120));
-	const minSize = s(28);
-	while (size >= minSize) {
-		ctx.font = `900 ${size}px "Inter", sans-serif`;
-		if (ctx.measureText(String(value)).width <= maxWidth) {
-			return size;
-		}
-		size -= s(4);
-	}
-	return minSize;
+function roundedRectPath(ctx, x, y, width, height, radius) {
+	const safeRadius = Math.max(0, Math.min(radius, width / 2, height / 2));
+	ctx.beginPath();
+	ctx.moveTo(x + safeRadius, y);
+	ctx.arcTo(x + width, y, x + width, y + height, safeRadius);
+	ctx.arcTo(x + width, y + height, x, y + height, safeRadius);
+	ctx.arcTo(x, y + height, x, y, safeRadius);
+	ctx.arcTo(x, y, x + width, y, safeRadius);
+	ctx.closePath();
 }
 
 function normalizeMinimumScoreValues(values) {
