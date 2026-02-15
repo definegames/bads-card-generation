@@ -41,6 +41,8 @@ OUTPUT_ROOT=outputs_ru LOCALE=ru yarn generate:assets
 
 Every locale pass copies its atlases and misc assets into `public/atlases/<locale>` and `public/misc/<locale>` respectively. The Next.js app surfaces these folders through the locale switcher at the top of the page.
 
+Card back assets are canonical PNGs in `images/`. `yarn generate:misc` now copies those files into `<output>/misc` (with project-specific output names) instead of drawing card backs in code. Keep the source files in `images/` as the single source of truth.
+
 When needed, you can run the generators individually:
 
 ```bash
