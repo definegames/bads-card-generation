@@ -5,17 +5,25 @@ const fs = require('fs/promises');
 const { createCanvas } = require('canvas');
 const { parse } = require('csv-parse/sync');
 require('./utils/fontRegistry'); // Register fonts
-const { TICKET_CARD_SIZE, SMALL_CARD_SCALE, BODY_TEXT_COLOR, TEXT_BLOCK_LINE_HEIGHT } = require('./utils/constants');
+const { TICKET_CARD_SIZE } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
 
-const BACKGROUND_COLOR = '#fffdf8';
-const BORDER_COLOR = '#d9cbbd';
-const TITLE_COLOR = '#c52233';
-const FUNNY_TEXT_COLOR = '#7a4a38';
-const s = (value) => Math.round(value * SMALL_CARD_SCALE);
-const PROBLEM_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
+const BACKGROUND_COLOR = '#ffffff';
+const TITLE_COLOR = '#d02626';
+const TITLE_X = 61;
+const TITLE_Y = 66;
+const TITLE_FONT = '900 64px "Inter", sans-serif';
+const DELIMITER_X = 127;
+const DELIMITER_Y = 189;
+const DELIMITER_WIDTH = 513;
+const DELIMITER_COLOR = '#a3a3a3';
+const DELIMITER_LINE_WIDTH = 1;
+const TEXT_X = 61;
+const TEXT_Y = 226;
+const TEXT_FONT = '400 36px "Inter", sans-serif';
+const PROBLEM_TEXT_LINE_HEIGHT = 42;
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/problems.csv');
@@ -59,59 +67,39 @@ async function drawProblemCard(filePath, record, options = {}) {
 function paintBackground(ctx) {
 	ctx.fillStyle = BACKGROUND_COLOR;
 	ctx.fillRect(0, 0, TICKET_CARD_SIZE, TICKET_CARD_SIZE);
-
-	ctx.strokeStyle = BORDER_COLOR;
-	ctx.lineWidth = s(4);
-	ctx.strokeRect(s(2), s(2), TICKET_CARD_SIZE - s(4), TICKET_CARD_SIZE - s(4));
 }
 
 function paintProblem(ctx, record, { isBlank = false } = {}) {
-	const padding = s(28);
-	const safeLeft = padding;
-	const safeRight = TICKET_CARD_SIZE - padding;
-	const contentWidth = safeRight - safeLeft;
+	const contentWidth = TICKET_CARD_SIZE - TEXT_X * 2;
 
 	const title = (record.Title || 'Problem').trim().toUpperCase();
 	if (!isBlank) {
 		ctx.fillStyle = TITLE_COLOR;
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
-		ctx.font = `700 ${s(30)}px "Inter", sans-serif`;
-		ctx.fillText(title, safeLeft, padding);
+		ctx.font = TITLE_FONT;
+		ctx.fillText(title, TITLE_X, TITLE_Y);
 	}
 
-	const delimiterY = padding + s(48);
-	ctx.strokeStyle = '#edd9cf';
-	ctx.lineWidth = s(2);
+	ctx.strokeStyle = DELIMITER_COLOR;
+	ctx.lineWidth = DELIMITER_LINE_WIDTH;
+	ctx.lineCap = 'round';
 	ctx.beginPath();
-	ctx.moveTo(safeLeft, delimiterY);
-	ctx.lineTo(safeRight, delimiterY);
+	ctx.moveTo(DELIMITER_X, DELIMITER_Y);
+	ctx.lineTo(DELIMITER_X + DELIMITER_WIDTH, DELIMITER_Y);
 	ctx.stroke();
 
 	if (isBlank) {
 		return;
 	}
 
-	let cursorY = delimiterY + s(18);
+	let cursorY = TEXT_Y;
 	const mainText = getLocalizedText(record, ['Text']);
 	if (mainText) {
-		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = `500 ${s(20)}px "Inter", sans-serif`;
+		ctx.fillStyle = '#000000';
+		ctx.font = TEXT_FONT;
 		cursorY = drawTextBlock(ctx, mainText, {
-			x: safeLeft,
-			y: cursorY,
-			maxWidth: contentWidth,
-			lineHeight: PROBLEM_TEXT_LINE_HEIGHT
-		});
-	}
-
-	const funny = (record['Funny text'] || '').trim();
-	if (funny) {
-		cursorY += s(16);
-		ctx.fillStyle = FUNNY_TEXT_COLOR;
-		ctx.font = `italic 500 ${s(20)}px "Inter", sans-serif`;
-		drawTextBlock(ctx, funny, {
-			x: safeLeft,
+			x: TEXT_X,
 			y: cursorY,
 			maxWidth: contentWidth,
 			lineHeight: PROBLEM_TEXT_LINE_HEIGHT
