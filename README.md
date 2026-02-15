@@ -22,17 +22,8 @@ cd fonts
 wget "https://github.com/rsms/inter/raw/master/docs/font-files/Inter-Regular.ttf"
 wget "https://github.com/rsms/inter/raw/master/docs/font-files/Inter-Bold.ttf"
 
-# Noto Sans (fallback text font)
-wget "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf"
-wget "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Bold.ttf"
-
-# Noto Color Emoji (for emoji rendering - REQUIRED)
-wget "https://github.com/googlefonts/noto-emoji/raw/main/fonts/NotoColorEmoji.ttf"
-
 cd ..
 ```
-
-**Note:** The NotoColorEmoji.ttf font is essential for proper emoji rendering (🅰️, 🚀, etc.). Without it, emojis will appear as boxes with Unicode codes.
 
 ## Generate the cards
 

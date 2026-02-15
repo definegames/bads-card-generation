@@ -7,18 +7,30 @@ const { parse } = require('csv-parse/sync');
 require('./utils/fontRegistry'); // Register fonts
 const {
 	CARD_SIZE,
-	EDGE_THICKNESS,
-	CONTENT_PADDING,
+	LARGE_CARD_TITLE_LEFT,
+	LARGE_CARD_TITLE_TOP,
+	LARGE_CARD_TITLE_FONT_SIZE,
+	LARGE_CARD_TITLE_FONT_WEIGHT,
 	LARGE_CARD_SCALE,
-	BACKGROUND_COLOR,
 	BODY_TEXT_COLOR
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
-
-const BLANK_SCORE_WIDTH_TOKEN = '\u2007\u2007\u2007\u2007\u2007\u2007';
 const s = (value) => Math.round(value * LARGE_CARD_SCALE);
+const ABILITY_TITLE_X = LARGE_CARD_TITLE_LEFT;
+const ABILITY_TITLE_Y = LARGE_CARD_TITLE_TOP;
+const ABILITY_DIVIDER_X = 119;
+const ABILITY_DIVIDER_Y = 275;
+const ABILITY_TEXT_X = 119;
+const ABILITY_TEXT_Y = 314;
+const ABILITY_TEXT_FONT_SIZE = 36;
+const ABILITY_TEXT_LINE_HEIGHT = Math.round(ABILITY_TEXT_FONT_SIZE * 1.35);
+const ABILITY_PILL_X = 853;
+const ABILITY_PILL_Y = 32;
+const ABILITY_PILL_WIDTH = 120;
+const ABILITY_PILL_HEIGHT = 100;
+const ABILITY_PILL_RADIUS = 25;
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/abilities.csv');
@@ -61,65 +73,57 @@ async function drawAbilityCard(filePath, record, options = {}) {
 }
 
 function paintBackground(ctx) {
-	ctx.fillStyle = BACKGROUND_COLOR;
+	ctx.fillStyle = '#ffffff';
 	ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
-
-	ctx.strokeStyle = '#d4cdc3';
-	ctx.lineWidth = s(4);
-	ctx.strokeRect(EDGE_THICKNESS / 2, EDGE_THICKNESS / 2, CARD_SIZE - EDGE_THICKNESS, CARD_SIZE - EDGE_THICKNESS);
 }
 
 function paintAbilityContent(ctx, record, { isBlank = false } = {}) {
-	const safeLeft = EDGE_THICKNESS + CONTENT_PADDING;
-	const safeRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-	const safeWidth = safeRight - safeLeft;
-	const top = EDGE_THICKNESS + CONTENT_PADDING;
-	const headerBottom = paintHeaderRow(ctx, record, safeRight, { isBlank });
+	const safeWidth = CARD_SIZE - ABILITY_TEXT_X * 2;
+	paintHeaderRow(ctx, record, { isBlank });
 
 	if (!isBlank) {
 		const title = (record.Title || 'Untitled Ability').trim();
-		ctx.textAlign = 'center';
+		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = `700 ${s(34)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
-		ctx.fillText(title, CARD_SIZE / 2, Math.max(top, headerBottom + s(12)));
+		ctx.font = `${LARGE_CARD_TITLE_FONT_WEIGHT} ${LARGE_CARD_TITLE_FONT_SIZE}px "Inter", sans-serif`;
+		ctx.fillText(title, ABILITY_TITLE_X, ABILITY_TITLE_Y);
 	}
 
-	ctx.strokeStyle = '#d9cbbd';
-	ctx.lineWidth = s(2);
-	const dividerY = Math.max(top, headerBottom + s(12)) + s(48);
+	ctx.strokeStyle = '#a3a3a3';
+	ctx.lineWidth = s(1);
 	ctx.beginPath();
-	ctx.moveTo(safeLeft, dividerY);
-	ctx.lineTo(safeRight, dividerY);
+	ctx.moveTo(ABILITY_DIVIDER_X, ABILITY_DIVIDER_Y);
+	ctx.lineTo(ABILITY_DIVIDER_X + 513, ABILITY_DIVIDER_Y);
 	ctx.stroke();
 
 	if (isBlank) {
 		return;
 	}
-	let cursorY = dividerY + s(12);
+	let cursorY = ABILITY_TEXT_Y;
 	ctx.textAlign = 'left';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `500 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `400 ${ABILITY_TEXT_FONT_SIZE}px "Inter", sans-serif`;
 	const description = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, description, {
-		x: safeLeft,
+		x: ABILITY_TEXT_X,
 		y: cursorY,
 		maxWidth: safeWidth,
-		lineHeight: s(28),
-		blankLineHeight: s(24)
+		lineHeight: ABILITY_TEXT_LINE_HEIGHT,
+		blankLineHeight: ABILITY_TEXT_LINE_HEIGHT
 	});
 
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
 		cursorY += s(20);
-		ctx.font = `italic 500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `italic 400 ${ABILITY_TEXT_FONT_SIZE}px "Inter", sans-serif`;
 		ctx.fillStyle = '#5c4d40';
 		drawTextBlock(ctx, funny, {
-			x: safeLeft,
+			x: ABILITY_TEXT_X,
 			y: cursorY,
 			maxWidth: safeWidth,
-			lineHeight: s(24),
-			blankLineHeight: s(20)
+			lineHeight: ABILITY_TEXT_LINE_HEIGHT,
+			blankLineHeight: ABILITY_TEXT_LINE_HEIGHT
 		});
 	}
 }
@@ -138,11 +142,9 @@ function normalizePointsValue(record = {}) {
 	return trimmed;
 }
 
-function paintHeaderRow(ctx, record, safeZoneRight, { isBlank = false } = {}) {
+function paintHeaderRow(ctx, record, { isBlank = false } = {}) {
 	const pointsValue = isBlank ? '' : normalizePointsValue(record);
-	const pillMeasurementValue = isBlank ? BLANK_SCORE_WIDTH_TOKEN : (pointsValue || '1');
-	const pillMetrics = measureScorePill(ctx, pillMeasurementValue);
-	return drawScorePill(ctx, pointsValue, safeZoneRight, pillMetrics, { isBlank });
+	return drawScorePill(ctx, pointsValue, { isBlank });
 }
 
 function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {
@@ -165,37 +167,24 @@ function drawRoundedRect(ctx, x, y, width, height, radius, stroke = false) {
 	ctx.restore();
 }
 
-function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = false } = {}) {
-	const pillX = safeZoneRight - metrics.width;
-	const pillY = EDGE_THICKNESS + s(6);
+function drawScorePill(ctx, scoreValue, { isBlank = false } = {}) {
+	const pillX = ABILITY_PILL_X;
+	const pillY = ABILITY_PILL_Y;
 
-	ctx.fillStyle = '#fff';
-	ctx.strokeStyle = '#d8cbbb';
-	ctx.lineWidth = s(2);
-	drawRoundedRect(ctx, pillX, pillY, metrics.width, metrics.height, s(14), true);
+	ctx.fillStyle = '#efefef';
+	ctx.strokeStyle = '#c5c5c5';
+	ctx.lineWidth = 2;
+	drawRoundedRect(ctx, pillX, pillY, ABILITY_PILL_WIDTH, ABILITY_PILL_HEIGHT, ABILITY_PILL_RADIUS, true);
 
 	if (!isBlank && String(scoreValue || '').trim()) {
-		ctx.fillStyle = '#a0692b';
+		ctx.fillStyle = '#b3b3b3';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
-		ctx.font = `700 ${s(24)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
-		ctx.fillText(scoreValue, pillX + metrics.width / 2, pillY + metrics.height / 2);
+		ctx.font = `700 72px "Inter", sans-serif`;
+		ctx.fillText(scoreValue, pillX + ABILITY_PILL_WIDTH / 2, pillY + ABILITY_PILL_HEIGHT / 2);
 	}
 
-	return pillY + metrics.height;
-}
-
-function measureScorePill(ctx, scoreValue) {
-	ctx.save();
-	ctx.font = `700 ${s(24)}px "Inter", "Noto Sans", "Montserrat", sans-serif`;
-	const scoreWidth = ctx.measureText(scoreValue).width;
-	ctx.restore();
-	const pillPaddingX = s(18);
-	const pillHeight = s(44);
-	return {
-		width: scoreWidth + pillPaddingX * 2,
-		height: pillHeight
-	};
+	return pillY + ABILITY_PILL_HEIGHT;
 }
 
 function drawTextBlock(ctx, raw = '', options) {

@@ -3,42 +3,58 @@ const fs = require('fs');
 const { registerFont } = require('canvas');
 
 const FONTS_DIR = path.resolve(__dirname, '../../fonts');
+const FONT_EXTENSION_REGEX = /\.(ttf|otf)$/i;
+
+const WEIGHT_BY_TOKEN = {
+	Thin: '100',
+	ExtraLight: '200',
+	Light: '300',
+	Regular: '400',
+	Medium: '500',
+	SemiBold: '600',
+	Bold: '700',
+	ExtraBold: '800',
+	Black: '900'
+};
+
+function parseFontVariant(filename) {
+	const extensionless = filename.replace(FONT_EXTENSION_REGEX, '');
+	const firstDashIndex = extensionless.indexOf('-');
+
+	if (firstDashIndex === -1) {
+		return null;
+	}
+
+	const family = extensionless.slice(0, firstDashIndex);
+	const rawVariant = extensionless.slice(firstDashIndex + 1);
+	const isItalic = rawVariant.endsWith('Italic');
+	const weightToken = isItalic
+		? rawVariant.slice(0, -'Italic'.length) || 'Regular'
+		: rawVariant;
+	const weight = WEIGHT_BY_TOKEN[weightToken] || '400';
+
+	return {
+		family,
+		weight,
+		style: isItalic ? 'italic' : 'normal'
+	};
+}
 
 // Register all fonts once at module load
 function registerFonts() {
 	try {
-		const interRegular = path.join(FONTS_DIR, 'Inter-Regular.ttf');
-		const interBold = path.join(FONTS_DIR, 'Inter-Bold.ttf');
+		const fontFiles = fs
+			.readdirSync(FONTS_DIR)
+			.filter((fileName) => FONT_EXTENSION_REGEX.test(fileName));
 
-		if (fs.existsSync(interRegular)) {
-			registerFont(interRegular, { family: 'Inter', weight: '400' });
-			registerFont(interRegular, { family: 'Inter', weight: '500' });
-			registerFont(interRegular, { family: 'Inter', weight: '600' });
-		}
+		for (const fileName of fontFiles) {
+			const parsed = parseFontVariant(fileName);
 
-		if (fs.existsSync(interBold)) {
-			registerFont(interBold, { family: 'Inter', weight: '700' });
-			registerFont(interBold, { family: 'Inter', weight: '800' });
-			registerFont(interBold, { family: 'Inter', weight: '900' });
-		}
+			if (!parsed) {
+				continue;
+			}
 
-		const notoRegular = path.join(FONTS_DIR, 'NotoSans-Regular.ttf');
-		const notoBold = path.join(FONTS_DIR, 'NotoSans-Bold.ttf');
-
-		if (fs.existsSync(notoRegular)) {
-			registerFont(notoRegular, { family: 'Noto Sans', weight: '400' });
-			registerFont(notoRegular, { family: 'Noto Sans', weight: '500' });
-			registerFont(notoRegular, { family: 'Noto Sans', weight: '600' });
-		}
-
-		if (fs.existsSync(notoBold)) {
-			registerFont(notoBold, { family: 'Noto Sans', weight: '700' });
-			registerFont(notoBold, { family: 'Noto Sans', weight: '800' });
-		}
-
-		const emojiFont = path.join(FONTS_DIR, 'NotoColorEmoji.ttf');
-		if (fs.existsSync(emojiFont)) {
-			registerFont(emojiFont, { family: 'Noto Color Emoji' });
+			registerFont(path.join(FONTS_DIR, fileName), parsed);
 		}
 	} catch (error) {
 		console.error('Error registering fonts:', error.message);

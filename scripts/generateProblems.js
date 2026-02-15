@@ -75,7 +75,7 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 		ctx.fillStyle = TITLE_COLOR;
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
-		ctx.font = `700 ${s(30)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `700 ${s(30)}px "Inter", sans-serif`;
 		ctx.fillText(title, safeLeft, padding);
 	}
 
@@ -95,7 +95,7 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 	const mainText = getLocalizedText(record, ['Text']);
 	if (mainText) {
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = `500 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `500 ${s(20)}px "Inter", sans-serif`;
 		cursorY = drawTextBlock(ctx, mainText, {
 			x: safeLeft,
 			y: cursorY,
@@ -108,7 +108,7 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 	if (funny) {
 		cursorY += s(16);
 		ctx.fillStyle = FUNNY_TEXT_COLOR;
-		ctx.font = `italic 500 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `italic 500 ${s(20)}px "Inter", sans-serif`;
 		drawTextBlock(ctx, funny, {
 			x: safeLeft,
 			y: cursorY,

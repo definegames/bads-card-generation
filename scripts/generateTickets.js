@@ -99,7 +99,7 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 
 	const badgeY = padding - s(8);
 	if (!isBlank) {
-		ctx.font = `700 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `700 ${s(18)}px "Inter", sans-serif`;
 		const badgeWidth = ctx.measureText(category).width + s(24);
 		ctx.fillStyle = categoryColors.background;
 		drawRoundedRect(ctx, safeLeft, badgeY, badgeWidth, s(32), s(10));
@@ -114,7 +114,7 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = `600 ${s(24)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `600 ${s(24)}px "Inter", sans-serif`;
 		ctx.fillText(title, safeLeft, badgeY + s(44));
 	}
 
@@ -139,7 +139,7 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 	let cursorY = dividerY + s(18);
 	const text = getLocalizedText(record, ['Text']);
 	if (text.trim()) {
-		ctx.font = `500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `500 ${s(18)}px "Inter", sans-serif`;
 		cursorY = drawTextBlock(ctx, text, {
 			x: safeLeft,
 			y: cursorY,
@@ -153,7 +153,7 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
 		cursorY += s(16);
-		ctx.font = `italic 500 ${s(16)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `italic 500 ${s(16)}px "Inter", sans-serif`;
 		ctx.fillStyle = '#574334';
 		drawTextBlock(ctx, funny, {
 			x: safeLeft,
@@ -181,7 +181,7 @@ function paintCounterSlots(ctx, record, left, top, maxWidth) {
 	const usableWidth = Math.max(endX - startX, 1);
 	const columnSpacing = usableWidth / (slotsPerRow - 1);
 
-	ctx.font = `600 ${glyphSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `600 ${glyphSize}px "Inter", sans-serif`;
 	ctx.fillStyle = '#4b372a';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
@@ -256,7 +256,7 @@ function drawDirectiveIcon(ctx, style, x, y, lineHeight) {
 	ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
 	ctx.fill();
 	ctx.fillStyle = '#fffdf8';
-	ctx.font = `700 ${s(14)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `700 ${s(14)}px "Inter", sans-serif`;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText(style.letter, centerX, centerY);

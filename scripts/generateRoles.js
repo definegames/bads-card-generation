@@ -128,7 +128,7 @@ function paintRoleBack(ctx, { isBlank = false } = {}) {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `600 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `600 ${s(20)}px "Inter", sans-serif`;
 	ctx.fillText('ROLE CARD', centerX, centerY);
 }
 
@@ -169,7 +169,7 @@ function paintRoleContent(ctx, record, { isBlank = false } = {}) {
 	const text = getLocalizedText(record, ['Text']);
 	if (text) {
 		ctx.textAlign = 'left';
-		ctx.font = `500 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `500 ${s(20)}px "Inter", sans-serif`;
 		cursorY = drawTextBlock(ctx, text, {
 			x: safeLeft,
 			y: cursorY,
@@ -182,7 +182,7 @@ function paintRoleContent(ctx, record, { isBlank = false } = {}) {
 	const funny = (record['Funny text'] || '').trim();
 	if (funny) {
 		cursorY += s(24);
-		ctx.font = `italic 500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `italic 500 ${s(18)}px "Inter", sans-serif`;
 		ctx.fillStyle = '#5c4d40';
 		cursorY = drawTextBlock(ctx, funny, {
 			x: safeLeft,
@@ -305,13 +305,13 @@ function fitTitleFont(ctx, text, maxWidth) {
 	const baseSize = s(42);
 	const minSize = s(22);
 	for (let size = baseSize; size >= minSize; size -= s(2)) {
-		const font = `800 ${size}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		const font = `800 ${size}px "Inter", sans-serif`;
 		ctx.font = font;
 		if (ctx.measureText(text).width <= maxWidth || size === minSize) {
 			return { font, size };
 		}
 	}
-	const fallbackFont = `800 ${minSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	const fallbackFont = `800 ${minSize}px "Inter", sans-serif`;
 	return { font: fallbackFont, size: minSize };
 }
 

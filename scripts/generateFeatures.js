@@ -9,6 +9,10 @@ const {
 	CARD_SIZE,
 	EDGE_THICKNESS,
 	CONTENT_PADDING,
+	LARGE_CARD_TITLE_LEFT,
+	LARGE_CARD_TITLE_TOP,
+	LARGE_CARD_TITLE_FONT_SIZE,
+	LARGE_CARD_TITLE_FONT_WEIGHT,
 	LARGE_CARD_SCALE,
 	BACKGROUND_COLOR,
 	BODY_TEXT_COLOR
@@ -84,14 +88,14 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 
 	const title = (record.Title || 'Untitled Feature').trim();
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `700 ${s(30)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `${LARGE_CARD_TITLE_FONT_WEIGHT} ${LARGE_CARD_TITLE_FONT_SIZE}px "Inter", sans-serif`;
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
-	ctx.fillText(title, safeZoneLeft, headerBottom + s(16));
+	ctx.fillText(title, LARGE_CARD_TITLE_LEFT, LARGE_CARD_TITLE_TOP);
 
 	let cursorY = headerBottom + s(60);
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `500 ${s(19)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `500 ${s(19)}px "Inter", sans-serif`;
 	const description = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, description, {
 		x: safeZoneLeft,
@@ -108,7 +112,7 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 			lineHeight: s(22),
 			blankLineHeight: s(20)
 		};
-		ctx.font = `italic 500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `italic 500 ${s(18)}px "Inter", sans-serif`;
 		const funnyHeight = measureTextBlockHeight(ctx, funny, funnyOptions);
 		const funnyGap = s(18);
 		const minFunnyY = cursorY + funnyGap;
@@ -142,7 +146,7 @@ function paintScoreWatermark(ctx, scoreValue) {
 	ctx.save();
 	ctx.globalAlpha = 0.1;
 	ctx.fillStyle = '#1c140d';
-	ctx.font = `900 ${s(320)}px "Inter", "Noto Sans", "Noto Color Emoji", "Montserrat", sans-serif`;
+	ctx.font = `900 ${s(320)}px "Inter", sans-serif`;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText(text, CARD_SIZE / 2, CARD_SIZE / 2);
@@ -302,7 +306,7 @@ function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = fals
 		ctx.fillStyle = '#a0692b';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
-		ctx.font = `700 ${s(24)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `700 ${s(24)}px "Inter", sans-serif`;
 		ctx.fillText(scoreValue, pillX + metrics.width / 2, pillY + metrics.height / 2);
 	}
 
@@ -311,7 +315,7 @@ function drawScorePill(ctx, scoreValue, safeZoneRight, metrics, { isBlank = fals
 
 function measureScorePill(ctx, scoreValue) {
 	ctx.save();
-	ctx.font = `700 ${s(24)}px "Inter", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `700 ${s(24)}px "Inter", sans-serif`;
 	const scoreWidth = ctx.measureText(scoreValue).width;
 	ctx.restore();
 	const pillPaddingX = s(18);

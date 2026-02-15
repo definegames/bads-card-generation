@@ -9,6 +9,10 @@ const {
 	CARD_SIZE,
 	EDGE_THICKNESS,
 	CONTENT_PADDING,
+	LARGE_CARD_TITLE_LEFT,
+	LARGE_CARD_TITLE_TOP,
+	LARGE_CARD_TITLE_FONT_SIZE,
+	LARGE_CARD_TITLE_FONT_WEIGHT,
 	LARGE_CARD_SCALE,
 	BODY_TEXT_COLOR,
 	MILESTONE_BACK_FILE_NAME
@@ -112,11 +116,11 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 
 // Title (smaller font)
 	if (!isBlank) {
-		ctx.textAlign = 'center';
+		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
 		ctx.fillStyle = BODY_TEXT_COLOR;
-		ctx.font = `700 ${s(28)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
-		ctx.fillText((record.Title || '').trim(), CARD_SIZE / 2, EDGE_THICKNESS + s(16));
+		ctx.font = `${LARGE_CARD_TITLE_FONT_WEIGHT} ${LARGE_CARD_TITLE_FONT_SIZE}px "Inter", sans-serif`;
+		ctx.fillText((record.Title || '').trim(), LARGE_CARD_TITLE_LEFT, LARGE_CARD_TITLE_TOP);
 	}
 
 	// Divider line
@@ -133,7 +137,7 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 
 	// Body copy (smaller font)
 	ctx.textAlign = 'left';
-	const bodyFont = `500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	const bodyFont = `500 ${s(18)}px "Inter", sans-serif`;
 	ctx.font = bodyFont;
 
 	let cursorY = EDGE_THICKNESS + s(90);
@@ -154,7 +158,7 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 	const funny = record['Funny text'];
 	if (funny && funny.trim()) {
 		cursorY += s(18);
-		ctx.font = `italic 500 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `italic 500 ${s(18)}px "Inter", sans-serif`;
 		cursorY = drawTextBlock(ctx, funny, {
 			x: safeZoneLeft,
 			y: cursorY,
@@ -219,7 +223,7 @@ function drawInfoBadges(ctx, { scoreValues, deadlineValue, safeZoneBottom }) {
 		ctx.fillStyle = SCORE_PANEL_COLOR;
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
-		ctx.font = `900 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `900 ${s(20)}px "Inter", sans-serif`;
 		ctx.fillText('DEADLINE', cursorX + radius, deadlineHeaderY);
 		ctx.restore();
 
@@ -245,7 +249,7 @@ function drawDeadlineBadge(ctx, { value, centerX, centerY, radius, fill = DEADLI
 	ctx.textBaseline = 'middle';
 	ctx.fillStyle = SCORE_PANEL_LABEL_COLOR;
 	const valueFontSize = fitBadgeValueFont(ctx, value, radius);
-	ctx.font = `900 ${valueFontSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `900 ${valueFontSize}px "Inter", sans-serif`;
 	ctx.fillText(String(value), centerX, centerY);
 	ctx.restore();
 }
@@ -261,15 +265,15 @@ function drawScoreFrame(ctx, { x, y, width, values }) {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'top';
 	ctx.fillStyle = SCORE_PANEL_COLOR;
-	ctx.font = `900 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `900 ${s(20)}px "Inter", sans-serif`;
 	ctx.fillText('SCORE', x + width / 2, y);
 
 	let cursorY = y + SCORE_STACK_HEADER_HEIGHT + SCORE_STACK_HEADER_GAP;
 	const labels = ['1st', '2nd', '3rd'];
 	const labelColor = '#b7b0a6';
 	const valueColor = SCORE_PANEL_LABEL_COLOR;
-	const labelFont = `800 ${s(18)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
-	const valueFont = `900 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	const labelFont = `800 ${s(18)}px "Inter", sans-serif`;
+	const valueFont = `900 ${s(20)}px "Inter", sans-serif`;
 	ctx.font = labelFont;
 	const labelWidthMax = Math.max(
 		...labels.map((label) => ctx.measureText(`${label}:`).width)
@@ -333,14 +337,14 @@ function drawInfoBadge(ctx, { label, value, centerX, centerY, radius, fill = SCO
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillStyle = SCORE_PANEL_LABEL_COLOR;
-	ctx.font = `700 ${s(20)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `700 ${s(20)}px "Inter", sans-serif`;
 	ctx.fillText(label, centerX, centerY);
 
 	ctx.save();
 	ctx.fillStyle = INFO_BADGE_VALUE_COLOR;
 	ctx.globalAlpha = INFO_BADGE_VALUE_ALPHA;
 	const valueFontSize = fitBadgeValueFont(ctx, value, radius);
-	ctx.font = `900 ${valueFontSize}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `900 ${valueFontSize}px "Inter", sans-serif`;
 	ctx.fillText(value, centerX, centerY);
 	ctx.restore();
 	ctx.restore();
@@ -351,7 +355,7 @@ function fitBadgeValueFont(ctx, value, radius) {
 	let size = Math.min(radius * 1.5, s(120));
 	const minSize = s(28);
 	while (size >= minSize) {
-		ctx.font = `900 ${size}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+		ctx.font = `900 ${size}px "Inter", sans-serif`;
 		if (ctx.measureText(String(value)).width <= maxWidth) {
 			return size;
 		}
@@ -423,7 +427,7 @@ function paintBack(ctx, { isBlank = false } = {}) {
 	ctx.fillStyle = SCORE_PANEL_COLOR;
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.font = `800 ${s(48)}px "Inter", "Noto Color Emoji", "Noto Sans", "Montserrat", sans-serif`;
+	ctx.font = `800 ${s(48)}px "Inter", sans-serif`;
 	ctx.fillText('MILESTONE', CARD_SIZE / 2, CARD_SIZE / 2);
 }
 
