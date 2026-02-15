@@ -12,7 +12,8 @@ const {
 	CATEGORY_COLORS,
 	TICKET_CARD_SIZE,
 	SMALL_CARD_SCALE,
-	TICKET_DIRECTIVE_COLORS
+	TICKET_DIRECTIVE_COLORS,
+	TEXT_BLOCK_LINE_HEIGHT
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
@@ -26,6 +27,7 @@ const DIRECTIVE_ICON_STYLES = [
 const s = (value) => Math.round(value * SMALL_CARD_SCALE);
 const DIRECTIVE_ICON_SIZE = s(34);
 const DIRECTIVE_ICON_GAP = s(14);
+const TICKET_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/tickets.csv');
@@ -144,8 +146,8 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: s(24),
-			blankLineHeight: s(22),
+			lineHeight: TICKET_TEXT_LINE_HEIGHT,
+			blankLineHeight: TICKET_TEXT_LINE_HEIGHT,
 			renderDirectiveIcons: true
 		});
 	}
@@ -159,8 +161,8 @@ function paintTicket(ctx, record, { isBlank = false } = {}) {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: s(22),
-			blankLineHeight: s(18)
+			lineHeight: TICKET_TEXT_LINE_HEIGHT,
+			blankLineHeight: TICKET_TEXT_LINE_HEIGHT
 		});
 	}
 }

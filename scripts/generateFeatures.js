@@ -8,7 +8,8 @@ require('./utils/fontRegistry'); // Register fonts
 const {
 	CARD_SIZE,
 	LARGE_CARD_SCALE,
-	BODY_TEXT_COLOR
+	BODY_TEXT_COLOR,
+	TEXT_BLOCK_LINE_HEIGHT
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
@@ -26,6 +27,7 @@ const FEATURE_PILL_Y = 32;
 const FEATURE_PILL_WIDTH = 120;
 const FEATURE_PILL_HEIGHT = 100;
 const FEATURE_PILL_RADIUS = 25;
+const FEATURE_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
 
 const SCORE_STYLES = {
 	1: {
@@ -128,8 +130,8 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 		x: TITLE_X,
 		y: cursorY,
 		maxWidth: TITLE_MAX_WIDTH,
-		lineHeight: s(26),
-		blankLineHeight: s(24),
+		lineHeight: FEATURE_TEXT_LINE_HEIGHT,
+		blankLineHeight: FEATURE_TEXT_LINE_HEIGHT,
 		align: 'left'
 	});
 
@@ -141,8 +143,8 @@ function paintFeatureContent(ctx, record, { isBlank = false } = {}) {
 			x: CARD_SIZE / 2,
 			y: FUNNY_TEXT_Y,
 			maxWidth: FUNNY_TEXT_MAX_WIDTH,
-			lineHeight: s(32),
-			blankLineHeight: s(32),
+			lineHeight: FEATURE_TEXT_LINE_HEIGHT,
+			blankLineHeight: FEATURE_TEXT_LINE_HEIGHT,
 			align: 'center'
 		});
 	}

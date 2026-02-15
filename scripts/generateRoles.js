@@ -13,7 +13,8 @@ const {
 	ROLE_CARD_WIDTH,
 	RECT_CARD_SCALE,
 	ROLE_CARD_BACKGROUND,
-	ROLE_ACCENT_COLOR
+	ROLE_ACCENT_COLOR,
+	TEXT_BLOCK_LINE_HEIGHT
 } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
@@ -21,6 +22,7 @@ const { getLocalizedText } = require('./utils/textHelpers');
 
 const FOUNDER_TITLE = 'The Founder';
 const s = (value) => Math.round(value * RECT_CARD_SCALE);
+const ROLE_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/roles.csv');
@@ -174,8 +176,8 @@ function paintRoleContent(ctx, record, { isBlank = false } = {}) {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: s(28),
-			blankLineHeight: s(24)
+			lineHeight: ROLE_TEXT_LINE_HEIGHT,
+			blankLineHeight: ROLE_TEXT_LINE_HEIGHT
 		});
 	}
 
@@ -188,8 +190,8 @@ function paintRoleContent(ctx, record, { isBlank = false } = {}) {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: s(24),
-			blankLineHeight: s(20)
+			lineHeight: ROLE_TEXT_LINE_HEIGHT,
+			blankLineHeight: ROLE_TEXT_LINE_HEIGHT
 		});
 	}
 

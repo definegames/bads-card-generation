@@ -8,14 +8,10 @@ require('./utils/fontRegistry'); // Register fonts
 const {
 	CARD_SIZE,
 	EDGE_THICKNESS,
-	CONTENT_PADDING,
-	LARGE_CARD_TITLE_LEFT,
-	LARGE_CARD_TITLE_TOP,
-	LARGE_CARD_TITLE_FONT_SIZE,
-	LARGE_CARD_TITLE_FONT_WEIGHT,
 	LARGE_CARD_SCALE,
 	BODY_TEXT_COLOR,
-	KEYSTONE_BACK_FILE_NAME
+	KEYSTONE_BACK_FILE_NAME,
+	TEXT_BLOCK_LINE_HEIGHT
 } = require('./utils/constants');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
@@ -29,6 +25,14 @@ const KEYSTONE_BACK_GRADIENT_START = '#f8fbff';
 const KEYSTONE_BACK_GRADIENT_END = '#bed5ff';
 const KEYSTONE_BACK_TEXT = '#1f2d46';
 const s = (value) => Math.round(value * LARGE_CARD_SCALE);
+const TITLE_Y = 159;
+const TITLE_MAX_WIDTH = CARD_SIZE - 119 * 2;
+const BODY_TEXT_X = 167;
+const BODY_TEXT_Y = 428;
+const BODY_TEXT_MAX_WIDTH = CARD_SIZE - BODY_TEXT_X * 2;
+const FUNNY_TEXT_Y = 777;
+const FUNNY_TEXT_MAX_WIDTH = CARD_SIZE - 119 * 2;
+const KEYSTONE_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/keystones.csv');
@@ -100,47 +104,37 @@ function paintKeystoneCopy(ctx, record, { isBlank = false } = {}) {
 		return;
 	}
 
-	const safeZoneLeft = EDGE_THICKNESS + CONTENT_PADDING;
-	const safeZoneRight = CARD_SIZE - EDGE_THICKNESS - CONTENT_PADDING;
-	const contentWidth = safeZoneRight - safeZoneLeft;
-
-	ctx.textAlign = 'left';
+	ctx.textAlign = 'center';
 	ctx.textBaseline = 'top';
 	ctx.fillStyle = BODY_TEXT_COLOR;
-	ctx.font = `${LARGE_CARD_TITLE_FONT_WEIGHT} ${LARGE_CARD_TITLE_FONT_SIZE}px "Inter", sans-serif`;
-	ctx.fillText((record.Title || '').trim(), LARGE_CARD_TITLE_LEFT, LARGE_CARD_TITLE_TOP);
-
-	ctx.strokeStyle = KEYSTONE_DIVIDER_COLOR;
-	ctx.lineWidth = s(2);
-	ctx.beginPath();
-	ctx.moveTo(safeZoneLeft, EDGE_THICKNESS + s(70));
-	ctx.lineTo(safeZoneRight, EDGE_THICKNESS + s(70));
-	ctx.stroke();
+	ctx.font = '500 64px "Inter", sans-serif';
+	ctx.fillText((record.Title || '').trim(), CARD_SIZE / 2, TITLE_Y, TITLE_MAX_WIDTH);
 
 	ctx.textAlign = 'left';
-	ctx.font = `500 ${s(20)}px "Inter", sans-serif`;
+	ctx.font = '400 40px "Inter", sans-serif';
 	ctx.fillStyle = BODY_TEXT_COLOR;
 
-	let cursorY = EDGE_THICKNESS + s(86);
 	const bodyCopy = getLocalizedText(record, ['Text']);
-	cursorY = drawTextBlock(ctx, bodyCopy, {
-		x: safeZoneLeft,
-		y: cursorY,
-		maxWidth: contentWidth,
-		lineHeight: s(26),
-		blankLineHeight: s(24)
+	drawTextBlock(ctx, bodyCopy, {
+		x: BODY_TEXT_X,
+		y: BODY_TEXT_Y,
+		maxWidth: BODY_TEXT_MAX_WIDTH,
+		lineHeight: KEYSTONE_TEXT_LINE_HEIGHT,
+		blankLineHeight: KEYSTONE_TEXT_LINE_HEIGHT,
+		align: 'left'
 	});
 
 	const funny = (record['Funny text'] || '').trim();
 	if (funny) {
-		cursorY += s(16);
-		ctx.font = `italic 500 ${s(18)}px "Inter", sans-serif`;
-		cursorY = drawTextBlock(ctx, funny, {
-			x: safeZoneLeft,
-			y: cursorY,
-			maxWidth: contentWidth,
-			lineHeight: s(22),
-			blankLineHeight: s(20)
+		ctx.font = 'italic 400 36px "Inter", sans-serif';
+		ctx.fillStyle = '#949494';
+		drawTextBlock(ctx, funny, {
+			x: CARD_SIZE / 2,
+			y: FUNNY_TEXT_Y,
+			maxWidth: FUNNY_TEXT_MAX_WIDTH,
+			lineHeight: KEYSTONE_TEXT_LINE_HEIGHT,
+			blankLineHeight: KEYSTONE_TEXT_LINE_HEIGHT,
+			align: 'center'
 		});
 	}
 }
@@ -167,7 +161,7 @@ function paintKeystoneBack(ctx, { isBlank = false } = {}) {
 }
 
 function drawTextBlock(ctx, raw = '', options) {
-	const { x, y, maxWidth, lineHeight, blankLineHeight = lineHeight } = options;
+	const { x, y, maxWidth, lineHeight, blankLineHeight = lineHeight, align = 'left' } = options;
 	const normalized = String(raw ?? '')
 		.replace(/\r/g, '')
 		.replace(/\t/g, '    ');
@@ -177,6 +171,8 @@ function drawTextBlock(ctx, raw = '', options) {
 
 	const lines = normalized.split('\n');
 	let cursorY = y;
+	ctx.textAlign = align;
+	ctx.textBaseline = 'top';
 	lines.forEach((line) => {
 		if (!line.trim()) {
 			cursorY += blankLineHeight;

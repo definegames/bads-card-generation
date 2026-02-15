@@ -5,7 +5,7 @@ const fs = require('fs/promises');
 const { createCanvas } = require('canvas');
 const { parse } = require('csv-parse/sync');
 require('./utils/fontRegistry'); // Register fonts
-const { TICKET_CARD_SIZE, SMALL_CARD_SCALE, BODY_TEXT_COLOR } = require('./utils/constants');
+const { TICKET_CARD_SIZE, SMALL_CARD_SCALE, BODY_TEXT_COLOR, TEXT_BLOCK_LINE_HEIGHT } = require('./utils/constants');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
 const { resolveOutputPath } = require('./utils/runtimeConfig');
 const { getLocalizedText } = require('./utils/textHelpers');
@@ -15,6 +15,7 @@ const BORDER_COLOR = '#d9cbbd';
 const TITLE_COLOR = '#c52233';
 const FUNNY_TEXT_COLOR = '#7a4a38';
 const s = (value) => Math.round(value * SMALL_CARD_SCALE);
+const PROBLEM_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
 
 async function main() {
 	const csvPath = path.resolve(__dirname, '../data/problems.csv');
@@ -100,7 +101,7 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: s(26)
+			lineHeight: PROBLEM_TEXT_LINE_HEIGHT
 		});
 	}
 
@@ -113,7 +114,7 @@ function paintProblem(ctx, record, { isBlank = false } = {}) {
 			x: safeLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: s(26)
+			lineHeight: PROBLEM_TEXT_LINE_HEIGHT
 		});
 	}
 }

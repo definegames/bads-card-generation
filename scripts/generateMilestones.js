@@ -15,7 +15,8 @@ const {
 	LARGE_CARD_TITLE_FONT_WEIGHT,
 	LARGE_CARD_SCALE,
 	BODY_TEXT_COLOR,
-	MILESTONE_BACK_FILE_NAME
+	MILESTONE_BACK_FILE_NAME,
+	TEXT_BLOCK_LINE_HEIGHT
 } = require('./utils/constants');
 const { paintEdgesAndDividers } = require('./utils/edgePainter');
 const { shouldIgnoreRecord } = require('./utils/recordFilters');
@@ -40,6 +41,7 @@ const SCORE_STACK_ITEM_HEIGHT = s(44);
 const SCORE_STACK_ITEM_GAP = s(10);
 const SCORE_STACK_ITEM_RADIUS = s(14);
 const SCORE_STACK_ITEM_PADDING_X = s(14);
+const MILESTONE_TEXT_LINE_HEIGHT = s(TEXT_BLOCK_LINE_HEIGHT);
 
 const SCORE_STACK_ITEM_COLORS = ['#4ea865', '#347b4f', SCORE_PANEL_COLOR];
 
@@ -144,15 +146,13 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 	const minimumScoreValues = formatMinimumScoreValues(record['Minimum Score']);
 	const deadlineValue = formatDeadlineValue(record.Deadline);
 
-	const bodyLineHeight = s(24);
-	const blankLineHeight = s(22);
 	const bodyCopy = getLocalizedText(record, ['Text']);
 	cursorY = drawTextBlock(ctx, bodyCopy, {
 		x: safeZoneLeft,
 		y: cursorY,
 		maxWidth: contentWidth,
-		lineHeight: bodyLineHeight,
-		blankLineHeight
+		lineHeight: MILESTONE_TEXT_LINE_HEIGHT,
+		blankLineHeight: MILESTONE_TEXT_LINE_HEIGHT
 	});
 
 	const funny = record['Funny text'];
@@ -163,8 +163,8 @@ function paintCopy(ctx, record, { isBlank = false } = {}) {
 			x: safeZoneLeft,
 			y: cursorY,
 			maxWidth: contentWidth,
-			lineHeight: s(22),
-			blankLineHeight: s(20)
+			lineHeight: MILESTONE_TEXT_LINE_HEIGHT,
+			blankLineHeight: MILESTONE_TEXT_LINE_HEIGHT
 		});
 	}
 
