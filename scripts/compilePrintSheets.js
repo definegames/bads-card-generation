@@ -29,17 +29,18 @@ const A4_HEIGHT_PT = (A4_HEIGHT_MM / MM_PER_INCH) * POINTS_PER_INCH;
 
 const DEFAULT_MARGIN = Math.round(PRINT_DPI * 0.35); // ~9 mm
 const DEFAULT_GAP = 1;
-const EXTRA_EMPTY_SHEETS = 1;
+const EXTRA_EMPTY_SHEETS = 0;
 const MISC_OUTPUT_DIR = resolveOutputPath('misc');
 const KEYSTONE_BACK_PATH = path.join(MISC_OUTPUT_DIR, KEYSTONE_BACK_FILE_NAME);
 const MILESTONE_BACK_PATH = path.join(MISC_OUTPUT_DIR, MILESTONE_BACK_FILE_NAME);
 const GOAL_BACK_PATH = path.join(MISC_OUTPUT_DIR, 'goal-deck.png');
 const ROLE_BACK_PATH = path.join(MISC_OUTPUT_DIR, 'role-back.png');
 
+// Keep physical print sizes fixed, regardless of source card pixel dimensions.
 const PLAYER_CARD_SIZE_MM = 85;
 const WORK_CARD_SIZE_MM = 78;
 const ROLE_CARD_HEIGHT_MM = 100;
-const ROLE_CARD_WIDTH_MM = Math.round(ROLE_CARD_HEIGHT_MM * (ROLE_CARD_WIDTH / ROLE_CARD_HEIGHT));
+const ROLE_CARD_WIDTH_MM = 76;
 
 const PRINT_SETS = [
 	{
